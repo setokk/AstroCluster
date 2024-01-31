@@ -31,12 +31,12 @@ class EmbeddingMethod():
 
 
 # Plot to show how similar the data is
-def show_data_plot(embeddings):
+def show_data_plot(embeddings, emb_name):
     plt.figure(figsize=(8, 6))
     plt.scatter(np.array(embeddings)[:,0], 
                 np.array(embeddings)[:,1], 
                 c=[], cmap='viridis', edgecolors='k', alpha=0.7)
-    plt.title(f'Scatter plot of data')
+    plt.title(f'Scatter plot of data ({emb_name})')
     plt.xlabel('Dimension 1')
     plt.ylabel('Dimension 2')
     plt.show()
@@ -97,7 +97,7 @@ if __name__ == '__main__':
 
         emb_method.train(emb_X)
         embeddings = emb_method.get_embeddings(emb_X)
-        show_data_plot(embeddings)
+        show_data_plot(embeddings, emb_name)
 
         X_train, X_test, train_indices, test_indices = train_test_split(
             embeddings, range(len(emb_X)),
