@@ -1,1 +1,19 @@
-clustering/
+### Cluster ###
+cluster/clustering/
+
+### Server ###
+server/HELP.md
+server/target/
+server/!.mvn/wrapper/maven-wrapper.jar
+server/!**/src/main/**/target/
+server/!**/src/test/**/target/
+
+### IntelliJ IDEA ###
+server/.idea
+server/*.iws
+server/*.iml
+server/*.ipr
+
+### VS Code ###
+.vscode/
+server/.vscode/
