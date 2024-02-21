@@ -64,7 +64,7 @@ if __name__ == '__main__':
     traverser_strategy, keyword_remover = SUPPORTED_LANGUAGES.get(project_language)
 
     # Get file content data
-    files,file_paths = project_traverser.get_project_files(traverser_strategy,  
+    files,file_paths = project_traverser.get_project_files(traverser_strategy,
                                                            project_path, 
                                                            file_extensions)
 
