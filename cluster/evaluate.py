@@ -68,7 +68,7 @@ if __name__ == '__main__':
                                                            project_path, 
                                                            file_extensions)
 
-    # Get file tokens for certain embedding methods
+    # Get file tokens (used in certain embedding methods)
     tokenized_files = []
     for file_content in files:
         tokens = list(javalang.tokenizer.tokenize(file_content))
@@ -78,8 +78,8 @@ if __name__ == '__main__':
     # Define embedding methods
     embedding_methods = [
         EmbeddingMethod("UniXcoder", UniXEmbedder(), files),
-        EmbeddingMethod("Word2VecEmbedder", Word2VecEmbedder(), tokenized_files)
-        #EmbeddingMethod("Doc2VecEmbedder", Doc2VecEmbedder(), tokenized_files)
+        EmbeddingMethod("Word2VecEmbedder", Word2VecEmbedder(), tokenized_files),
+        EmbeddingMethod("Doc2VecEmbedder", Doc2VecEmbedder(), tokenized_files)
     ]
 
     # Instantiate clustering algorithms

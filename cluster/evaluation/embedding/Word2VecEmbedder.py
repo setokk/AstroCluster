@@ -8,8 +8,8 @@ class Word2VecEmbedder(Embedder):
         self.model = None
 
     def get_embeddings(self, files):
-        if self.model == None:
-            raise RuntimeError('Attempted to get embeddings from an UNTRAINED model.')
+        if self.model is None:
+            raise ValueError("The model needs to be trained first.")
 
         # Get the embeddings for each file and for each of its tokens
         # After retrieving the embeddings of its tokens,
