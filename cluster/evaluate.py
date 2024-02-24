@@ -10,7 +10,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.cluster import MeanShift, AffinityPropagation, Birch
 
 # Project dependencies
-from common.input.validator import validate_arguments
+from common.cli.validator import validate_arguments
 import common.preprocessing.traversing.project_traverser as project_traverser
 
 # Preprocessing

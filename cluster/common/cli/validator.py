@@ -9,7 +9,7 @@ def validate_arguments(argv: List[str]) -> Tuple[bool, str, str, List[str]]:
     if (len(argv) != 4):
         print('Incorrect number of arguments!\n')
         print('Usage:')
-        print('\tpython3 train.py <project_language: str> <project_path: str> <file_extensions: List[str]>')
+        print('\tpython3 program.py <project_language: str> <project_path: str> <file_extensions: List[str]>')
         print('\tExample: python3 train.py "java" "C:/users/my project" "[\'java\', \'py\', \'c\', \'erl\']"')
         return False, '', '', []
     
