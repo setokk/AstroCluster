@@ -1,4 +1,5 @@
 import sys
+import copy
 
 import numpy as np
 from matplotlib import pyplot as plt
@@ -64,17 +65,17 @@ if __name__ == '__main__':
     traverser_strategy, keyword_remover = SUPPORTED_LANGUAGES.get(project_language)
 
     # Get file content data
-    files,file_paths = project_traverser.get_project_files(traverser_strategy,
+    files, file_paths = project_traverser.get_project_files(traverser_strategy,
                                                            project_path, 
                                                            file_extensions)
-
+    
     # Get file tokens (used in certain embedding methods)
     tokenized_files = []
     for file_content in files:
         tokens = list(javalang.tokenizer.tokenize(file_content))
         token_values = [token.value for token in tokens]
         tokenized_files.append(token_values)
-    
+
     # Define embedding methods
     embedding_methods = [
         EmbeddingMethod("UniXcoder", UniXEmbedder(), files),
@@ -97,18 +98,19 @@ if __name__ == '__main__':
 
         emb_method.train(emb_X)
         embeddings = emb_method.get_embeddings(emb_X)
-        show_data_plot(embeddings, emb_name)
+        
+        #show_data_plot(embeddings, emb_name)
+        print(f'{emb_name}\n')
+        print(f'[0]: {len(embeddings[0])}, [1]: {len(embeddings[1])}\n')
 
         X_train, X_test, train_indices, test_indices = train_test_split(
             embeddings, range(len(emb_X)),
             test_size=0.2, random_state=42
         )
         for cl_name in clustering_methods:
-            cl_method = clustering_methods[cl_name]
-            cl_method.fit(X_train)
-            Y_pred = cl_method.predict(X_test)
+            cl_model = copy.deepcopy(clustering_methods[cl_name])
+            cl_model.fit(X_train)
+            Y_pred = cl_model.predict(X_test)
 
-            print(f'\n{emb_name} -> {cl_name}')
-            for i, label in enumerate(Y_pred):
-                original_file = files[test_indices[i]]
-                print(f'Datapoint {i}, label: {label}')
+            #print(f'\n{emb_name} -> {cl_name}')
+            #original_file = files[test_indices[i]]
