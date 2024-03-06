@@ -6,13 +6,15 @@ class Word2VecEmbedder(Embedder):
     def __init__(self, vector_size: int = 100, 
                  window: int = 5, 
                  min_count: int = 1, 
-                 workers: int = 4) -> None:
+                 workers: int = 4,
+                 epochs: int = 5) -> None:
         super().__init__()
         self.model = None
         self.vector_size = vector_size
         self.window = window
         self.min_count = min_count
         self.workers = workers
+        self.epochs = epochs
 
     def get_embeddings(self, files):
         if self.model is None:
@@ -43,6 +45,7 @@ class Word2VecEmbedder(Embedder):
                               vector_size=self.vector_size, 
                               window=self.window, 
                               min_count=self.min_count, 
-                              workers=self.workers)
+                              workers=self.workers,
+                              epochs=self.epochs)
         
-        print('Ended Word2Vec embedder training')
+        print('Ended Word2Vec embedder training...')

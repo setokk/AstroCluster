@@ -24,6 +24,8 @@ class Doc2VecEmbedder(Embedder):
         return embeddings
     
     def train(self, files) -> None:
+        print('Starting Doc2Vec embedder training...')
+
         tagged_data = [TaggedDocument(words=document, tags=[str(i)]) for i, document in enumerate(files)]
 
         self.model = Doc2Vec(vector_size=self.vector_size, 
@@ -33,3 +35,5 @@ class Doc2VecEmbedder(Embedder):
                              epochs=self.epochs)
         self.model.build_vocab(tagged_data)
         self.model.train(tagged_data, total_examples=self.model.corpus_count, epochs=self.model.epochs)
+
+        print('Ended Doc2Vec embedder training...')
