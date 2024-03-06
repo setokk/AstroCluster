@@ -2,9 +2,11 @@ from gensim.models.doc2vec import Doc2Vec, TaggedDocument
 from evaluation.embedding.Embedder import Embedder
 
 class Doc2VecEmbedder(Embedder):
-    def __init__(self, vector_size=300, 
-                 window=5, min_count=1, 
-                 workers=4, epochs=100) -> None:
+    def __init__(self, vector_size: int = 300, 
+                 window: int = 5, 
+                 min_count: int = 1, 
+                 workers: int = 4, 
+                 epochs: int = 100) -> None:
         super().__init__()
         self.model = None
         self.vector_size = vector_size

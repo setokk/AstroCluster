@@ -8,6 +8,7 @@ import javalang
 
 # Machine Learning dependencies
 from sklearn.model_selection import train_test_split
+from sklearn.decomposition import PCA
 from sklearn.cluster import MeanShift, AffinityPropagation, Birch
 
 # Project dependencies
@@ -66,8 +67,8 @@ if __name__ == '__main__':
 
     # Get file content data
     files, file_paths = project_traverser.get_project_files(traverser_strategy,
-                                                           project_path, 
-                                                           file_extensions)
+                                                            project_path, 
+                                                            file_extensions)
     
     # Get file tokens (used in certain embedding methods)
     tokenized_files = []
@@ -78,7 +79,7 @@ if __name__ == '__main__':
 
     # Define embedding methods
     embedding_methods = [
-        EmbeddingMethod("UniXcoder", UniXEmbedder(), files),
+        #EmbeddingMethod("UniXcoder", UniXEmbedder(), files),
         EmbeddingMethod("Word2VecEmbedder", Word2VecEmbedder(), tokenized_files),
         EmbeddingMethod("Doc2VecEmbedder", Doc2VecEmbedder(), tokenized_files)
     ]
@@ -98,6 +99,28 @@ if __name__ == '__main__':
 
         emb_method.train(emb_X)
         embeddings = emb_method.get_embeddings(emb_X)
+
+        pca = PCA(n_components = None) # None keeps all components
+        X_pca = pca.fit_transform(embeddings)
+
+        # Calculate explained variance ratio
+        explained_variance = pca.explained_variance_ratio_
+
+        # Calculate cumulative explained variance
+        cumulative_variance = np.cumsum(explained_variance)
+
+        # Create scree plot
+        plt.figure(figsize=(8, 6))
+
+        plt.bar(range(len(explained_variance)), explained_variance, alpha=0.5,
+        align='center', label='individual explained variance', color='g')
+        plt.step(range(len(cumulative_variance)), cumulative_variance, where='mid',
+        label='cumulative explained variance')
+        plt.ylabel('Explained variance ratio')
+        plt.xlabel('Principal components')
+        plt.legend(loc='best')
+        plt.tight_layout()
+        plt.show()
         
         #show_data_plot(embeddings, emb_name)
         print(f'{emb_name}\n')
@@ -112,5 +135,7 @@ if __name__ == '__main__':
             cl_model.fit(X_train)
             Y_pred = cl_model.predict(X_test)
 
-            #print(f'\n{emb_name} -> {cl_name}')
+            num_of_clusters = len(np.unique(Y_pred))
+            print(f'\n{emb_name} -> {cl_name}')
+            print(f'{num_of_clusters}\n\n---------------------')
             #original_file = files[test_indices[i]]

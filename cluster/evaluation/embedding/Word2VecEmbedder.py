@@ -3,9 +3,16 @@ from gensim.models import Word2Vec
 from evaluation.embedding.Embedder import Embedder
 
 class Word2VecEmbedder(Embedder):
-    def __init__(self) -> None:
+    def __init__(self, vector_size: int = 100, 
+                 window: int = 5, 
+                 min_count: int = 1, 
+                 workers: int = 4) -> None:
         super().__init__()
         self.model = None
+        self.vector_size = vector_size
+        self.window = window
+        self.min_count = min_count
+        self.workers = workers
 
     def get_embeddings(self, files):
         if self.model is None:
@@ -33,7 +40,9 @@ class Word2VecEmbedder(Embedder):
         
         tokenized_files = files
         self.model = Word2Vec(sentences=tokenized_files, 
-                              vector_size=100, window=5, 
-                              min_count=1, workers=4)
+                              vector_size=self.vector_size, 
+                              window=self.window, 
+                              min_count=self.min_count, 
+                              workers=self.workers)
         
         print('Ended Word2Vec embedder training')
