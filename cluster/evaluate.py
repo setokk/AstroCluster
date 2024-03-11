@@ -33,15 +33,54 @@ class EmbeddingMethod():
 
 
 # Plot to show how similar the data is
-def show_data_plot(embeddings, emb_name):
+def show_data_plot(emb_name: str, pca_embeddings, n_components: int) -> None:
     plt.figure(figsize=(8, 6))
-    plt.scatter(np.array(embeddings)[:,0], 
-                np.array(embeddings)[:,1], 
+    plt.scatter(np.array(pca_embeddings)[:,0], 
+                np.array(pca_embeddings)[:,1], 
                 c=[], cmap='viridis', edgecolors='k', alpha=0.7)
-    plt.title(f'Scatter plot of data ({emb_name})')
+    plt.title(f'First two dimensions of data using PCA n_components = {n_components} ({emb_name})')
     plt.xlabel('Dimension 1')
     plt.ylabel('Dimension 2')
     plt.show()
+
+# Function to show cumulative explained variance for PCA
+def show_pca_variance_plot(embeddings):
+    pca = PCA(n_components = None) # None keeps all components
+    X_pca = pca.fit_transform(embeddings)
+
+    # Calculate explained variance ratio
+    explained_variance = pca.explained_variance_ratio_
+
+    # Calculate cumulative explained variance
+    cumulative_variance = np.cumsum(explained_variance)
+
+    # Create scree plot
+    plt.figure(figsize=(8, 6))
+
+    plt.bar(range(len(explained_variance)), explained_variance, alpha=0.5,
+    align='center', label='individual explained variance', color='g')
+    plt.step(range(len(cumulative_variance)), cumulative_variance, where='mid',
+    label='cumulative explained variance')
+    plt.ylabel('Explained variance ratio')
+    plt.xlabel('Principal components')
+    plt.legend(loc='best')
+    plt.tight_layout()
+    plt.show()
+
+# Function to get the pca embeddings
+def get_pca_embeddings(emb_name: str, embeddings):
+        n_components = None
+        if emb_name == 'UniXcoder':
+            n_components = 100
+        elif emb_name == 'Word2VecEmbedder':
+            n_components = 10
+        elif emb_name == 'Doc2VecEmbedder':
+            n_components = 125
+
+        pca = PCA(n_components=n_components)
+        pca_embeddings = pca.fit_transform(embeddings)
+        
+        return pca_embeddings, n_components
 
 # Function to display and save performance metrics
 def calc_performance_metrics(X, Y_pred):
@@ -79,7 +118,7 @@ if __name__ == '__main__':
 
     # Define embedding methods
     embedding_methods = [
-        #EmbeddingMethod("UniXcoder", UniXEmbedder(), files),
+        EmbeddingMethod("UniXcoder", UniXEmbedder(), files),
         EmbeddingMethod("Word2VecEmbedder", Word2VecEmbedder(), tokenized_files),
         EmbeddingMethod("Doc2VecEmbedder", Doc2VecEmbedder(), tokenized_files)
     ]
@@ -99,43 +138,36 @@ if __name__ == '__main__':
 
         emb_method.train(emb_X)
         embeddings = emb_method.get_embeddings(emb_X)
+        pca_embeddings, n_components = get_pca_embeddings(emb_name, embeddings)
 
-        pca = PCA(n_components = None) # None keeps all components
-        X_pca = pca.fit_transform(embeddings)
+        # Here we declare a list that holds:
+        # a) original embeddings
+        # b) pca embeddings
+        embeddings_list = []
+        embeddings_list.append(embeddings)
+        embeddings_list.append(pca_embeddings)
 
-        # Calculate explained variance ratio
-        explained_variance = pca.explained_variance_ratio_
+        # Show variance plot to find out the optimal n_components
+        show_pca_variance_plot(embeddings)
 
-        # Calculate cumulative explained variance
-        cumulative_variance = np.cumsum(explained_variance)
+        # Show first two dimensions with PCA (with optimal n_components)
+        show_data_plot(emb_name, pca_embeddings, n_components)
 
-        # Create scree plot
-        plt.figure(figsize=(8, 6))
+        # Try each embedding
+        for embedding in embeddings_list:
+            print(f'{emb_name}')
+            print(f'Dimension: {len(embedding[0])}')
 
-        plt.bar(range(len(explained_variance)), explained_variance, alpha=0.5,
-        align='center', label='individual explained variance', color='g')
-        plt.step(range(len(cumulative_variance)), cumulative_variance, where='mid',
-        label='cumulative explained variance')
-        plt.ylabel('Explained variance ratio')
-        plt.xlabel('Principal components')
-        plt.legend(loc='best')
-        plt.tight_layout()
-        plt.show()
-        
-        #show_data_plot(embeddings, emb_name)
-        print(f'{emb_name}\n')
-        print(f'[0]: {len(embeddings[0])}, [1]: {len(embeddings[1])}\n')
+            X_train, X_test, train_indices, test_indices = train_test_split(
+                embedding, range(len(emb_X)),
+                test_size=0.2, random_state=42
+            )
+            for cl_name in clustering_methods:
+                cl_model = copy.deepcopy(clustering_methods[cl_name])
+                cl_model.fit(X_train)
+                Y_pred = cl_model.predict(X_test)
 
-        X_train, X_test, train_indices, test_indices = train_test_split(
-            embeddings, range(len(emb_X)),
-            test_size=0.2, random_state=42
-        )
-        for cl_name in clustering_methods:
-            cl_model = copy.deepcopy(clustering_methods[cl_name])
-            cl_model.fit(X_train)
-            Y_pred = cl_model.predict(X_test)
-
-            num_of_clusters = len(np.unique(Y_pred))
-            print(f'\n{emb_name} -> {cl_name}')
-            print(f'{num_of_clusters}\n\n---------------------')
-            #original_file = files[test_indices[i]]
+                num_of_clusters = len(np.unique(Y_pred))
+                print(f'\n{emb_name} -> {cl_name}')
+                print(f'{num_of_clusters}\n\n---------------------')
+                #original_file_content = files[test_indices[i]]
