@@ -6,12 +6,20 @@ from matplotlib import pyplot as plt
 
 import javalang
 
-# Machine Learning dependencies
+
+# <-- MACHINE LEARNING DEPENDENCIES -->
+# Preprocessing
 from sklearn.model_selection import train_test_split
 from sklearn.decomposition import PCA
+
+# Clustering
 from sklearn.cluster import MeanShift, AffinityPropagation, Birch
 
-# Project dependencies
+# Metrics
+from sklearn.metrics import silhouette_score, calinski_harabasz_score, davies_bouldin_score
+
+
+# <-- PROJECT DEPENDENCIES -->
 from common.cli.validator import validate_arguments
 import common.preprocessing.traversing.project_traverser as project_traverser
 
@@ -23,7 +31,7 @@ from evaluation.embedding.Doc2VecEmbedder import Doc2VecEmbedder
 from common.supported_languages import SUPPORTED_LANGUAGES
 
 
-# Class used for cleaner evaluation
+# Class used for easier evaluation
 # Depending on the embedding method, we might want to use different input data (self.X)
 class EmbeddingMethod():
     def __init__(self, emb_name, emb_method, emb_X) -> None:
@@ -83,9 +91,20 @@ def get_pca_embeddings(emb_name: str, embeddings):
         return pca_embeddings, n_components
 
 # Function to display and save performance metrics
-def calc_performance_metrics(X, Y_pred):
-    pass
+def calc_performance_metrics(X, Y_pred) -> dict:
+    metrics_dict = {}
 
+    # Silhouette Score
+    metrics_dict['Silhouette Score'] = silhouette_score(X, Y_pred)
+
+    # Calinski-Harabasz Index
+    metrics_dict['Calinski-Harabasz Index'] = calinski_harabasz_score(X, Y_pred)
+
+    # Davies-Bouldin Index
+    metrics_dict['Davies-Bouldin Index'] = davies_bouldin_score(X, Y_pred)
+
+    return metrics_dict
+    
 
 if __name__ == '__main__':
     # Validate arguments
@@ -168,6 +187,10 @@ if __name__ == '__main__':
                 Y_pred = cl_model.predict(X_test)
 
                 num_of_clusters = len(np.unique(Y_pred))
+                metrics_dict = calc_performance_metrics(X_test, Y_pred)
                 print(f'\n{emb_name} -> {cl_name}')
-                print(f'{num_of_clusters}\n\n---------------------')
+                print(f'Number of clusters: {num_of_clusters}')
+                print(f'Metrics:')
+                print(metrics_dict)
+                print("---------------------\n\n")
                 #original_file_content = files[test_indices[i]]
