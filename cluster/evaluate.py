@@ -43,16 +43,16 @@ class EmbeddingMethod():
 # Plot to show how similar the data is
 def show_data_plot(emb_name: str, pca_embeddings, n_components: int) -> None:
     plt.figure(figsize=(8, 6))
-    plt.scatter(np.array(pca_embeddings)[:,0], 
-                np.array(pca_embeddings)[:,1], 
+    plt.scatter(np.array(pca_embeddings)[:,0],
+                np.array(pca_embeddings)[:,1],
                 c=[], cmap='viridis', edgecolors='k', alpha=0.7)
     plt.title(f'First two dimensions of data using PCA n_components = {n_components} ({emb_name})')
     plt.xlabel('Dimension 1')
     plt.ylabel('Dimension 2')
     plt.show()
 
-# Function to show cumulative explained variance for PCA
-def show_pca_variance_plot(embeddings):
+# Function that calculates the cumulative variance for PCA
+def get_cumulative_variance(embeddings):
     pca = PCA(n_components = None) # None keeps all components
     X_pca = pca.fit_transform(embeddings)
 
@@ -62,11 +62,30 @@ def show_pca_variance_plot(embeddings):
     # Calculate cumulative explained variance
     cumulative_variance = np.cumsum(explained_variance)
 
+    return cumulative_variance
+
+# Function to calculate the optimal PCA n_components based on cumulative variance
+def get_optimal_pca_n_components(embeddings, threshold: float) -> int:
+    cumulative_variance = get_cumulative_variance(embeddings)
+
+    # Get optimal PCA n_components
+    optimal_n_components = 0
+    for cum_var in cumulative_variance:
+        optimal_n_components += 1
+        if cum_var >= threshold:
+            break
+
+    return optimal_n_components
+
+# Function to show cumulative explained variance for PCA
+def show_pca_variance_plot(embeddings):
+    cumulative_variance = get_cumulative_variance(embeddings)
+
     # Create scree plot
     plt.figure(figsize=(8, 6))
 
-    plt.bar(range(len(explained_variance)), explained_variance, alpha=0.5,
-    align='center', label='individual explained variance', color='g')
+    #plt.bar(range(len(explained_variance)), explained_variance, alpha=0.5,
+    #align='center', label='individual explained variance', color='g')
     plt.step(range(len(cumulative_variance)), cumulative_variance, where='mid',
     label='cumulative explained variance')
     plt.ylabel('Explained variance ratio')
@@ -76,19 +95,11 @@ def show_pca_variance_plot(embeddings):
     plt.show()
 
 # Function to get the pca embeddings
-def get_pca_embeddings(emb_name: str, embeddings):
-        n_components = None
-        if emb_name == 'UniXcoder':
-            n_components = 100
-        elif emb_name == 'Word2VecEmbedder':
-            n_components = 10
-        elif emb_name == 'Doc2VecEmbedder':
-            n_components = 125
+def get_pca_embeddings(embeddings, n_components: int):
+    pca = PCA(n_components=n_components)
+    pca_embeddings = pca.fit_transform(embeddings)
 
-        pca = PCA(n_components=n_components)
-        pca_embeddings = pca.fit_transform(embeddings)
-        
-        return pca_embeddings, n_components
+    return pca_embeddings
 
 # Function to display and save performance metrics
 def calc_performance_metrics(X, Y_pred) -> dict:
@@ -104,7 +115,6 @@ def calc_performance_metrics(X, Y_pred) -> dict:
     metrics_dict['Davies-Bouldin Index'] = davies_bouldin_score(X, Y_pred)
 
     return metrics_dict
-    
 
 if __name__ == '__main__':
     # Validate arguments
@@ -125,9 +135,9 @@ if __name__ == '__main__':
 
     # Get file content data
     files, file_paths = project_traverser.get_project_files(traverser_strategy,
-                                                            project_path, 
+                                                            project_path,
                                                             file_extensions)
-    
+
     # Get file tokens (used in certain embedding methods)
     tokenized_files = []
     for file_content in files:
@@ -157,7 +167,10 @@ if __name__ == '__main__':
 
         emb_method.train(emb_X)
         embeddings = emb_method.get_embeddings(emb_X)
-        pca_embeddings, n_components = get_pca_embeddings(emb_name, embeddings)
+
+        threshold = 0.95 # Threshold for cumulative variance
+        n_components = get_optimal_pca_n_components(embeddings, threshold)
+        pca_embeddings = get_pca_embeddings(embeddings, n_components)
 
         # Here we declare a list that holds:
         # a) original embeddings
