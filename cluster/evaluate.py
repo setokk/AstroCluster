@@ -180,10 +180,10 @@ if __name__ == '__main__':
         embeddings_list.append(pca_embeddings)
 
         # Show variance plot to find out the optimal n_components
-        show_pca_variance_plot(embeddings)
+        #show_pca_variance_plot(embeddings)
 
         # Show first two dimensions with PCA (with optimal n_components)
-        show_data_plot(emb_name, pca_embeddings, n_components)
+        #show_data_plot(emb_name, pca_embeddings, n_components)
 
         # Try each embedding
         for embedding in embeddings_list:

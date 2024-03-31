@@ -1,5 +1,6 @@
 ### Cluster ###
 cluster/clustering/
+cluster/projects/
 
 ### Server ###
 server/HELP.md
