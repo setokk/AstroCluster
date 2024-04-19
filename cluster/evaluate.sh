@@ -45,8 +45,27 @@ if [ ! -d "$flink"  ] ||
 	fi
 fi
 
+echo "-------------------[ APACHE FLINK ]-------------------"
 python3 -B evaluate.py "java" "$flink" "['java']"
+echo "-------------------[ APACHE FLINK ]-------------------"
+echo ""
+
+echo "-------------------[ APACHE KAFKA ]-------------------"
 python3 -B evaluate.py "java" "$kafka" "['java']"
+echo "-------------------[ APACHE KAFKA ]-------------------"
+echo ""
+
+echo "-------------------[ APACHE TOMCAT ]-------------------"
 python3 -B evaluate.py "java" "$tomcat" "['java']"
+echo "-------------------[ APACHE TOMCAT ]-------------------"
+echo ""
+
+echo "-------------------[ APACHE STORM ]-------------------"
 python3 -B evaluate.py "java" "$storm" "['java']"
+echo "-------------------[ APACHE STORM ]-------------------"
+echo ""
+
+echo "-------------------[ APACHE HIVE ]-------------------"
 python3 -B evaluate.py "java" "$hive" "['java']"
+echo "-------------------[ APACHE HIVE ]-------------------"
+echo ""
