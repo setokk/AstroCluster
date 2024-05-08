@@ -1,49 +1,42 @@
 #!/bin/bash
-if [ "$#" -ne 1 ]; then
-	echo "Usage: $0 \"<git_clone_mode: str>\""
-	echo "Examples:"
-	echo "        $0 \"ssh\""
-	echo "        $0 \"https\""
-	exit 1
-fi
+MAN=$(cat <<-END
+Usage: ./$0 [--clone-mode | -cm <GIT_CLONE_MODE: string>] [--delete-dirs | -d <DELETE_DIRS: boolean>]
 
-flink="./projects/apache/flink"
-kafka="./projects/apache/kafka"
-tomcat="./projects/apache/tomcat"
-storm="./projects/apache/storm"
-hive="./projects/apache/hive"
-if [ ! -d "$flink"  ] ||
-   [ ! -d "$kafka" ] ||
-   [ ! -d "$tomcat" ] ||
-   [ ! -d "$storm" ] ||
-   [ ! -d "$hive" ]; then
-	
-	rm -rf "$flink"
-	rm -rf "$kafka"
-	rm -rf "$tomcat"
-	rm -rf "$storm"
-	rm -rf "$hive" 
-	 
-	git_clone_mode=$1
-	if [ "$git_clone_mode" = "ssh" ]; then
+List of available options:
+
+    --clone-mode or -cm            Git clone mode. Acceptable values: "ssh" or "https". Default value is "https".
+    --delete-dirs or -d            Flag for deleting the cloned project directories after finishing evaluation. Default value is false.
+END
+)
+
+GIT_CLONE_MODE="https"
+DELETE_DIRS=false
+while [[ "$#" -gt 0 ]]
+do
+    if [ "$1" = "--clone-mode" || "$1" = "-cm" ]; then
+    else if 
+    fi
+shift
+done
+
+declare -A projects_dir_map
+projects_dir_map["flink"]="./projects/apache/flink"
+projects_dir_map["kafka"]="./projects/apache/kafka"
+projects_dir_map["tomcat"]="./projects/apache/tomcat"
+projects_dir_map["storm"]="./projects/apache/storm"
+projects_dir_map["hive"]="./projects/apache/hive"
+
+
+	if [ "$GIT_CLONE_MODE" = "ssh" ]; then
 		echo "Cloning in ssh mode..."
-		git clone git@github.com:apache/flink.git "$flink"
-		git clone git@github.com:apache/kafka.git "$kafka"
-		git clone git@github.com:apache/tomcat.git "$tomcat"
-		git clone git@github.com:apache/storm.git "$storm"
-		git clone git@github.com:apache/hive.git "$hive"
-	elif [ "$git_clone_mode" = "https" ]; then
+		git clone git@github.com:apache/flink.git $flink
+	elif [ "$GIT_CLONE_MODE" = "https" ]; then
 		echo "Cloning in https mode..."
 		git clone https://github.com/apache/flink.git $flink
-		git clone https://github.com/apache/kafka.git $kafka
-		git clone https://github.com/apache/tomcat.git $tomcat
-		git clone https://github.com/apache/storm.git $storm
-		git clone https://github.com/apache/hive.git $hive
 	else
 		echo "Clone mode has to be one of the following: [ssh, https]"
 		exit 1
 	fi
-fi
 
 echo "-------------------[ APACHE FLINK ]-------------------"
 python3 -B evaluate.py "java" "$flink" "['java']"
