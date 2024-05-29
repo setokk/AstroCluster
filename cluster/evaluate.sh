@@ -32,38 +32,23 @@ projects_dir_map["storm"]="./projects/apache/storm"
 projects_dir_map["hive"]="./projects/apache/hive"
 
 
-	if [ "$GIT_CLONE_MODE" = "ssh" ]; then
-		echo "Cloning in ssh mode..."
-		git clone git@github.com:apache/flink.git $flink
-	elif [ "$GIT_CLONE_MODE" = "https" ]; then
-		echo "Cloning in https mode..."
-		git clone https://github.com/apache/flink.git $flink
-	else
-		echo "Clone mode has to be one of the following: [ssh, https]"
-		exit 1
-	fi
+if [ "$GIT_CLONE_MODE" = "ssh" ]; then
+    echo "Cloning in ssh mode..."
+    git clone git@github.com:apache/flink.git $flink
+elif [ "$GIT_CLONE_MODE" = "https" ]; then
+    echo "Cloning in https mode..."
+    git clone https://github.com/apache/flink.git $flink
+else
+    echo "Clone mode has to be one of the following: [ssh, https]"
+    exit 1
+fi
 
-echo "-------------------[ APACHE FLINK ]-------------------"
-python3 -B evaluate.py "java" "$flink" "['java']"
-echo "-------------------[ APACHE FLINK ]-------------------"
-echo ""
-
-echo "-------------------[ APACHE KAFKA ]-------------------"
-python3 -B evaluate.py "java" "$kafka" "['java']"
-echo "-------------------[ APACHE KAFKA ]-------------------"
-echo ""
-
-echo "-------------------[ APACHE TOMCAT ]-------------------"
-python3 -B evaluate.py "java" "$tomcat" "['java']"
-echo "-------------------[ APACHE TOMCAT ]-------------------"
-echo ""
-
-echo "-------------------[ APACHE STORM ]-------------------"
-python3 -B evaluate.py "java" "$storm" "['java']"
-echo "-------------------[ APACHE STORM ]-------------------"
-echo ""
-
-echo "-------------------[ APACHE HIVE ]-------------------"
-python3 -B evaluate.py "java" "$hive" "['java']"
-echo "-------------------[ APACHE HIVE ]-------------------"
-echo ""
+# Evaluate projects
+for project in "${!projects_dir_map[@]}"; do
+    PROJECT_NAME_UPPER=$(echo "$project" | tr '[:lower:]' '[:upper:]')
+    PROJECT_DIR=${projects_dir_map[$project]}
+    echo "-------------------[ APACHE $PROJECT_NAME_UPPER ]-------------------"
+    python3 -B evaluate.py "java" "$PROJECT_DIR" "['java']"
+    echo "-------------------[ APACHE $PROJECT_NAME_UPPER ]-------------------"
+    echo ""
+done
