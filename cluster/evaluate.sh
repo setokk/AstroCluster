@@ -46,7 +46,7 @@ fi
 # Evaluate projects
 for project in "${!projects_dir_map[@]}"; do
     PROJECT_NAME_UPPER=$(echo "$project" | tr '[:lower:]' '[:upper:]')
-    PROJECT_DIR=${projects_dir_map[$project]}
+    PROJECT_DIR="${projects_dir_map[$project]}"
     echo "-------------------[ APACHE $PROJECT_NAME_UPPER ]-------------------"
     python3 -B evaluate.py "java" "$PROJECT_DIR" "['java']"
     echo "-------------------[ APACHE $PROJECT_NAME_UPPER ]-------------------"
