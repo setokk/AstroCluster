@@ -13,8 +13,10 @@ GIT_CLONE_MODE="https"
 DELETE_DIRS=false
 while [[ "$#" -gt 0 ]]
 do
-    if [ "$1" = "--clone-mode" || "$1" = "-cm" ]; then
-    else if 
+    if [ ["$1" = "--clone-mode"] || ["$1" = "-cm"] ]; then
+        GIT_CLONE_MODE="$2"
+    else if [ ["$1" = "--delete-dirs"] || ["$1" = "-d"] ]; then
+        DELETE_DIRS=true
     fi
 shift
 done
