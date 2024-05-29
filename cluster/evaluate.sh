@@ -11,15 +11,14 @@ END
 
 GIT_CLONE_MODE="https"
 DELETE_DIRS=false
-while [[ "$#" -gt 0 ]]
-do
-    if [ ["$1" = "--clone-mode"] || ["$1" = "-cm"] ]; then
+while [[ "$#" -gt 0 ]]; do
+    if ["$1" = "--clone-mode" || "$1" = "-cm"]; then
         GIT_CLONE_MODE="$2"
-    else if [ ["$1" = "--delete-dirs"] || ["$1" = "-d"] ]; then
+    elif ["$1" = "--delete-dirs" || "$1" = "-d"]; then
         DELETE_DIRS=true
-    else if [ ["$1" = "--help"] || ["$1" = "-h"] ]; then
+    elif ["$1" = "--help" || "$1" = "-h"]; then
         echo "$MAN"
-	exit 0
+        exit 0
     fi
     shift
 done
@@ -31,17 +30,19 @@ projects_dir_map["tomcat"]="./projects/apache/tomcat"
 projects_dir_map["storm"]="./projects/apache/storm"
 projects_dir_map["hive"]="./projects/apache/hive"
 
-
-if [ "$GIT_CLONE_MODE" = "ssh" ]; then
-    echo "Cloning in ssh mode..."
-    git clone git@github.com:apache/flink.git $flink
-elif [ "$GIT_CLONE_MODE" = "https" ]; then
-    echo "Cloning in https mode..."
-    git clone https://github.com/apache/flink.git $flink
-else
-    echo "Clone mode has to be one of the following: [ssh, https]"
-    exit 1
-fi
+# Clone projects
+for project in "${!projects_dir_map[@]}"; do
+    if [ "$GIT_CLONE_MODE" = "ssh" ]; then
+        echo "Cloning in ssh mode..."
+        git clone "git@github.com:apache/$project.git" "$project"
+    elif [ "$GIT_CLONE_MODE" = "https" ]; then
+        echo "Cloning in https mode..."
+        git clone "https://github.com/apache/$project.git" "$project"
+    else
+        echo "Clone mode has to be one of the following: [ssh, https]"
+        exit 1
+    fi
+done
 
 # Evaluate projects
 for project in "${!projects_dir_map[@]}"; do
