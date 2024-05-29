@@ -17,8 +17,11 @@ do
         GIT_CLONE_MODE="$2"
     else if [ ["$1" = "--delete-dirs"] || ["$1" = "-d"] ]; then
         DELETE_DIRS=true
+    else if [ ["$1" = "--help"] || ["$1" = "-h"] ]; then
+        echo "$MAN"
+	exit 0
     fi
-shift
+    shift
 done
 
 declare -A projects_dir_map
