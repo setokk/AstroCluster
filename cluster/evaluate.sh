@@ -1,6 +1,6 @@
 #!/bin/bash
 MAN=$(cat <<-END
-Usage: ./$0 [--clone-mode | -cm <GIT_CLONE_MODE: string>] [--delete-dirs | -d <DELETE_DIRS: boolean>]
+Usage: $0 [--clone-mode | -cm <GIT_CLONE_MODE: string>] [--delete-dirs | -d <DELETE_DIRS: boolean>]
 
 List of available options:
 
@@ -12,11 +12,11 @@ END
 GIT_CLONE_MODE="https"
 DELETE_DIRS=false
 while [[ "$#" -gt 0 ]]; do
-    if ["$1" = "--clone-mode" || "$1" = "-cm"]; then
+    if [[ "$1" = "--clone-mode" || "$1" = "-cm" ]]; then
         GIT_CLONE_MODE="$2"
-    elif ["$1" = "--delete-dirs" || "$1" = "-d"]; then
+    elif [[ "$1" = "--delete-dirs" || "$1" = "-d" ]]; then
         DELETE_DIRS=true
-    elif ["$1" = "--help" || "$1" = "-h"]; then
+    elif [[ "$1" = "--help" || "$1" = "-h" ]]; then
         echo "$MAN"
         exit 0
     fi
@@ -32,12 +32,13 @@ projects_dir_map["hive"]="./projects/apache/hive"
 
 # Clone projects
 for project in "${!projects_dir_map[@]}"; do
+    PROJECT_DIR="${projects_dir_map[$project]}"
     if [ "$GIT_CLONE_MODE" = "ssh" ]; then
         echo "Cloning in ssh mode..."
-        git clone "git@github.com:apache/$project.git" "$project"
+        git clone "git@github.com:apache/$project.git" "$PROJECT_DIR"
     elif [ "$GIT_CLONE_MODE" = "https" ]; then
         echo "Cloning in https mode..."
-        git clone "https://github.com/apache/$project.git" "$project"
+        git clone "https://github.com/apache/$project.git" "$PROJECT_DIR"
     else
         echo "Clone mode has to be one of the following: [ssh, https]"
         exit 1
@@ -53,3 +54,12 @@ for project in "${!projects_dir_map[@]}"; do
     echo "-------------------[ APACHE $PROJECT_NAME_UPPER ]-------------------"
     echo ""
 done
+
+# Delete directories
+if [ $DELETE_DIRS = true ]; then
+    for project in "${!projects_dir_map[@]}"; do
+        PROJECT_DIR="${projects_dir_map[$project]}"
+        rm -rf "$PROJECT_DIR"
+        echo -e "Deleted $PROJECT_DIR"
+    done
+fi
