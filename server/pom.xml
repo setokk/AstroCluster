@@ -9,12 +9,15 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>edu.setokk</groupId>
-    <artifactId>astrocluster</artifactId>
+    <artifactId>astrocluster-server</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>server</name>
     <description>server</description>
     <properties>
         <java.version>21</java.version>
+        <protobuf.version>4.27.2</protobuf.version>
+        <grpc.version>1.63.0</grpc.version>
+        <os.detected.classifier>linux-x86_32</os.detected.classifier>
     </properties>
     <dependencies>
         <!-- WEB DEPENDENCIES -->
@@ -31,6 +34,7 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
+            <version>42.7.2</version>
             <scope>runtime</scope>
         </dependency>
 
@@ -43,17 +47,22 @@
         <dependency>
             <groupId>io.grpc</groupId>
             <artifactId>grpc-netty-shaded</artifactId>
-            <version>1.63.0</version>
+            <version>${grpc.version}</version>
         </dependency>
         <dependency>
             <groupId>io.grpc</groupId>
             <artifactId>grpc-protobuf</artifactId>
-            <version>1.63.0</version>
+            <version>${grpc.version}</version>
         </dependency>
         <dependency>
             <groupId>io.grpc</groupId>
             <artifactId>grpc-stub</artifactId>
-            <version>1.63.0</version>
+            <version>${grpc.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java</artifactId>
+            <version>${protobuf.version}</version>
         </dependency>
 
         <!-- MAIL DEPENDENCIES -->
@@ -75,10 +84,16 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>javax.annotation</groupId>
+            <artifactId>javax.annotation-api</artifactId>
+            <version>1.2</version>
+        </dependency>
     </dependencies>
 
     <build>
         <plugins>
+            <!-- LOMBOK -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -91,23 +106,74 @@
                     </excludes>
                 </configuration>
             </plugin>
-<!--            <plugin>
+            <plugin>
                 <groupId>org.xolstice.maven.plugins</groupId>
                 <artifactId>protobuf-maven-plugin</artifactId>
                 <version>0.6.1</version>
                 <configuration>
-                    <protoSourceRoot>${project.basedir}/src/main/proto</protoSourceRoot>
+                    <protoSourceRoot>${project.basedir}/../proto</protoSourceRoot>
+                    <outputDirectory>${project.basedir}/target/protoc-classes-ac</outputDirectory>
+                    <protocArtifact>com.google.protobuf:protoc:${protobuf.version}:exe:${os.detected.classifier}</protocArtifact>
+                    <pluginId>grpc-java</pluginId>
+                    <pluginArtifact>io.grpc:protoc-gen-grpc-java:${grpc.version}:exe:${os.detected.classifier}</pluginArtifact>
                 </configuration>
                 <executions>
                     <execution>
                         <goals>
                             <goal>compile</goal>
-                            <goal>test-compile</goal>
+                            <goal>compile-custom</goal>
                         </goals>
                     </execution>
                 </executions>
-            </plugin>-->
+            </plugin>
+
+            <!-- COPY PROTO GENERATED FILES TO PROJECT PACKAGE -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.2.0</version>
+                <executions>
+                    <execution>
+                        <id>copy-generated-protoc-classes</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.basedir}/src/main/java/edu/setokk/astrocluster/cluster/proto</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.basedir}/target/protoc-classes-ac/edu/setokk/astrocluster/cluster/proto</directory>
+                                    <includes>
+                                        <include>**/*.java</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- DELETE PROTO GENERATED FILES FROM THEIR ORIGIN DIRECTORY -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.8</version>
+                <executions>
+                    <execution>
+                        <id>delete-protoc-classes-directory</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <delete dir="${project.basedir}/target/protoc-classes-ac/edu/setokk/astrocluster/cluster/proto"/>
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
-
 </project>

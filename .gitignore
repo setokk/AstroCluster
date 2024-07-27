@@ -1,3 +1,6 @@
+### Main project ###
+/.idea/
+
 ### Cluster ###
 cluster/clustering/
 cluster/projects/
@@ -8,6 +11,8 @@ server/target/
 server/!.mvn/wrapper/maven-wrapper.jar
 server/!**/src/main/**/target/
 server/!**/src/test/**/target/
+server/projects/
+server/.idea/
 
 ### IntelliJ IDEA ###
 server/.idea

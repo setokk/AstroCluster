@@ -1,8 +1,8 @@
 syntax = "proto3";
 
 option java_multiple_files = true;
-option java_package = "edu.setokk.astrocluster";
-option java_outer_classname = "ClusterProto";
+option java_package = "edu.setokk.astrocluster.cluster.proto";
+option java_outer_classname = "ClusterStubGrpc";
 
 package cluster.proto;
 
