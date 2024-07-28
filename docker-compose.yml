@@ -1,0 +1,45 @@
+version: "3.8"
+services:
+  db:
+    container_name: "ac-db"
+    image: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data_ac_cluster:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "root!238Ji*"
+      POSTGRES_DB: "cluster"
+
+  clusterservice:
+    container_name: "ac-cluster-service"
+    build:
+      context: ./cluster
+      dockerfile: Dockerfile
+    ports:
+      - "50051:50051"
+
+  server:
+    container_name: "ac-server"
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+      args:
+        MAVEN_PROFILES: "${AC_MAVEN_PROFILES}"
+    ports:
+      - "8080:8080"
+    environment:
+      spring.datasource.url: "jdbc:postgresql://db:5432/cluster"
+      MAVEN_PROFILES: "${AC_MAVEN_PROFILES}"
+
+  client:
+    container_name: "ac-client"
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    ports:
+      - "4200:4200"
+
+volumes:
+  pg_data_ac_cluster:

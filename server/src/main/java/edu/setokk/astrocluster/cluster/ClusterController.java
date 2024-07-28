@@ -2,6 +2,7 @@ package edu.setokk.astrocluster.cluster;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,8 +17,8 @@ public class ClusterController {
         this.clusterService = clusterService;
     }
 
-    public ResponseEntity<?> performClustering(@RequestParam String gitUrl) throws IOException, InterruptedException {
-        clusterService.performClustering(gitUrl);
+    public ResponseEntity<?> performClustering(@RequestBody ClusterRequestBody requestBody) throws IOException, InterruptedException {
+        clusterService.performClustering(requestBody);
 
         return ResponseEntity.ok(null);
     }
