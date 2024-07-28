@@ -103,28 +103,20 @@ def get_pca_embeddings(embeddings, n_components: int):
 
 # Function to display and save performance metrics
 def calc_performance_metrics(X, Y_pred) -> dict:
-    metrics_dict = {}
-
-    # Silhouette Score
-    metrics_dict['Silhouette Score'] = silhouette_score(X, Y_pred)
-
-    # Calinski-Harabasz Index
-    metrics_dict['Calinski-Harabasz Index'] = calinski_harabasz_score(X, Y_pred)
-
-    # Davies-Bouldin Index
-    metrics_dict['Davies-Bouldin Index'] = davies_bouldin_score(X, Y_pred)
-
+    metrics_dict = {'Silhouette Score': silhouette_score(X, Y_pred),
+                    'Calinski-Harabasz Index': calinski_harabasz_score(X, Y_pred),
+                    'Davies-Bouldin Index': davies_bouldin_score(X, Y_pred)}
     return metrics_dict
 
 if __name__ == '__main__':
     # Validate arguments
     is_valid, project_language, project_path, file_extensions = validate_arguments(sys.argv)
-    if (not is_valid):
+    if not is_valid:
         print('Error in input, exiting...')
         exit(1)
 
     # Check for language support
-    if (project_language not in SUPPORTED_LANGUAGES):
+    if project_language not in SUPPORTED_LANGUAGES:
         print(f'Support for language"{project_language}" does not exist. List of supported languages:\n')
         for language in SUPPORTED_LANGUAGES.keys:
             print(f'\t{language}')
@@ -175,9 +167,7 @@ if __name__ == '__main__':
         # Here we declare a list that holds:
         # a) original embeddings
         # b) pca embeddings
-        embeddings_list = []
-        embeddings_list.append(embeddings)
-        embeddings_list.append(pca_embeddings)
+        embeddings_list = [embeddings, pca_embeddings]
 
         # Show variance plot to find out the optimal n_components
         #show_pca_variance_plot(embeddings)
