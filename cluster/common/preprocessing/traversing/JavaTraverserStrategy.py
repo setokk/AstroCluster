@@ -9,6 +9,7 @@ class JavaTraverserStrategy(TraverserStrategy):
     def check_file_name(self, file_path: str, valid_extensions: str) -> bool:
         return (re.search(valid_extensions, file_path) and 
                 file_path.find('module-info.java') == -1 and
+                file_path.find('package-info.java') == -1 and
                 file_path.find('Test') == -1 and 
                 file_path.find('test') == -1)
 
