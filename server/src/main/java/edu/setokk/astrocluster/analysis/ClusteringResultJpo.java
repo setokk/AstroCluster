@@ -1,5 +1,6 @@
 package edu.setokk.astrocluster.analysis;
 
+import edu.setokk.astrocluster.util.StringUtils;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,7 +24,7 @@ public class ClusteringResultJpo {
     @SequenceGenerator(
             name = "clusteringResultSeqGen",
             sequenceName = "clustering_result_seq",
-            allocationSize = 10
+            allocationSize = 1
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
@@ -38,7 +39,14 @@ public class ClusteringResultJpo {
     @Column(name = "similarity_score", nullable = false)
     private String similarityScore;
 
+    @Column(name = "cluster_label", nullable = false)
+    private String clusterLabel;
+
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "analysis_id", nullable = false)
     private AnalysisJpo analysis;
+
+    public String getFileName() {
+        return StringUtils.splitByAndGetLast(filePath, "[\\\\/]");
+    }
 }

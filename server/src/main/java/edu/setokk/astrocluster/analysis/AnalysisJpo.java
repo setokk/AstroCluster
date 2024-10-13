@@ -1,5 +1,6 @@
 package edu.setokk.astrocluster.analysis;
 
+import edu.setokk.astrocluster.util.StringUtils;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,18 +29,26 @@ public class AnalysisJpo {
     @SequenceGenerator(
             name = "analysisSeqGen",
             sequenceName = "analysis_seq",
-            allocationSize = 10
+            allocationSize = 2
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
             generator = "analysisSeqGen"
     )
-    @Column(name = "id", updatable = false)
+    @Column(name = "id", updatable = false, nullable = false)
     private Long id;
 
-    @Column(name = "project_uuid", updatable = false)
+    @Column(name = "project_uuid", updatable = false, nullable = false)
     private String projectUUID;
+
+    @Column(name = "git_url", updatable = false, nullable = false)
+    private String gitUrl;
 
     @OneToMany(mappedBy = "analysis", orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<ClusteringResultJpo> clusteringResults;
+
+    public String getGitProjectName() {
+        String splitGitUrl = StringUtils.splitByAndGetLast(gitUrl, "\\/");
+        return StringUtils.splitByAndGetFirst(splitGitUrl, "\\."); // Remove .git
+    }
 }

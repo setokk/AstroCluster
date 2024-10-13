@@ -3,10 +3,8 @@ package edu.setokk.astrocluster.cluster;
 import edu.setokk.astrocluster.cluster.proto.ClusterRequest;
 import edu.setokk.astrocluster.cluster.proto.ClusterResponse;
 import edu.setokk.astrocluster.cluster.proto.ClusterServiceGrpc;
-import edu.setokk.astrocluster.cluster.proto.ClusterStubGrpc;
-import edu.setokk.astrocluster.error.exception.BusinessLogicException;
+import edu.setokk.astrocluster.error.BusinessLogicException;
 import io.grpc.ManagedChannel;
-import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -18,11 +16,11 @@ import java.util.UUID;
 @Service
 public class ClusterService {
 
-    private final ClusterServiceGrpc.ClusterServiceBlockingStub blockingStub;
+    private final ClusterServiceGrpc.ClusterServiceBlockingStub clusterBlockingStub;
 
     @Autowired
     public ClusterService(ManagedChannel managedChannel) {
-        this.blockingStub = ClusterServiceGrpc.newBlockingStub(managedChannel);
+        this.clusterBlockingStub = ClusterServiceGrpc.newBlockingStub(managedChannel);
     }
 
     public void performClustering(ClusterRequestBody requestBody) throws IOException, InterruptedException {
@@ -40,7 +38,7 @@ public class ClusterService {
                 .setPath(projectPath)
                 .addAllExtensions(requestBody.getExtensions())
                 .build();
-        ClusterResponse clusterResponse = blockingStub.performClustering(clusterRequest);
+        ClusterResponse clusterResponse = clusterBlockingStub.performClustering(clusterRequest);
 
 
     }

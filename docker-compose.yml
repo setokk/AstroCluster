@@ -10,7 +10,7 @@ services:
     environment:
       POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "root!238Ji*"
-      POSTGRES_DB: "cluster"
+      POSTGRES_DB: "astrocluster"
 
   clusterservice:
     container_name: "ac-cluster-service"
@@ -30,7 +30,7 @@ services:
     ports:
       - "8080:8080"
     environment:
-      spring.datasource.url: "jdbc:postgresql://db:5432/cluster"
+      spring.datasource.url: "jdbc:postgresql://db:5432/astrocluster"
       MAVEN_PROFILES: "${AC_MAVEN_PROFILES}"
 
   client:
