@@ -3,7 +3,6 @@ package edu.setokk.astrocluster.cluster;
 import edu.setokk.astrocluster.error.AstroConstraintViolation;
 import edu.setokk.astrocluster.interfaces.IValidatable;
 import jakarta.validation.ConstraintViolation;
-import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,17 +24,13 @@ public class ClusterRequestBody implements IValidatable {
     private String lang;
     @NotNull(message = "extensions field is mandatory")
     private List<String> extensions;
-    private Set<ConstraintViolation<IValidatable>> violations = HashSet.newHashSet(0);
 
     @Override
-    public void prepareViolations() {
+    public Set<? extends ConstraintViolation<IValidatable>> prepareViolations() {
+        var violations = new HashSet<ConstraintViolation<IValidatable>>();
         if (extensions.isEmpty()) {
             violations.add(new AstroConstraintViolation<>("extensions must have at least one element", this, "extensions"));
         }
-    }
-
-    @Override
-    public Set<? extends ConstraintViolation<IValidatable>> violations() {
         return violations;
     }
 }
