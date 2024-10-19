@@ -14,7 +14,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -33,7 +32,7 @@ public class GlobalExceptionHandler {
                 .getFieldErrors()
                 .stream()
                 .map(FieldError::getDefaultMessage)
-                .collect(Collectors.toList());
+                .toList();
 
         return new ResponseEntity<>(createErrorsMap(errors), HttpHeaders.EMPTY, HttpStatus.BAD_REQUEST);
     }
@@ -43,7 +42,7 @@ public class GlobalExceptionHandler {
         Set<ConstraintViolation<?>> violations = e.getConstraintViolations();
         List<String> errors = violations.stream()
                 .map(ConstraintViolation::getMessage)
-                .collect(Collectors.toList());
+                .toList();
 
         return new ResponseEntity<>(createErrorsMap(errors), HttpHeaders.EMPTY, HttpStatus.BAD_REQUEST);
     }

@@ -4,6 +4,7 @@ import edu.setokk.astrocluster.cluster.proto.ClusterRequest;
 import edu.setokk.astrocluster.cluster.proto.ClusterResponse;
 import edu.setokk.astrocluster.cluster.proto.ClusterServiceGrpc;
 import edu.setokk.astrocluster.error.BusinessLogicException;
+import edu.setokk.astrocluster.util.IOUtils;
 import io.grpc.ManagedChannel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,10 +25,7 @@ public class ClusterService {
     }
 
     public void performClustering(ClusterRequestBody requestBody) throws IOException, InterruptedException {
-        // Create a unique dir using UUID
-        String projectPath = System.getProperty("user.dir") + File.separator + "projects" + File.separator + UUID.randomUUID();
-
-        // Clone the git repo in that folder
+        String projectPath = IOUtils.PROJECTS_DIR + UUID.randomUUID();
         Process gcProcess = Runtime.getRuntime().exec(new String[]{"git", "clone", requestBody.getGitUrl(), projectPath});
         if (gcProcess.waitFor() != 0)
             throw new BusinessLogicException(HttpStatus.INTERNAL_SERVER_ERROR, "Git clone failed for url: \""+requestBody.getGitUrl()+"\"");
@@ -39,7 +37,5 @@ public class ClusterService {
                 .addAllExtensions(requestBody.getExtensions())
                 .build();
         ClusterResponse clusterResponse = clusterBlockingStub.performClustering(clusterRequest);
-
-
     }
 }

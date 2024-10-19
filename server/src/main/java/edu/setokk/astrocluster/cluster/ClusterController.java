@@ -21,7 +21,7 @@ public class ClusterController {
 
     @PostMapping("/perform-clustering")
     public ResponseEntity<?> performClustering(@RequestBody ClusterRequestBody requestBody) throws IOException, InterruptedException {
-        requestBody.validateAndThrowErrors();
+        requestBody.validate();
         clusterService.performClustering(requestBody);
         return ResponseEntity.ok(null);
     }

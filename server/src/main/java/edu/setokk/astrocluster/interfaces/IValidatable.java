@@ -6,7 +6,7 @@ import jakarta.validation.ConstraintViolationException;
 import java.util.Set;
 
 public interface IValidatable {
-    default void validateAndThrowErrors() {
+    default void validate() {
         var violations = prepareViolations();
         if (!violations.isEmpty()) {
             throw new ConstraintViolationException(violations);
