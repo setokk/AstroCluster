@@ -296,7 +296,7 @@ class TripletDataset(Dataset):
         return anchor_ids.squeeze(0), positive_ids.squeeze(0), negative_ids.squeeze(0)
 
 
-def load_datasets(anchors_path, positives_path, negatives_path, delimiter=r'\s*```[@]```\s*', regex=r'[0-9]+\s*:\s*{(.*)}'):
+def load_datasets(anchors_path, positives_path, negatives_path, delimiter=r'```[@]```', regex=r'[0-9]+\s*:\s*{(.*)}'):
     files_contents = []
     paths = [anchors_path, positives_path, negatives_path]
     for path in paths:
@@ -311,7 +311,7 @@ def load_datasets(anchors_path, positives_path, negatives_path, delimiter=r'\s*`
                         file_code_contents.append(code_content)
         except Exception as e:
             print(f'Error reading file in path: {path}\nError: {e}\n')
-            
+
         files_contents.append(file_code_contents)
     return files_contents[0], files_contents[1], files_contents[2]
 
@@ -351,6 +351,16 @@ train_dataloader = DataLoader(train_dataset, batch_size=8, shuffle=True)
 optimizer = AdamW(model.parameters(), lr=1e-5, weight_decay=0.01)
 train_model(model, train_dataloader, optimizer, triplet_loss_fn, num_epochs=3)
 
-model.save_pretrained('./fine_tuned_unixcoder')
-tokenizer.save_pretrained('./fine_tuned_unixcoder')
+# Save model
+import os
+# Define the directory to save the fine-tuned model and tokenizer
+save_directory = './fine_tuned_unixcoder'
+if not os.path.exists(save_directory):
+    os.makedirs(save_directory)
 
+# Save the model state dictionary
+model_save_path = os.path.join(save_directory, 'pytorch_model.bin')
+torch.save(model.state_dict(), model_save_path)
+
+# Save the tokenizer
+tokenizer.save_pretrained(save_directory)
