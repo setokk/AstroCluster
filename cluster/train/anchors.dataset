@@ -51,8 +51,7 @@
             }
         }
     ```[@]```
-}
-
+},
 2: {
     ```[@]```
         package com.example.demo.services;
@@ -99,8 +98,7 @@
             }
         }
     ```[@]```
-}
-
+},
 3: {
     ```[@]```
         package com.example.demo.repositories;
