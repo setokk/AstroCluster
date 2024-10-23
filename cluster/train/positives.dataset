@@ -1,5 +1,4 @@
 1: {
-    ```[@]```
     package com.example.demo.controllers;
 
     import com.example.demo.models.Product;
@@ -50,10 +49,9 @@
             return ResponseEntity.ok(products);
         }
     }
-    ```[@]```
-},
+}
+```[@]```
 2: {
-    ```[@]```
     package com.example.demo.services;
     
     import com.example.demo.models.Product;
@@ -97,10 +95,9 @@
             productRepository.deleteById(id);
         }
     }
-    ```[@]```
-},
+}
+```[@]```
 3: {
-    ```[@]```
     package com.example.demo.repositories;
     
     import com.example.demo.models.Product;
@@ -113,10 +110,9 @@
     public interface ProductRepository extends JpaRepository<Product, Long> {
         Optional<Product> findById(Long id);
     }
-    ```[@]```
-},
+}
+```[@]```
 4: {
-    ```[@]```
     package com.example.demo.transactions;
     
     import java.math.BigDecimal;
@@ -158,10 +154,9 @@
             return transferDate;
         }
     }
-    ```[@]```
-},
+}
+```[@]```
 5: {
-    ```[@]```
     package com.example.demo.inventory;
     
     public class WarehouseItem {
@@ -194,10 +189,9 @@
             return cost;
         }
     }
-    ```[@]```
-},
+}
+```[@]```
 6: {
-    ```[@]```
     package com.example.demo.ecommerce;
     
     import java.util.List;
@@ -226,5 +220,4 @@
             return totalAmount;
         }
     }
-    ```[@]```
 }
