@@ -296,7 +296,7 @@ class TripletDataset(Dataset):
         return anchor_ids.squeeze(0), positive_ids.squeeze(0), negative_ids.squeeze(0)
 
 
-def load_dataset(anchors_path, positives_path, negatives_path, delimiter=r'\s*```[@]```\s*', regex=r'([0-9]+)\s*:\s*{(.*)}'):
+def load_datasets(anchors_path, positives_path, negatives_path, delimiter=r'\s*```[@]```\s*', regex=r'([0-9]+)\s*:\s*{(.*)}'):
     files_contents = []
     paths = [anchors_path, positives_path, negatives_path]
     for path in paths:
@@ -310,8 +310,11 @@ def load_dataset(anchors_path, positives_path, negatives_path, delimiter=r'\s*``
                         pos = matched.group(1)
                         code_content = matched.group(2)
                         file_contents.append((pos, code_content))
+                # Sort by pos (this ensures correct mapping through anchor, positive and negative datasets)
+                file_contents.sort(key=lambda x: x[0])
         except Exception as e:
             print(f'Error reading file in path: {path}\nError: {e}\n')
+            
         files_contents.append(file_contents)
     return files_contents[0], files_contents[1], files_contents[2]
 
@@ -344,7 +347,7 @@ model = UniXcoderForEmbedding(model_name).to(device)
 tokenizer = RobertaTokenizer.from_pretrained(model_name)
 triplet_loss_fn = TripletLoss(margin=1.0)
 
-anchor_contents, positive_contents, negative_contents = load_dataset('./anchors.dataset', './positives.dataset', 'negatives.dataset')
+anchor_contents, positive_contents, negative_contents = load_datasets('./anchors.dataset', './positives.dataset', 'negatives.dataset')
 train_dataset = TripletDataset(anchor_contents, positive_contents, negative_contents, tokenizer)
 train_dataloader = DataLoader(train_dataset, batch_size=8, shuffle=True)
 
