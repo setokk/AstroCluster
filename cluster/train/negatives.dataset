@@ -145,4 +145,122 @@
         }
     }
     ```[@]```
+},
+4: {
+    ```[@]```
+    package com.example.demo.models;
+    
+    import java.util.Date;
+    
+    public class UserAccount {
+    
+        private String accountId;
+        private String username;
+        private String email;
+        private Date createdDate;
+    
+        public UserAccount(String accountId, String username, String email, Date createdDate) {
+            this.accountId = accountId;
+            this.username = username;
+            this.email = email;
+            this.createdDate = createdDate;
+        }
+    
+        public String getAccountId() {
+            return accountId;
+        }
+    
+        public String getUsername() {
+            return username;
+        }
+    
+        public String getEmail() {
+            return email;
+        }
+    
+        public Date getCreatedDate() {
+            return createdDate;
+        }
+    }
+    ```[@]```
+},
+5: {
+    ```[@]```
+    package com.example.demo.orders;
+    
+    import java.util.Date;
+    
+    public class CustomerOrder {
+    
+        private String orderId;
+        private String customerId;
+        private Date orderDate;
+        private double totalAmount;
+    
+        public CustomerOrder(String orderId, String customerId, Date orderDate, double totalAmount) {
+            this.orderId = orderId;
+            this.customerId = customerId;
+            this.orderDate = orderDate;
+            this.totalAmount = totalAmount;
+        }
+    
+        public String getOrderId() {
+            return orderId;
+        }
+    
+        public String getCustomerId() {
+            return customerId;
+        }
+    
+        public Date getOrderDate() {
+            return orderDate;
+        }
+    
+        public double getTotalAmount() {
+            return totalAmount;
+        }
+    }
+    ```[@]```
+},
+6: {
+    ```[@]```
+    package com.example.demo.ecommerce;
+    
+    public class ProductReview {
+    
+        private String reviewId;
+        private String productId;
+        private String userId;
+        private String reviewText;
+        private int rating;
+    
+        public ProductReview(String reviewId, String productId, String userId, String reviewText, int rating) {
+            this.reviewId = reviewId;
+            this.productId = productId;
+            this.userId = userId;
+            this.reviewText = reviewText;
+            this.rating = rating;
+        }
+    
+        public String getReviewId() {
+            return reviewId;
+        }
+    
+        public String getProductId() {
+            return productId;
+        }
+    
+        public String getUserId() {
+            return userId;
+        }
+    
+        public String getReviewText() {
+            return reviewText;
+        }
+    
+        public int getRating() {
+            return rating;
+        }
+    }
+    ```[@]```
 }
