@@ -250,6 +250,7 @@ class Beam(object):
             sentence.append(tokens)
         return sentence
 
+import re
 import torch.optim as optim
 from torch.utils.data import Dataset, DataLoader
 from transformers import AdamW
@@ -295,8 +296,24 @@ class TripletDataset(Dataset):
         return anchor_ids.squeeze(0), positive_ids.squeeze(0), negative_ids.squeeze(0)
 
 
-def load_dataset(anchors_path, positives_path, negatives_path):
-
+def load_dataset(anchors_path, positives_path, negatives_path, delimiter=r'\s*```[@]```\s*', regex=r'([0-9]+)\s*:\s*{(.*)}'):
+    files_contents = []
+    paths = [anchors_path, positives_path, negatives_path]
+    for path in paths:
+        file_contents = []
+        try:
+            with open(path, 'r') as f:
+                file_content_split = f.read().split(delimiter)
+                for dataset_item in file_content_split:
+                    matched = re.match(regex, dataset_item.strip(), re.DOTALL)
+                    if matched:
+                        pos = matched.group(1)
+                        code_content = matched.group(2)
+                        file_contents.append((pos, code_content))
+        except Exception as e:
+            print(f'Error reading file in path: {path}\nError: {e}\n')
+        files_contents.append(file_contents)
+    return files_contents[0], files_contents[1], files_contents[2]
 
 def train_model(model, train_dataloader, optimizer, triplet_loss_fn, num_epochs=3):
     model.train()
