@@ -114,4 +114,117 @@
         Optional<Product> findById(Long id);
     }
     ```[@]```
+},
+4: {
+    ```[@]```
+    package com.example.demo.transactions;
+    
+    import java.math.BigDecimal;
+    import java.util.Date;
+    
+    public class BankTransferTransaction {
+    
+        private String transferId;
+        private String fromBankAccount;
+        private String toBankAccount;
+        private BigDecimal transferAmount;
+        private Date transferDate;
+    
+        public BankTransferTransaction(String transferId, String fromBankAccount, String toBankAccount, BigDecimal transferAmount, Date transferDate) {
+            this.transferId = transferId;
+            this.fromBankAccount = fromBankAccount;
+            this.toBankAccount = toBankAccount;
+            this.transferAmount = transferAmount;
+            this.transferDate = transferDate;
+        }
+    
+        public String getTransferId() {
+            return transferId;
+        }
+    
+        public String getFromBankAccount() {
+            return fromBankAccount;
+        }
+    
+        public String getToBankAccount() {
+            return toBankAccount;
+        }
+    
+        public BigDecimal getTransferAmount() {
+            return transferAmount;
+        }
+    
+        public Date getTransferDate() {
+            return transferDate;
+        }
+    }
+    ```[@]```
+},
+5: {
+    ```[@]```
+    package com.example.demo.inventory;
+    
+    public class WarehouseItem {
+    
+        private String warehouseItemId;
+        private String warehouseItemName;
+        private int stock;
+        private double cost;
+    
+        public WarehouseItem(String warehouseItemId, String warehouseItemName, int stock, double cost) {
+            this.warehouseItemId = warehouseItemId;
+            this.warehouseItemName = warehouseItemName;
+            this.stock = stock;
+            this.cost = cost;
+        }
+    
+        public String getWarehouseItemId() {
+            return warehouseItemId;
+        }
+    
+        public String getWarehouseItemName() {
+            return warehouseItemName;
+        }
+    
+        public int getStock() {
+            return stock;
+        }
+    
+        public double getCost() {
+            return cost;
+        }
+    }
+    ```[@]```
+},
+6: {
+    ```[@]```
+    package com.example.demo.ecommerce;
+    
+    import java.util.List;
+    
+    public class Order {
+    
+        private String orderId;
+        private List<String> orderItems;
+        private double totalAmount;
+    
+        public Order(String orderId, List<String> orderItems, double totalAmount) {
+            this.orderId = orderId;
+            this.orderItems = orderItems;
+            this.totalAmount = totalAmount;
+        }
+    
+        public String getOrderId() {
+            return orderId;
+        }
+    
+        public List<String> getOrderItems() {
+            return orderItems;
+        }
+    
+        public double getTotalAmount() {
+            return totalAmount;
+        }
+    }
+    ```[@]```
 }
