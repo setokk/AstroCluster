@@ -1,5 +1,4 @@
 1: {
-    ```[@]```
     package com.example.demo.services;
     
     import com.example.demo.models.User;
@@ -44,10 +43,9 @@
             return userRepository.findAll();
         }
     }
-    ```[@]```
-},
+}
+```[@]```
 2: {
-    ```[@]```
     package com.example.demo.controllers;
     
     import com.example.demo.models.Order;
@@ -98,10 +96,9 @@
             return ResponseEntity.ok(orders);
         }
     }
-    ```[@]```
-},
+}
+```[@]```
 3: {
-    ```[@]```
     package com.example.demo.services;
     
     import com.example.demo.models.Order;
@@ -144,10 +141,9 @@
             orderRepository.deleteById(id);
         }
     }
-    ```[@]```
-},
+}
+```[@]```
 4: {
-    ```[@]```
     package com.example.demo.models;
     
     import java.util.Date;
@@ -182,10 +178,9 @@
             return createdDate;
         }
     }
-    ```[@]```
-},
+}
+```[@]```
 5: {
-    ```[@]```
     package com.example.demo.orders;
     
     import java.util.Date;
@@ -220,10 +215,9 @@
             return totalAmount;
         }
     }
-    ```[@]```
-},
+}
+```[@]```
 6: {
-    ```[@]```
     package com.example.demo.ecommerce;
     
     public class ProductReview {
@@ -262,5 +256,4 @@
             return rating;
         }
     }
-    ```[@]```
 }
