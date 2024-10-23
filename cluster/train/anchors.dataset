@@ -115,3 +115,125 @@
         }
     ```[@]```
 }
+4: {
+    ```[@]```
+    package com.example.demo.transactions;
+    
+    import java.math.BigDecimal;
+    import java.util.Date;
+    
+    public class PaymentTransaction {
+    
+        private String transactionId;
+        private String senderAccountId;
+        private String receiverAccountId;
+        private BigDecimal amount;
+        private Date transactionDate;
+    
+        public PaymentTransaction(String transactionId, String senderAccountId, String receiverAccountId, BigDecimal amount, Date transactionDate) {
+            this.transactionId = transactionId;
+            this.senderAccountId = senderAccountId;
+            this.receiverAccountId = receiverAccountId;
+            this.amount = amount;
+            this.transactionDate = transactionDate;
+        }
+    
+        public String getTransactionId() {
+            return transactionId;
+        }
+    
+        public String getSenderAccountId() {
+            return senderAccountId;
+        }
+    
+        public String getReceiverAccountId() {
+            return receiverAccountId;
+        }
+    
+        public BigDecimal getAmount() {
+            return amount;
+        }
+    
+        public Date getTransactionDate() {
+            return transactionDate;
+        }
+    }
+    ```[@]```
+},
+5: {
+    ```[@]```
+    package com.example.demo.inventory;
+    
+    public class InventoryItem {
+    
+        private String itemId;
+        private String itemName;
+        private int quantity;
+        private double price;
+    
+        public InventoryItem(String itemId, String itemName, int quantity, double price) {
+            this.itemId = itemId;
+            this.itemName = itemName;
+            this.quantity = quantity;
+            this.price = price;
+        }
+    
+        public String getItemId() {
+            return itemId;
+        }
+    
+        public String getItemName() {
+            return itemName;
+        }
+    
+        public int getQuantity() {
+            return quantity;
+        }
+    
+        public double getPrice() {
+            return price;
+        }
+    }
+    ```[@]```
+},
+6: {
+    ```[@]```
+    package com.example.demo.ecommerce;
+    
+    import java.util.ArrayList;
+    import java.util.List;
+    
+    public class ShoppingCart {
+    
+        private String cartId;
+        private List<String> items;
+        private double total;
+    
+        public ShoppingCart(String cartId) {
+            this.cartId = cartId;
+            this.items = new ArrayList<>();
+            this.total = 0.0;
+        }
+    
+        public void addItem(String item) {
+            items.add(item);
+        }
+    
+        public void removeItem(String item) {
+            items.remove(item);
+        }
+    
+        public List<String> getItems() {
+            return items;
+        }
+    
+        public double getTotal() {
+            return total;
+        }
+    
+        public void calculateTotal(double itemPrice) {
+            total += itemPrice;
+        }
+    }
+    ```[@]```
+}
