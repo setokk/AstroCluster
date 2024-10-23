@@ -1,0 +1,148 @@
+1: {
+    ```[@]```
+    package com.example.demo.services;
+    
+    import com.example.demo.models.User;
+    import com.example.demo.repositories.UserRepository;
+    import org.springframework.stereotype.Service;
+    
+    import java.util.List;
+    import java.util.Optional;
+    
+    @Service
+    public class UserService {
+    
+        private final UserRepository userRepository;
+    
+        public UserService(UserRepository userRepository) {
+            this.userRepository = userRepository;
+        }
+    
+        public User findUserById(Long id) {
+            Optional<User> user = userRepository.findById(id);
+            return user.orElse(null);
+        }
+    
+        public User saveUser(User user) {
+            return userRepository.save(user);
+        }
+    
+        public User updateUser(Long id, User userDetails) {
+            User user = findUserById(id);
+            if (user != null) {
+                user.setName(userDetails.getName());
+                return userRepository.save(user);
+            }
+            return null;
+        }
+    
+        public void deleteUser(Long id) {
+            userRepository.deleteById(id);
+        }
+    
+        public List<User> getAllUsers() {
+            return userRepository.findAll();
+        }
+    }
+    ```[@]```
+},
+2: {
+    ```[@]```
+    package com.example.demo.controllers;
+    
+    import com.example.demo.models.Order;
+    import com.example.demo.services.OrderService;
+    import org.springframework.http.HttpStatus;
+    import org.springframework.http.ResponseEntity;
+    import org.springframework.web.bind.annotation.*;
+    
+    import java.util.List;
+    
+    @RestController
+    @RequestMapping("/orders")
+    public class OrderController {
+    
+        private final OrderService orderService;
+    
+        public OrderController(OrderService orderService) {
+            this.orderService = orderService;
+        }
+    
+        @GetMapping("/{id}")
+        public ResponseEntity<Order> getOrder(@PathVariable Long id) {
+            Order order = orderService.findOrderById(id);
+            return order != null ? ResponseEntity.ok(order) : ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    
+        @PostMapping
+        public ResponseEntity<Order> createOrder(@RequestBody Order order) {
+            Order newOrder = orderService.saveOrder(order);
+            return ResponseEntity.status(HttpStatus.CREATED).body(newOrder);
+        }
+    
+        @PutMapping("/{id}")
+        public ResponseEntity<Order> updateOrder(@PathVariable Long id, @RequestBody Order orderDetails) {
+            Order updatedOrder = orderService.updateOrder(id, orderDetails);
+            return updatedOrder != null ? ResponseEntity.ok(updatedOrder) : ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    
+        @DeleteMapping("/{id}")
+        public ResponseEntity<Void> deleteOrder(@PathVariable Long id) {
+            orderService.deleteOrder(id);
+            return ResponseEntity.noContent().build();
+        }
+    
+        @GetMapping
+        public ResponseEntity<List<Order>> getAllOrders() {
+            List<Order> orders = orderService.getAllOrders();
+            return ResponseEntity.ok(orders);
+        }
+    }
+    ```[@]```
+},
+3: {
+    ```[@]```
+    package com.example.demo.services;
+    
+    import com.example.demo.models.Order;
+    import com.example.demo.repositories.OrderRepository;
+    import org.springframework.stereotype.Service;
+    
+    import java.util.List;
+    
+    @Service
+    public class OrderService {
+    
+        private final OrderRepository orderRepository;
+    
+        public OrderService(OrderRepository orderRepository) {
+            this.orderRepository = orderRepository;
+        }
+    
+        public Order findOrderById(Long id) {
+            return orderRepository.findById(id).orElse(null);
+        }
+    
+        public List<Order> getAllOrders() {
+            return orderRepository.findAll();
+        }
+    
+        public Order saveOrder(Order order) {
+            return orderRepository.save(order);
+        }
+    
+        public Order updateOrder(Long id, Order orderDetails) {
+            Order existingOrder = findOrderById(id);
+            if (existingOrder != null) {
+                existingOrder.setTotal(orderDetails.getTotal());
+                return orderRepository.save(existingOrder);
+            }
+            return null;
+        }
+    
+        public void deleteOrder(Long id) {
+            orderRepository.deleteById(id);
+        }
+    }
+    ```[@]```
+}
