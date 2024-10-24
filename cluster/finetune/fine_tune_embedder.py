@@ -344,7 +344,7 @@ model = UniXcoderForEmbedding(model_name).to(device)
 tokenizer = RobertaTokenizer.from_pretrained(model_name)
 triplet_loss_fn = TripletLoss(margin=1.0)
 
-anchor_contents, positive_contents, negative_contents = load_datasets('./anchors.acds', './positives.acds', 'negatives.acds')
+anchor_contents, positive_contents, negative_contents = load_datasets('./anchors.acds', './positives.acds', './negatives.acds')
 train_dataset = TripletDataset(anchor_contents, positive_contents, negative_contents, tokenizer)
 train_dataloader = DataLoader(train_dataset, batch_size=8, shuffle=True)
 
