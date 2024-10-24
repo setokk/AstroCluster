@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Arrays;
 import java.util.Optional;
 
+import lombok.Getter;
+
 @Getter
 public enum SupportedLanguages {
 	JAVA("java", Arrays.asList("java"));
