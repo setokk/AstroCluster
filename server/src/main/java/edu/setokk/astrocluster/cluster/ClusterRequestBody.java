@@ -2,6 +2,7 @@ package edu.setokk.astrocluster.cluster;
 
 import edu.setokk.astrocluster.error.AstroConstraintViolation;
 import edu.setokk.astrocluster.interfaces.IValidatable;
+import edu.setokk.astrocluster.util.SupportedLanguages;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -32,5 +33,12 @@ public class ClusterRequestBody implements IValidatable {
             violations.add(new AstroConstraintViolation<>("extensions must have at least one element", this, "extensions"));
         }
         return violations;
+    }
+
+    @Override
+    public void postValidate() {
+        if (extensions.isEmpty()) {
+            extensions = SupportedLanguages.get(lang).getBasicExtensions();
+        }
     }
 }
