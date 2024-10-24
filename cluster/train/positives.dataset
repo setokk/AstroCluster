@@ -221,3 +221,179 @@
         }
     }
 }
+```[@]```
+7: {
+    package com.example.demo.auth;
+    
+    public class AdminLogin {
+    
+        private String adminUsername;
+        private String adminPassword;
+    
+        public AdminLogin(String adminUsername, String adminPassword) {
+            this.adminUsername = adminUsername;
+            this.adminPassword = adminPassword;
+        }
+    
+        public String getAdminUsername() {
+            return adminUsername;
+        }
+    
+        public String getAdminPassword() {
+            return adminPassword;
+        }
+    }
+}
+```[@]```
+8: {
+    package com.example.demo.socialmedia;
+    
+    public class Comment {
+    
+        private String commentId;
+        private String postId;
+        private String userId;
+        private String text;
+    
+        public Comment(String commentId, String postId, String userId, String text) {
+            this.commentId = commentId;
+            this.postId = postId;
+            this.userId = userId;
+            this.text = text;
+        }
+    
+        public String getCommentId() {
+            return commentId;
+        }
+    
+        public String getPostId() {
+            return postId;
+        }
+    
+        public String getUserId() {
+            return userId;
+        }
+    
+        public String getText() {
+            return text;
+        }
+    }
+}
+```[@]```
+9: {
+    package com.example.demo.education;
+    
+    import java.util.List;
+    
+    public class Module {
+    
+        private String moduleId;
+        private String moduleName;
+        private List<Lesson> lessons;
+    
+        public Module(String moduleId, String moduleName, List<Lesson> lessons) {
+            this.moduleId = moduleId;
+            this.moduleName = moduleName;
+            this.lessons = lessons;
+        }
+    
+        public String getModuleId() {
+            return moduleId;
+        }
+    
+        public String getModuleName() {
+            return moduleName;
+        }
+    
+        public List<Lesson> getLessons() {
+            return lessons;
+        }
+    }
+}
+```[@]```
+10: {
+    package com.example.demo.notifications;
+    
+    public class SMSNotification {
+    
+        private String phoneNumber;
+        private String message;
+    
+        public SMSNotification(String phoneNumber, String message) {
+            this.phoneNumber = phoneNumber;
+            this.message = message;
+        }
+    
+        public String getPhoneNumber() {
+            return phoneNumber;
+        }
+    
+        public String getMessage() {
+            return message;
+        }
+    }
+}
+```[@]```
+11: {
+    package com.example.demo.payments;
+    
+    public class DebitCardPayment {
+    
+        private String debitCardNumber;
+        private String holderName;
+        private String expirationDate;
+        private double amount;
+    
+        public DebitCardPayment(String debitCardNumber, String holderName, String expirationDate, double amount) {
+            this.debitCardNumber = debitCardNumber;
+            this.holderName = holderName;
+            this.expirationDate = expirationDate;
+            this.amount = amount;
+        }
+    
+        public String getDebitCardNumber() {
+            return debitCardNumber;
+        }
+    
+        public String getHolderName() {
+            return holderName;
+        }
+    
+        public String getExpirationDate() {
+            return expirationDate;
+        }
+    
+        public double getAmount() {
+            return amount;
+        }
+    }
+}
+```[@]```
+12: {
+    package com.example.demo.ecommerce;
+    
+    public class Invoice {
+    
+        private String invoiceId;
+        private String orderId;
+        private double totalAmount;
+    
+        public Invoice(String invoiceId, String orderId, double totalAmount) {
+            this.invoiceId = invoiceId;
+            this.orderId = orderId;
+            this.totalAmount = totalAmount;
+        }
+    
+        public String getInvoiceId() {
+            return invoiceId;
+        }
+    
+        public String getOrderId() {
+            return orderId;
+        }
+    
+        public double getTotalAmount() {
+            return totalAmount;
+        }
+    }
+}
