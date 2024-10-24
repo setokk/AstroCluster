@@ -257,3 +257,173 @@
         }
     }
 }
+```[@]```
+7: {
+    package com.example.demo.accounts;
+    
+    public class CustomerAccount {
+    
+        private String accountId;
+        private String email;
+        private String phoneNumber;
+    
+        public CustomerAccount(String accountId, String email, String phoneNumber) {
+            this.accountId = accountId;
+            this.email = email;
+            this.phoneNumber = phoneNumber;
+        }
+    
+        public String getAccountId() {
+            return accountId;
+        }
+    
+        public String getEmail() {
+            return email;
+        }
+    
+        public String getPhoneNumber() {
+            return phoneNumber;
+        }
+    }
+}
+```[@]```
+8: {
+    package com.example.demo.socialmedia;
+    
+    public class UserProfile {
+    
+        private String userId;
+        private String name;
+        private String bio;
+    
+        public UserProfile(String userId, String name, String bio) {
+            this.userId = userId;
+            this.name = name;
+            this.bio = bio;
+        }
+    
+        public String getUserId() {
+            return userId;
+        }
+    
+        public String getName() {
+            return name;
+        }
+    
+        public String getBio() {
+            return bio;
+        }
+    }
+}
+```[@]```
+9: {
+    package com.example.demo.education;
+    
+    import java.util.List;
+    
+    public class Quiz {
+    
+        private String quizId;
+        private String moduleId;
+        private List<String> questions;
+    
+        public Quiz(String quizId, String moduleId, List<String> questions) {
+            this.quizId = quizId;
+            this.moduleId = moduleId;
+            this.questions = questions;
+        }
+    
+        public String getQuizId() {
+            return quizId;
+        }
+    
+        public String getModuleId() {
+            return moduleId;
+        }
+    
+        public List<String> getQuestions() {
+            return questions;
+        }
+    }
+}
+```[@]```
+10: {
+    package com.example.demo.notifications;
+    
+    public class PushNotification {
+    
+        private String deviceId;
+        private String notificationMessage;
+    
+        public PushNotification(String deviceId, String notificationMessage) {
+            this.deviceId = deviceId;
+            this.notificationMessage = notificationMessage;
+        }
+    
+        public String getDeviceId() {
+            return deviceId;
+        }
+    
+        public String getNotificationMessage() {
+            return notificationMessage;
+        }
+    }
+}
+```[@]```
+11: {
+    package com.example.demo.payments;
+    
+    public class BankAccount {
+    
+        private String accountNumber;
+        private String bankName;
+        private String accountHolderName;
+    
+        public BankAccount(String accountNumber, String bankName, String accountHolderName) {
+            this.accountNumber = accountNumber;
+            this.bankName = bankName;
+            this.accountHolderName = accountHolderName;
+        }
+    
+        public String getAccountNumber() {
+            return accountNumber;
+        }
+    
+        public String getBankName() {
+            return bankName;
+        }
+    
+        public String getAccountHolderName() {
+            return accountHolderName;
+        }
+    }
+}
+```[@]```
+12: {
+    package com.example.demo.ecommerce;
+    
+    public class Product {
+    
+        private String productId;
+        private String productName;
+        private double price;
+    
+        public Product(String productId, String productName, double price) {
+            this.productId = productId;
+            this.productName = productName;
+            this.price = price;
+        }
+    
+        public String getProductId() {
+            return productId;
+        }
+    
+        public String getProductName() {
+            return productName;
+        }
+    
+        public double getPrice() {
+            return price;
+        }
+    }
+}
