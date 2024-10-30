@@ -15,15 +15,26 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * This class is used to handle all business logic exceptions thrown by the application at runtime. 
+ * Its purpose is to eliminate 'try catches' and not complicate error handling on the controller side.
+ * When an exception is thrown it goes through the handler. 
+ * From there, we prepare the error message(s) and send them to the client.
+ */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+    /**
+     * Catches and handles {@link BusinessLogicException} exceptions
+     * @param e the {@link BusinessLogicException} exception that was thrown
+     */
     @ExceptionHandler(BusinessLogicException.class)
     public ResponseEntity<ErrorMessage> handleBusinessLogicException(BusinessLogicException e) {
         return new ResponseEntity<>(createErrorsMap(e.getErrorMessages()), e.getHttpStatus());
     }
 
     /**
-     * Catches and handles 'MethodArgumentNotValidException' exceptions (from jakarta constraints)
+     * Catches and handles {@link MethodArgumentNotValidException} exceptions (from jakarta constraints)
+     * @param e the {@link MethodArgumentNotValidException} exception that was thrown
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, List<String>>> handleValidation(MethodArgumentNotValidException e) {
@@ -36,6 +47,10 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(createErrorsMap(errors), HttpHeaders.EMPTY, HttpStatus.BAD_REQUEST);
     }
 
+    /**
+     * Catches and handles {@link ConstraintViolationException} exceptions (from jakarta constraints)
+     * @param e the {@link ConstraintViolationException} exception that was thrown
+     */
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<Map<String, List<String>>> handleConstraintViolation(ConstraintViolationException e) {
         Set<ConstraintViolation<?>> violations = e.getConstraintViolations();
