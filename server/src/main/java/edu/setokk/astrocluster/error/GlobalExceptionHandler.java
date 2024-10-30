@@ -19,8 +19,7 @@ import java.util.Set;
 public class GlobalExceptionHandler {
     @ExceptionHandler(BusinessLogicException.class)
     public ResponseEntity<ErrorMessage> handleBusinessLogicException(BusinessLogicException e) {
-        ErrorMessage error = new ErrorMessage(e.getMessage(), e.getHttpStatus().value());
-        return new ResponseEntity<>(error, e.getHttpStatus());
+        return new ResponseEntity<>(createErrorsMap(e.getErrorMessages()), e.getHttpStatus());
     }
 
     /**

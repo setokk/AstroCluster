@@ -1,8 +1,9 @@
 package edu.setokk.astrocluster.cluster;
 
-import edu.setokk.astrocluster.error.AstroConstraintViolation;
-import edu.setokk.astrocluster.interfaces.IValidatable;
+import edu.setokk.astrocluster.error.IValidatable;
 import edu.setokk.astrocluster.util.SupportedLanguages;
+import edu.setokk.astrocluster.error.BusinessLogicException;
+import org.springframework.http.HttpStatus;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -27,18 +28,25 @@ public class ClusterRequestBody implements IValidatable {
     private List<String> extensions;
 
     @Override
-    public Set<? extends ConstraintViolation<IValidatable>> prepareViolations() {
-        var violations = new HashSet<ConstraintViolation<IValidatable>>();
+    public void prepareErrors() throws BusinessLogicException {
+        BusinessLogicException e = new BusinessLogicException(HttpStatus.BAD_REQUEST);
         if (extensions.isEmpty()) {
-            violations.add(new AstroConstraintViolation<>("extensions must have at least one element", this, "extensions"));
+            e.addErrorMessage("'extensions' field is mandatory");
         }
-        return violations;
+        if (e.hasErrorMessages()) throw e;
     }
 
     @Override
-    public void postValidate() {
+    public void postValidate() throws BusinessLogicException {
+        BusinessLogicException e = new BusinessLogicException(HttpStatus.BAD_REQUEST);
         if (extensions.isEmpty()) {
-            extensions = SupportedLanguages.get(lang).getBasicExtensions();
+            var supportedLanguage = SupportedLanguages.get(lang);
+            if (supportedLanguage.isPresent()) {
+                extensions = SupportedLanguages.get(lang).getBasicExtensions();
+            } else {
+                e.addErrorMessage("'lang' field=" + lang + " is not supported.");
+            }
         }
+        if (e.hasErrorMessages()) throw e;
     }
 }
