@@ -251,7 +251,6 @@ class Beam(object):
         return sentence
 
 import re
-import torch.optim as optim
 from torch.utils.data import Dataset, DataLoader
 from transformers import AdamW
 

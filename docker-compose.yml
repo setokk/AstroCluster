@@ -43,3 +43,4 @@ services:
 
 volumes:
   pg_data_ac_cluster:
+    name: "pg_data_ac_cluster"

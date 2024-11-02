@@ -17,6 +17,11 @@ List of available options:
 END
 )
 
+# Colors for terminal
+BLUE='\033[0;34m'
+RED='\033[0;31m'
+NC='\033[0m'
+
 SKIP_UI=false
 SKIP_SERVER=false
 SKIP_GRPC=false
@@ -53,7 +58,10 @@ if [ $SKIP_AC = false ]; then
     SERVICES_TO_BUILD+=("clusterservice")
 fi
 if [ $SKIP_DB = false ]; then
-    SERVICES_TO_BUILD+=("db")    
+    SERVICES_TO_BUILD+=("db")
+    # Undeploy DB and remove docker volume with DB data
+    sudo docker stop ac-db && sudo docker rm ac-db
+    sudo docker volume rm pg_data_ac_cluster
 fi
 if [ $SKIP_SERVER = false ]; then
     SERVICES_TO_BUILD+=("server")
@@ -63,8 +71,8 @@ if [ $SKIP_UI = false ]; then
 fi
 
 if [ "${#SERVICES_TO_BUILD[@]}" -eq 0 ]; then
-    echo -e "Services to build cannot be zero. Please remove a --skip service argument to continue..."
+    echo -e "[${RED}BUILD ERROR${NC}]: Services to build cannot be zero. Please remove a --skip flag to continue..."
     exit 1
 fi
-echo -e "Building ${SERVICES_TO_BUILD[@]}"
+echo -e "[${BLUE}BUILD INFO${NC}]: Building ${SERVICES_TO_BUILD[@]}"
 sudo docker-compose up -d --build "${SERVICES_TO_BUILD[@]}"
