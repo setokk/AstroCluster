@@ -10,7 +10,7 @@ public class GrpcClientConfig {
 
     @Bean
     public ManagedChannel managedChannel() {
-        return ManagedChannelBuilder.forAddress("localhost", 9090)
+        return ManagedChannelBuilder.forAddress("clusterservice", 50051)
                 .usePlaintext()
                 .build();
     }
