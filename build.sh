@@ -45,12 +45,15 @@ while [[ "$#" -gt 0 ]]; do
     shift
 done
 
-# Maven profiles
-MAVEN_PROFILES=""
+# gRPC generation
+AC_MAVEN_PROFILES=""
+AC_GENERATE_GRPC=""
 if [ $SKIP_GRPC = false ]; then
-    MAVEN_PROFILES+="grpc"
+    AC_MAVEN_PROFILES+="grpc"
+    AC_GENERATE_GRPC=true
 fi
-export AC_MAVEN_PROFILES="${MAVEN_PROFILES}"
+export MAVEN_PROFILES="${AC_MAVEN_PROFILES}"
+export GENERATE_GRPC="${AC_GENERATE_GRPC}"
 
 # Services to build and deploy
 declare -a SERVICES_TO_BUILD

@@ -4,7 +4,6 @@ COPY src /home/app/src
 COPY pom.xml /home/app
 
 ARG MAVEN_PROFILES
-
 RUN if [ -z $MAVEN_PROFILES ]; then mvn -f /home/app/pom.xml clean package -DskipTests; else mvn -f /home/app/pom.xml clean package -P${MAVEN_PROFILES} -DskipTests; fi
 
 # Package stage

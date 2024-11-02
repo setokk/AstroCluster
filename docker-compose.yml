@@ -17,6 +17,8 @@ services:
     build:
       context: ./cluster
       dockerfile: Dockerfile
+      args:
+        GENERATE_GRPC: "${GENERATE_GRPC}"
     ports:
       - "50051:50051"
 
@@ -26,7 +28,7 @@ services:
       context: ./server
       dockerfile: Dockerfile
       args:
-        MAVEN_PROFILES: "${AC_MAVEN_PROFILES}"
+        MAVEN_PROFILES: "${MAVEN_PROFILES}"
     ports:
       - "8080:8080"
     environment:
