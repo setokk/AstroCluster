@@ -1,5 +1,6 @@
 package edu.setokk.astrocluster.cluster;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,7 +21,7 @@ public class ClusterController {
     }
 
     @PostMapping("/perform-clustering")
-    public ResponseEntity<?> performClustering(@RequestBody ClusterRequestBody requestBody) throws IOException, InterruptedException {
+    public ResponseEntity<?> performClustering(@RequestBody @Valid ClusterRequestBody requestBody) throws IOException, InterruptedException {
         requestBody.validate();
         clusterService.performClustering(requestBody);
         return ResponseEntity.ok(null);

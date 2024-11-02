@@ -1,26 +1,27 @@
 package edu.setokk.astrocluster.error;
 
+import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 /**
  * Custom {@link RuntimeException} type used for business logic exceptions.
  * <br/>
- * <br/>
- * These include: <br/><br/>
+ * These include:
  * <ul>
  *  <li>Validation errors, in which case the possible errors <b>can be more than 1.</b></li>
  *  <li>Database or service errors, in which case the possible errors <b>can be at maximum 1.</b></li>
  * </ul>
  */
+@Getter
 public class BusinessLogicException extends RuntimeException {
     private final HttpStatus httpStatus;
     private final List<String> errorMessages;
 
     /**
-     * 
      * @param httpStatus the HTTP status to be returned in the response
      */
     public BusinessLogicException(HttpStatus httpStatus) {
@@ -50,9 +51,5 @@ public class BusinessLogicException extends RuntimeException {
 
     public void addErrorMessage(String errorMessage) {
         this.errorMessages.add(errorMessage);
-    }
-
-    public List<String> getErrorMessages() {
-        return this.errorMessages;
     }
 }

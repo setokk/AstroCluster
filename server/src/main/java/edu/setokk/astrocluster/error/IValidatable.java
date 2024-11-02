@@ -1,12 +1,5 @@
 package edu.setokk.astrocluster.error;
 
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.ConstraintViolationException;
-
-import java.util.Set;
-
-import edu.setokk.astrocluster.error.BusinessLogicException;
-
 /**
  * This interface <b>should</b> be implemented by all classes that represent the request bodies of all endpoints.
  * <br/><br/>
@@ -24,7 +17,6 @@ public interface IValidatable {
      * @throws BusinessLogicException if any error in the request body was detected
      */
     default void prepareErrors() throws BusinessLogicException {
-        return;
     }
 
     /**
@@ -38,6 +30,5 @@ public interface IValidatable {
      * @throws BusinessLogicException if any error in the values themselves was found (ex. value does not exist for enum)
      */
     default void postValidate() throws BusinessLogicException {
-        return;
     }
 }

@@ -19,9 +19,8 @@ public enum SupportedLanguages {
 	}
 	
 	public static Optional<SupportedLanguages> get(String lang) {
-		Arrays.stream(values())
-			.filter(l -> lang.equals(l.getLang()))
-			.findAny()
-			.orElse(Optional.empty());
+		return Arrays.stream(values())
+				.filter(l -> lang.equals(l.getLang()))
+                .findAny();
 	}
 }

@@ -28,7 +28,7 @@ public class GlobalExceptionHandler {
      * @param e the {@link BusinessLogicException} exception that was thrown
      */
     @ExceptionHandler(BusinessLogicException.class)
-    public ResponseEntity<ErrorMessage> handleBusinessLogicException(BusinessLogicException e) {
+    public ResponseEntity<Map<String, List<String>>> handleBusinessLogicException(BusinessLogicException e) {
         return new ResponseEntity<>(createErrorsMap(e.getErrorMessages()), e.getHttpStatus());
     }
 
