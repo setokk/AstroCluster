@@ -34,6 +34,7 @@ services:
     environment:
       spring.datasource.url: "jdbc:postgresql://db:5432/astrocluster"
       MAVEN_PROFILES: "${AC_MAVEN_PROFILES}"
+      GRPC_OUTPUT_PATH: "${BE_GRPC_OUTPUT_PATH}"
 
   client:
     container_name: "${CLIENT_CONTAINER_ID}"

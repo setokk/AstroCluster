@@ -24,9 +24,9 @@ source ./docker-compose.config.sh
 source ./proto/grpc.config.sh
 
 # Colors for terminal
-readonly BLUE='\033[0;34m'
-readonly RED='\033[0;31m'
-readonly NC='\033[0m'
+readonly BLUE="\033[0;34m"
+readonly RED="\033[0;31m"
+readonly NC="\033[0m"
 
 SKIP_UI=false
 SKIP_SERVER=false
@@ -52,11 +52,14 @@ while [[ "$#" -gt 0 ]]; do
 done
 
 # gRPC generation
-AC_MAVEN_PROFILES=""
-AC_GENERATE_GRPC=""
+AC_MAVEN_PROFILES="" # Flag for holding various dynamic maven profiles
+AC_GENERATE_GRPC=""  # Flag to indicate gRPC generation to clustering service Dockerfile
 if [ $SKIP_GRPC = false ]; then
     AC_MAVEN_PROFILES+="grpc"
     AC_GENERATE_GRPC=true
+    # Temporarily copy .proto files to cluster and server directories (in order to be visible for copying via Dockerfile)
+    cp ./proto/cluster.proto ./server/cluster.proto
+    cp ./proto/cluster.proto ./cluster/cluster.proto
 fi
 export MAVEN_PROFILES="${AC_MAVEN_PROFILES}"
 export GENERATE_GRPC="${AC_GENERATE_GRPC}"
@@ -69,8 +72,8 @@ fi
 if [ $SKIP_DB = false ]; then
     SERVICES_TO_BUILD+=("db")
     # Undeploy DB and remove docker volume with DB data
-    sudo docker stop ac-db && sudo docker rm ac-db
-    sudo docker volume rm pg_data_ac_cluster
+    echo -e "${BLUE}$(sudo docker stop ac-db && sudo docker rm ac-db)${NC}"
+    echo -e "${BLUE}$(sudo docker volume rm pg_data_ac_cluster)${NC}"
 fi
 if [ $SKIP_SERVER = false ]; then
     SERVICES_TO_BUILD+=("server")
@@ -88,6 +91,11 @@ sudo docker-compose up -d --build "${SERVICES_TO_BUILD[@]}"
 
 # Copy generated gRPC files from containers to the actual project directory
 if [ $SKIP_GRPC = false ]; then
+    # Delete temporary .proto files
+    rm -rf ./server/cluster.proto
+    rm -rf ./cluster/cluster.proto
+
+    # Copy generated files from containers to actual project directory
     docker cp "${SERVER_CONTAINER_ID}:${BE_GRPC_DOCKER_PATH}" "${BE_GRPC_PROJECT_PATH}"
     echo -e "[${BLUE}INFO${NC}]: Server gRPC update finished. Copied docker gRPC files to project directory."
     docker cp "${CLUSTER_SERVICE_CONTAINER_ID}:${CS_GRPC_DOCKER_PATH}" "${CS_GRPC_PROJECT_PATH}"

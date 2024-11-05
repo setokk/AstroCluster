@@ -18,6 +18,7 @@
         <protobuf.version>4.27.2</protobuf.version>
         <grpc.version>1.63.0</grpc.version>
         <os.detected.classifier>linux-x86_32</os.detected.classifier>
+        <ac.grpc.output.path>${project.basedir}/${env.GRPC_OUTPUT_PATH}</ac.grpc.output.path>
     </properties>
     <dependencies>
         <!-- WEB DEPENDENCIES -->
@@ -135,7 +136,7 @@
                         <artifactId>protobuf-maven-plugin</artifactId>
                         <version>0.6.1</version>
                         <configuration>
-                            <protoSourceRoot>${project.basedir}/../proto</protoSourceRoot>
+                            <protoSourceRoot>${project.basedir}</protoSourceRoot>
                             <outputDirectory>${project.basedir}/target/protoc-classes-ac</outputDirectory>
                             <protocArtifact>com.google.protobuf:protoc:${protobuf.version}:exe:${os.detected.classifier}</protocArtifact>
                             <pluginId>grpc-java</pluginId>
@@ -151,7 +152,7 @@
                         </executions>
                     </plugin>
 
-                    <!-- COPY PROTO GENERATED FILES TO PROJECT PACKAGE -->
+                    <!-- COPY PROTO GENERATED FILES TO gRPC PACKAGE inside src -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-resources-plugin</artifactId>
@@ -164,7 +165,7 @@
                                     <goal>resources</goal>
                                 </goals>
                                 <configuration>
-                                    <outputDirectory>${project.basedir}/src/main/java/edu/setokk/astrocluster/grpc</outputDirectory>
+                                    <outputDirectory>${ac.grpc.output.path}</outputDirectory>
                                     <resources>
                                         <resource>
                                             <directory>${project.basedir}/target/protoc-classes-ac/edu/setokk/astrocluster/cluster/proto</directory>
