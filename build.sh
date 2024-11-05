@@ -1,4 +1,6 @@
 #!/bin/bash
+set -eo pipefail
+
 MAN=$(cat <<-END
 Usage: $0 [--skip-ui <SKIP_UI: boolean>] [--skip-grpc <SKIP_GRPC: boolean>]
 
