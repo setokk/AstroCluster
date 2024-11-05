@@ -1,7 +1,7 @@
 version: "3.8"
 services:
   db:
-    container_name: "ac-db"
+    container_name: "${DB_CONTAINER_ID}"
     image: postgres
     ports:
       - "5432:5432"
@@ -13,7 +13,7 @@ services:
       POSTGRES_DB: "astrocluster"
 
   clusterservice:
-    container_name: "ac-cluster-service"
+    container_name: "${CLUSTER_SERVICE_CONTAINER_ID}"
     build:
       context: ./cluster
       dockerfile: Dockerfile
@@ -23,7 +23,7 @@ services:
       - "50051:50051"
 
   server:
-    container_name: "ac-server"
+    container_name: "${SERVER_CONTAINER_ID}"
     build:
       context: ./server
       dockerfile: Dockerfile
@@ -36,7 +36,7 @@ services:
       MAVEN_PROFILES: "${AC_MAVEN_PROFILES}"
 
   client:
-    container_name: "ac-client"
+    container_name: "${CLIENT_CONTAINER_ID}"
     build:
       context: ./client
       dockerfile: Dockerfile
