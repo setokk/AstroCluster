@@ -3,7 +3,7 @@
 // source: cluster.proto
 // Protobuf Java Version: 4.27.2
 
-package edu.setokk.astrocluster.cluster.proto;
+package edu.setokk.astrocluster.grpc;
 
 public interface ClusterRequestOrBuilder extends
     // @@protoc_insertion_point(interface_extends:cluster.proto.ClusterRequest)

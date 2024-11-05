@@ -1,4 +1,4 @@
-package edu.setokk.astrocluster.cluster.proto;
+package edu.setokk.astrocluster.grpc;
 
 import static io.grpc.MethodDescriptor.generateFullMethodName;
 
@@ -15,29 +15,29 @@ public final class ClusterServiceGrpc {
   public static final java.lang.String SERVICE_NAME = "cluster.proto.ClusterService";
 
   // Static method descriptors that strictly reflect the proto.
-  private static volatile io.grpc.MethodDescriptor<edu.setokk.astrocluster.cluster.proto.ClusterRequest,
-      edu.setokk.astrocluster.cluster.proto.ClusterResponse> getPerformClusteringMethod;
+  private static volatile io.grpc.MethodDescriptor<ClusterRequest,
+          ClusterResponse> getPerformClusteringMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
       fullMethodName = SERVICE_NAME + '/' + "PerformClustering",
-      requestType = edu.setokk.astrocluster.cluster.proto.ClusterRequest.class,
-      responseType = edu.setokk.astrocluster.cluster.proto.ClusterResponse.class,
+      requestType = ClusterRequest.class,
+      responseType = ClusterResponse.class,
       methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
-  public static io.grpc.MethodDescriptor<edu.setokk.astrocluster.cluster.proto.ClusterRequest,
-      edu.setokk.astrocluster.cluster.proto.ClusterResponse> getPerformClusteringMethod() {
-    io.grpc.MethodDescriptor<edu.setokk.astrocluster.cluster.proto.ClusterRequest, edu.setokk.astrocluster.cluster.proto.ClusterResponse> getPerformClusteringMethod;
+  public static io.grpc.MethodDescriptor<ClusterRequest,
+          ClusterResponse> getPerformClusteringMethod() {
+    io.grpc.MethodDescriptor<ClusterRequest, ClusterResponse> getPerformClusteringMethod;
     if ((getPerformClusteringMethod = ClusterServiceGrpc.getPerformClusteringMethod) == null) {
       synchronized (ClusterServiceGrpc.class) {
         if ((getPerformClusteringMethod = ClusterServiceGrpc.getPerformClusteringMethod) == null) {
           ClusterServiceGrpc.getPerformClusteringMethod = getPerformClusteringMethod =
-              io.grpc.MethodDescriptor.<edu.setokk.astrocluster.cluster.proto.ClusterRequest, edu.setokk.astrocluster.cluster.proto.ClusterResponse>newBuilder()
+              io.grpc.MethodDescriptor.<ClusterRequest, ClusterResponse>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
               .setFullMethodName(generateFullMethodName(SERVICE_NAME, "PerformClustering"))
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  edu.setokk.astrocluster.cluster.proto.ClusterRequest.getDefaultInstance()))
+                  ClusterRequest.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  edu.setokk.astrocluster.cluster.proto.ClusterResponse.getDefaultInstance()))
+                  ClusterResponse.getDefaultInstance()))
               .setSchemaDescriptor(new ClusterServiceMethodDescriptorSupplier("PerformClustering"))
               .build();
         }
@@ -96,8 +96,8 @@ public final class ClusterServiceGrpc {
 
     /**
      */
-    default void performClustering(edu.setokk.astrocluster.cluster.proto.ClusterRequest request,
-        io.grpc.stub.StreamObserver<edu.setokk.astrocluster.cluster.proto.ClusterResponse> responseObserver) {
+    default void performClustering(ClusterRequest request,
+                                   io.grpc.stub.StreamObserver<ClusterResponse> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getPerformClusteringMethod(), responseObserver);
     }
   }
@@ -131,8 +131,8 @@ public final class ClusterServiceGrpc {
 
     /**
      */
-    public void performClustering(edu.setokk.astrocluster.cluster.proto.ClusterRequest request,
-        io.grpc.stub.StreamObserver<edu.setokk.astrocluster.cluster.proto.ClusterResponse> responseObserver) {
+    public void performClustering(ClusterRequest request,
+                                  io.grpc.stub.StreamObserver<ClusterResponse> responseObserver) {
       io.grpc.stub.ClientCalls.asyncUnaryCall(
           getChannel().newCall(getPerformClusteringMethod(), getCallOptions()), request, responseObserver);
     }
@@ -156,7 +156,7 @@ public final class ClusterServiceGrpc {
 
     /**
      */
-    public edu.setokk.astrocluster.cluster.proto.ClusterResponse performClustering(edu.setokk.astrocluster.cluster.proto.ClusterRequest request) {
+    public ClusterResponse performClustering(ClusterRequest request) {
       return io.grpc.stub.ClientCalls.blockingUnaryCall(
           getChannel(), getPerformClusteringMethod(), getCallOptions(), request);
     }
@@ -180,8 +180,8 @@ public final class ClusterServiceGrpc {
 
     /**
      */
-    public com.google.common.util.concurrent.ListenableFuture<edu.setokk.astrocluster.cluster.proto.ClusterResponse> performClustering(
-        edu.setokk.astrocluster.cluster.proto.ClusterRequest request) {
+    public com.google.common.util.concurrent.ListenableFuture<ClusterResponse> performClustering(
+        ClusterRequest request) {
       return io.grpc.stub.ClientCalls.futureUnaryCall(
           getChannel().newCall(getPerformClusteringMethod(), getCallOptions()), request);
     }
@@ -207,8 +207,8 @@ public final class ClusterServiceGrpc {
     public void invoke(Req request, io.grpc.stub.StreamObserver<Resp> responseObserver) {
       switch (methodId) {
         case METHODID_PERFORM_CLUSTERING:
-          serviceImpl.performClustering((edu.setokk.astrocluster.cluster.proto.ClusterRequest) request,
-              (io.grpc.stub.StreamObserver<edu.setokk.astrocluster.cluster.proto.ClusterResponse>) responseObserver);
+          serviceImpl.performClustering((ClusterRequest) request,
+              (io.grpc.stub.StreamObserver<ClusterResponse>) responseObserver);
           break;
         default:
           throw new AssertionError();
@@ -232,8 +232,8 @@ public final class ClusterServiceGrpc {
           getPerformClusteringMethod(),
           io.grpc.stub.ServerCalls.asyncUnaryCall(
             new MethodHandlers<
-              edu.setokk.astrocluster.cluster.proto.ClusterRequest,
-              edu.setokk.astrocluster.cluster.proto.ClusterResponse>(
+                    ClusterRequest,
+                    ClusterResponse>(
                 service, METHODID_PERFORM_CLUSTERING)))
         .build();
   }
@@ -244,7 +244,7 @@ public final class ClusterServiceGrpc {
 
     @java.lang.Override
     public com.google.protobuf.Descriptors.FileDescriptor getFileDescriptor() {
-      return edu.setokk.astrocluster.cluster.proto.ClusterStubGrpc.getDescriptor();
+      return ClusterStubGrpc.getDescriptor();
     }
 
     @java.lang.Override

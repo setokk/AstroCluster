@@ -164,7 +164,7 @@
                                     <goal>resources</goal>
                                 </goals>
                                 <configuration>
-                                    <outputDirectory>${project.basedir}/src/main/java/edu/setokk/astrocluster/cluster/proto</outputDirectory>
+                                    <outputDirectory>${project.basedir}/src/main/java/edu/setokk/astrocluster/grpc</outputDirectory>
                                     <resources>
                                         <resource>
                                             <directory>${project.basedir}/target/protoc-classes-ac/edu/setokk/astrocluster/cluster/proto</directory>

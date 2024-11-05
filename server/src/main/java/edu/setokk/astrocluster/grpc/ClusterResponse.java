@@ -3,7 +3,7 @@
 // source: cluster.proto
 // Protobuf Java Version: 4.27.2
 
-package edu.setokk.astrocluster.cluster.proto;
+package edu.setokk.astrocluster.grpc;
 
 /**
  * Protobuf type {@code cluster.proto.ClusterResponse}
@@ -31,15 +31,15 @@ private static final long serialVersionUID = 0L;
 
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return edu.setokk.astrocluster.cluster.proto.ClusterStubGrpc.internal_static_cluster_proto_ClusterResponse_descriptor;
+    return ClusterStubGrpc.internal_static_cluster_proto_ClusterResponse_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return edu.setokk.astrocluster.cluster.proto.ClusterStubGrpc.internal_static_cluster_proto_ClusterResponse_fieldAccessorTable
+    return ClusterStubGrpc.internal_static_cluster_proto_ClusterResponse_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            edu.setokk.astrocluster.cluster.proto.ClusterResponse.class, edu.setokk.astrocluster.cluster.proto.ClusterResponse.Builder.class);
+            ClusterResponse.class, ClusterResponse.Builder.class);
   }
 
   public static final int STATUS_FIELD_NUMBER = 1;
@@ -93,10 +93,10 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof edu.setokk.astrocluster.cluster.proto.ClusterResponse)) {
+    if (!(obj instanceof ClusterResponse)) {
       return super.equals(obj);
     }
-    edu.setokk.astrocluster.cluster.proto.ClusterResponse other = (edu.setokk.astrocluster.cluster.proto.ClusterResponse) obj;
+    ClusterResponse other = (ClusterResponse) obj;
 
     if (getStatus()
         != other.getStatus()) return false;
@@ -118,44 +118,44 @@ private static final long serialVersionUID = 0L;
     return hash;
   }
 
-  public static edu.setokk.astrocluster.cluster.proto.ClusterResponse parseFrom(
+  public static ClusterResponse parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static edu.setokk.astrocluster.cluster.proto.ClusterResponse parseFrom(
+  public static ClusterResponse parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static edu.setokk.astrocluster.cluster.proto.ClusterResponse parseFrom(
+  public static ClusterResponse parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static edu.setokk.astrocluster.cluster.proto.ClusterResponse parseFrom(
+  public static ClusterResponse parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static edu.setokk.astrocluster.cluster.proto.ClusterResponse parseFrom(byte[] data)
+  public static ClusterResponse parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static edu.setokk.astrocluster.cluster.proto.ClusterResponse parseFrom(
+  public static ClusterResponse parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static edu.setokk.astrocluster.cluster.proto.ClusterResponse parseFrom(java.io.InputStream input)
+  public static ClusterResponse parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessage
         .parseWithIOException(PARSER, input);
   }
-  public static edu.setokk.astrocluster.cluster.proto.ClusterResponse parseFrom(
+  public static ClusterResponse parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -163,26 +163,26 @@ private static final long serialVersionUID = 0L;
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
 
-  public static edu.setokk.astrocluster.cluster.proto.ClusterResponse parseDelimitedFrom(java.io.InputStream input)
+  public static ClusterResponse parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessage
         .parseDelimitedWithIOException(PARSER, input);
   }
 
-  public static edu.setokk.astrocluster.cluster.proto.ClusterResponse parseDelimitedFrom(
+  public static ClusterResponse parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessage
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static edu.setokk.astrocluster.cluster.proto.ClusterResponse parseFrom(
+  public static ClusterResponse parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessage
         .parseWithIOException(PARSER, input);
   }
-  public static edu.setokk.astrocluster.cluster.proto.ClusterResponse parseFrom(
+  public static ClusterResponse parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -195,7 +195,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(edu.setokk.astrocluster.cluster.proto.ClusterResponse prototype) {
+  public static Builder newBuilder(ClusterResponse prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @java.lang.Override
@@ -216,18 +216,18 @@ private static final long serialVersionUID = 0L;
   public static final class Builder extends
       com.google.protobuf.GeneratedMessage.Builder<Builder> implements
       // @@protoc_insertion_point(builder_implements:cluster.proto.ClusterResponse)
-      edu.setokk.astrocluster.cluster.proto.ClusterResponseOrBuilder {
+          ClusterResponseOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return edu.setokk.astrocluster.cluster.proto.ClusterStubGrpc.internal_static_cluster_proto_ClusterResponse_descriptor;
+      return ClusterStubGrpc.internal_static_cluster_proto_ClusterResponse_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return edu.setokk.astrocluster.cluster.proto.ClusterStubGrpc.internal_static_cluster_proto_ClusterResponse_fieldAccessorTable
+      return ClusterStubGrpc.internal_static_cluster_proto_ClusterResponse_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              edu.setokk.astrocluster.cluster.proto.ClusterResponse.class, edu.setokk.astrocluster.cluster.proto.ClusterResponse.Builder.class);
+              ClusterResponse.class, ClusterResponse.Builder.class);
     }
 
     // Construct using edu.setokk.astrocluster.cluster.proto.ClusterResponse.newBuilder()
@@ -251,17 +251,17 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return edu.setokk.astrocluster.cluster.proto.ClusterStubGrpc.internal_static_cluster_proto_ClusterResponse_descriptor;
+      return ClusterStubGrpc.internal_static_cluster_proto_ClusterResponse_descriptor;
     }
 
     @java.lang.Override
-    public edu.setokk.astrocluster.cluster.proto.ClusterResponse getDefaultInstanceForType() {
-      return edu.setokk.astrocluster.cluster.proto.ClusterResponse.getDefaultInstance();
+    public ClusterResponse getDefaultInstanceForType() {
+      return ClusterResponse.getDefaultInstance();
     }
 
     @java.lang.Override
-    public edu.setokk.astrocluster.cluster.proto.ClusterResponse build() {
-      edu.setokk.astrocluster.cluster.proto.ClusterResponse result = buildPartial();
+    public ClusterResponse build() {
+      ClusterResponse result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -269,14 +269,14 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public edu.setokk.astrocluster.cluster.proto.ClusterResponse buildPartial() {
-      edu.setokk.astrocluster.cluster.proto.ClusterResponse result = new edu.setokk.astrocluster.cluster.proto.ClusterResponse(this);
+    public ClusterResponse buildPartial() {
+      ClusterResponse result = new ClusterResponse(this);
       if (bitField0_ != 0) { buildPartial0(result); }
       onBuilt();
       return result;
     }
 
-    private void buildPartial0(edu.setokk.astrocluster.cluster.proto.ClusterResponse result) {
+    private void buildPartial0(ClusterResponse result) {
       int from_bitField0_ = bitField0_;
       if (((from_bitField0_ & 0x00000001) != 0)) {
         result.status_ = status_;
@@ -285,16 +285,16 @@ private static final long serialVersionUID = 0L;
 
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof edu.setokk.astrocluster.cluster.proto.ClusterResponse) {
-        return mergeFrom((edu.setokk.astrocluster.cluster.proto.ClusterResponse)other);
+      if (other instanceof ClusterResponse) {
+        return mergeFrom((ClusterResponse)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(edu.setokk.astrocluster.cluster.proto.ClusterResponse other) {
-      if (other == edu.setokk.astrocluster.cluster.proto.ClusterResponse.getDefaultInstance()) return this;
+    public Builder mergeFrom(ClusterResponse other) {
+      if (other == ClusterResponse.getDefaultInstance()) return this;
       if (other.getStatus() != 0) {
         setStatus(other.getStatus());
       }
@@ -382,12 +382,12 @@ private static final long serialVersionUID = 0L;
   }
 
   // @@protoc_insertion_point(class_scope:cluster.proto.ClusterResponse)
-  private static final edu.setokk.astrocluster.cluster.proto.ClusterResponse DEFAULT_INSTANCE;
+  private static final ClusterResponse DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new edu.setokk.astrocluster.cluster.proto.ClusterResponse();
+    DEFAULT_INSTANCE = new ClusterResponse();
   }
 
-  public static edu.setokk.astrocluster.cluster.proto.ClusterResponse getDefaultInstance() {
+  public static ClusterResponse getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
@@ -423,7 +423,7 @@ private static final long serialVersionUID = 0L;
   }
 
   @java.lang.Override
-  public edu.setokk.astrocluster.cluster.proto.ClusterResponse getDefaultInstanceForType() {
+  public ClusterResponse getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

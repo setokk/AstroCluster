@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Optional;
 
 import lombok.Getter;
+import org.springframework.lang.NonNull;
 
 @Getter
 public enum SupportedLanguages {
@@ -18,7 +19,7 @@ public enum SupportedLanguages {
 		this.basicExtensions = basicExtensions;
 	}
 	
-	public static Optional<SupportedLanguages> get(String lang) {
+	public static Optional<SupportedLanguages> get(@NonNull String lang) {
 		return Arrays.stream(values())
 				.filter(l -> lang.equals(l.getLang()))
                 .findAny();

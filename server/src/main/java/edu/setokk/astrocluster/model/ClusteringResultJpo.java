@@ -1,4 +1,4 @@
-package edu.setokk.astrocluster.analysis;
+package edu.setokk.astrocluster.model;
 
 import edu.setokk.astrocluster.util.StringUtils;
 import jakarta.persistence.*;

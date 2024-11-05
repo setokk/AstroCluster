@@ -9,7 +9,7 @@ List of available options:
     --skip-ui               Skips the build process of ui frontend.
                             Default is false.
     --skip-server           Skips the build process of the backend.
-                            Default is false.    
+                            Default is false.
     --skip-grpc             Skips the update and build process for gRPC proto files. DO NOT use if proto files have been changed.
                             Default is false.
     --skip-ac               Skips AstroCluster clustering service.
@@ -18,6 +18,10 @@ List of available options:
                             Default is false.
 END
 )
+
+# Load build script configurations
+source ./docker-compose.config.sh
+source ./proto/grpc.config.sh
 
 # Colors for terminal
 readonly BLUE='\033[0;34m'
@@ -81,3 +85,11 @@ if [ "${#SERVICES_TO_BUILD[@]}" -eq 0 ]; then
 fi
 echo -e "[${BLUE}BUILD INFO${NC}]: Building ${SERVICES_TO_BUILD[@]}"
 sudo docker-compose up -d --build "${SERVICES_TO_BUILD[@]}"
+
+# Copy generated gRPC files from containers to the actual project directory
+if [ $SKIP_GRPC = false ]; then
+    docker cp "${SERVER_CONTAINER_ID}:${BE_GRPC_DOCKER_PATH}" "${BE_GRPC_PROJECT_PATH}"
+    echo -e "[${BLUE}INFO${NC}]: Server gRPC update finished. Copied docker gRPC files to project directory."
+    docker cp "${CLUSTER_SERVICE_CONTAINER_ID}:${CS_GRPC_DOCKER_PATH}" "${CS_GRPC_PROJECT_PATH}"
+    echo -e "[${BLUE}INFO${NC}: Cluster service gRPC update finished. Copied docker gRPC files to project directory."
+fi

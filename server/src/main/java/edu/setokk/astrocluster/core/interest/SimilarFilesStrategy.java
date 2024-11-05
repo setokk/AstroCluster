@@ -1,4 +1,4 @@
-package edu.setokk.astrocluster.interest;
+package edu.setokk.astrocluster.core.interest;
 
 import java.util.List;
 

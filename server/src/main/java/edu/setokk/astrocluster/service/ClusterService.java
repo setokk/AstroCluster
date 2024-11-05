@@ -1,9 +1,10 @@
-package edu.setokk.astrocluster.cluster;
+package edu.setokk.astrocluster.service;
 
-import edu.setokk.astrocluster.cluster.proto.ClusterRequest;
-import edu.setokk.astrocluster.cluster.proto.ClusterResponse;
-import edu.setokk.astrocluster.cluster.proto.ClusterServiceGrpc;
+import edu.setokk.astrocluster.grpc.ClusterRequest;
+import edu.setokk.astrocluster.grpc.ClusterResponse;
+import edu.setokk.astrocluster.grpc.ClusterServiceGrpc;
 import edu.setokk.astrocluster.error.BusinessLogicException;
+import edu.setokk.astrocluster.request.ClusterRequestBody;
 import edu.setokk.astrocluster.util.IOUtils;
 import io.grpc.ManagedChannel;
 import org.springframework.beans.factory.annotation.Autowired;

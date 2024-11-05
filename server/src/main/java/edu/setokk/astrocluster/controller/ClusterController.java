@@ -1,5 +1,7 @@
-package edu.setokk.astrocluster.cluster;
+package edu.setokk.astrocluster.controller;
 
+import edu.setokk.astrocluster.request.ClusterRequestBody;
+import edu.setokk.astrocluster.service.ClusterService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

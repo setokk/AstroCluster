@@ -1,4 +1,4 @@
-package edu.setokk.astrocluster.cluster;
+package edu.setokk.astrocluster.request;
 
 import edu.setokk.astrocluster.error.BusinessLogicException;
 import edu.setokk.astrocluster.error.IValidatable;
