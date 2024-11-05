@@ -20,9 +20,9 @@ END
 )
 
 # Colors for terminal
-BLUE='\033[0;34m'
-RED='\033[0;31m'
-NC='\033[0m'
+readonly BLUE='\033[0;34m'
+readonly RED='\033[0;31m'
+readonly NC='\033[0m'
 
 SKIP_UI=false
 SKIP_SERVER=false
