@@ -461,3 +461,675 @@ public interface UserRepository extends JpaRepository<User, Long> {
     int withdrawAmount(@Param("userId") Long userId, @Param("amount") BigDecimal amount);
 }
 }
+```[@]```
+14: {
+package com.shop.orders.controllers;
+
+import com.shop.orders.models.Order;
+import com.shop.orders.services.OrderService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/orders")
+public class OrderController {
+
+    private final OrderService orderService;
+
+    public OrderController(OrderService orderService) {
+        this.orderService = orderService;
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Order> getOrder(@PathVariable Long id) {
+        Order order = orderService.findOrderById(id);
+        return order != null ? ResponseEntity.ok(order) : ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
+
+    @PostMapping
+    public ResponseEntity<Order> createOrder(@RequestBody Order order) {
+        Order newOrder = orderService.saveOrder(order);
+        return ResponseEntity.status(HttpStatus.CREATED).body(newOrder);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Order> updateOrder(@PathVariable Long id, @RequestBody Order orderDetails) {
+        Order updatedOrder = orderService.updateOrder(id, orderDetails);
+        return ResponseEntity.ok(updatedOrder);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteOrder(@PathVariable Long id) {
+        orderService.deleteOrder(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Order>> getAllOrders() {
+        List<Order> orders = orderService.getAllOrders();
+        return ResponseEntity.ok(orders);
+    }
+}
+}
+```[@]```
+15: {
+package com.university.students.controllers;
+
+import com.university.students.models.Student;
+import com.university.students.services.StudentService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/students")
+public class StudentController {
+
+    private final StudentService studentService;
+
+    public StudentController(StudentService studentService) {
+        this.studentService = studentService;
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Student> getStudent(@PathVariable Long id) {
+        Student student = studentService.findStudentById(id);
+        return student != null ? ResponseEntity.ok(student) : ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
+
+    @PostMapping
+    public ResponseEntity<Student> createStudent(@RequestBody Student student) {
+        Student newStudent = studentService.saveStudent(student);
+        return ResponseEntity.status(HttpStatus.CREATED).body(newStudent);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Student> updateStudent(@PathVariable Long id, @RequestBody Student studentDetails) {
+        Student updatedStudent = studentService.updateStudent(id, studentDetails);
+        return ResponseEntity.ok(updatedStudent);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteStudent(@PathVariable Long id) {
+        studentService.deleteStudent(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Student>> getAllStudents() {
+        List<Student> students = studentService.getAllStudents();
+        return ResponseEntity.ok(students);
+    }
+}
+}
+```[@]```
+16: {
+package com.bank.accounts.models;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+@Entity
+public class Account {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String accountType;
+    private Double balance;
+    private String status;
+
+    public Account() {
+    }
+
+    public Account(String accountType, Double balance, String status) {
+        this.accountType = accountType;
+        this.balance = balance;
+        this.status = status;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getAccountType() {
+        return accountType;
+    }
+
+    public void setAccountType(String accountType) {
+        this.accountType = accountType;
+    }
+
+    public Double getBalance() {
+        return balance;
+    }
+
+    public void setBalance(Double balance) {
+        this.balance = balance;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+}
+}
+```[@]```
+17: {
+package com.store.products.models;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+@Entity
+public class Product {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String name;
+    private Double price;
+    private Integer stock;
+
+    public Product() {
+    }
+
+    public Product(String name, Double price, Integer stock) {
+        this.name = name;
+        this.price = price;
+        this.stock = stock;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
+    public Integer getStock() {
+        return stock;
+    }
+
+    public void setStock(Integer stock) {
+        this.stock = stock;
+    }
+}
+}
+```[@]```
+18: {
+package com.library.books.controllers;
+
+import com.library.books.models.Book;
+import com.library.books.services.BookService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/books")
+public class BookController {
+
+    private final BookService bookService;
+
+    public BookController(BookService bookService) {
+        this.bookService = bookService;
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Book> getBook(@PathVariable Long id) {
+        Book book = bookService.findBookById(id);
+        return book != null ? ResponseEntity.ok(book) : ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
+
+    @PostMapping
+    public ResponseEntity<Book> createBook(@RequestBody Book book) {
+        Book newBook = bookService.saveBook(book);
+        return ResponseEntity.status(HttpStatus.CREATED).body(newBook);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Book> updateBook(@PathVariable Long id, @RequestBody Book bookDetails) {
+        Book updatedBook = bookService.updateBook(id, bookDetails);
+        return ResponseEntity.ok(updatedBook);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteBook(@PathVariable Long id) {
+        bookService.deleteBook(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Book>> getAllBooks() {
+        List<Book> books = bookService.getAllBooks();
+        return ResponseEntity.ok(books);
+    }
+}
+}
+```[@]```
+19: {
+package com.company.employees.schedulers;
+
+import com.company.employees.services.EmployeeService;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
+
+@Component
+public class EmployeeScheduler {
+
+    private final EmployeeService employeeService;
+
+    public EmployeeScheduler(EmployeeService employeeService) {
+        this.employeeService = employeeService;
+    }
+
+    @Scheduled(cron = "0 0 1 * * ?")
+    public void updateEmployeeStatuses() {
+        employeeService.updateAllEmployeeStatuses();
+    }
+
+    @Scheduled(fixedRate = 3600000)
+    public void generateEmployeeReports() {
+        employeeService.generateReports();
+    }
+}
+}
+```[@]```
+20: {
+package com.healthcare.patients.repositories;
+
+import com.healthcare.patients.models.Patient;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+public interface PatientRepository extends JpaRepository<Patient, Long> {
+
+    @Query("SELECT p FROM Patient p WHERE p.age > :age")
+    List<Patient> findPatientsByAgeGreaterThan(@Param("age") Integer age);
+
+    @Query("SELECT p FROM Patient p WHERE p.diagnosis = :diagnosis")
+    List<Patient> findPatientsByDiagnosis(@Param("diagnosis") String diagnosis);
+}
+}
+```[@]```
+21: {
+package com.education.courses.models;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+@Entity
+public class Course {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String title;
+    private String instructor;
+    private Integer duration;
+
+    public Course() {
+    }
+
+    public Course(String title, String instructor, Integer duration) {
+        this.title = title;
+        this.instructor = instructor;
+        this.duration = duration;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getInstructor() {
+        return instructor;
+    }
+
+    public void setInstructor(String instructor) {
+        this.instructor = instructor;
+    }
+
+    public Integer getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Integer duration) {
+        this.duration = duration;
+    }
+}
+}
+```[@]```
+22: {
+package com.travel.bookings.models;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import java.util.Date;
+
+@Entity
+public class Booking {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String hotelName;
+    private Date checkInDate;
+    private Date checkOutDate;
+    private Long customerId;
+
+    public Booking() {
+    }
+
+    public Booking(String hotelName, Date checkInDate, Date checkOutDate, Long customerId) {
+        this.hotelName = hotelName;
+        this.checkInDate = checkInDate;
+        this.checkOutDate = checkOutDate;
+        this.customerId = customerId;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getHotelName() {
+        return hotelName;
+    }
+
+    public void setHotelName(String hotelName) {
+        this.hotelName = hotelName;
+    }
+
+    public Date getCheckInDate() {
+        return checkInDate;
+    }
+
+    public void setCheckInDate(Date checkInDate) {
+        this.checkInDate = checkInDate;
+    }
+
+    public Date getCheckOutDate() {
+        return checkOutDate;
+    }
+
+    public void setCheckOutDate(Date checkOutDate) {
+        this.checkOutDate = checkOutDate;
+    }
+
+    public Long getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(Long customerId) {
+        this.customerId = customerId;
+    }
+}
+}
+```[@]```
+23: {
+package com.restaurant.reservations.models;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import java.util.Date;
+
+@Entity
+public class Reservation {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String restaurantName;
+    private Date reservationTime;
+    private Long customerId;
+
+    public Reservation() {
+    }
+
+    public Reservation(String restaurantName, Date reservationTime, Long customerId) {
+        this.restaurantName = restaurantName;
+        this.reservationTime = reservationTime;
+        this.customerId = customerId;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getRestaurantName() {
+        return restaurantName;
+    }
+
+    public void setRestaurantName(String restaurantName) {
+        this.restaurantName = restaurantName;
+    }
+
+    public Date getReservationTime() {
+        return reservationTime;
+    }
+
+    public void setReservationTime(Date reservationTime) {
+        this.reservationTime = reservationTime;
+    }
+
+    public Long getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(Long customerId) {
+        this.customerId = customerId;
+    }
+}
+}
+```[@]```
+24: {
+package com.finance.loans.controllers;
+
+import com.finance.loans.models.Loan;
+import com.finance.loans.services.LoanService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/loans")
+public class LoanController {
+
+    private final LoanService loanService;
+
+    public LoanController(LoanService loanService) {
+        this.loanService = loanService;
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Loan> getLoan(@PathVariable Long id) {
+        Loan loan = loanService.findLoanById(id);
+        return loan != null ? ResponseEntity.ok(loan) : ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
+
+    @PostMapping
+    public ResponseEntity<Loan> createLoan(@RequestBody Loan loan) {
+        Loan newLoan = loanService.saveLoan(loan);
+        return ResponseEntity.status(HttpStatus.CREATED).body(newLoan);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Loan> updateLoan(@PathVariable Long id, @RequestBody Loan loanDetails) {
+        Loan updatedLoan = loanService.updateLoan(id, loanDetails);
+        return ResponseEntity.ok(updatedLoan);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteLoan(@PathVariable Long id) {
+        loanService.deleteLoan(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Loan>> getAllLoans() {
+        List<Loan> loans = loanService.getAllLoans();
+        return ResponseEntity.ok(loans);
+    }
+}
+}
+```[@]```
+25: {
+package com.logistics.shipments.repositories;
+
+import com.logistics.shipments.models.Shipment;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+public interface ShipmentRepository extends JpaRepository<Shipment, Long> {
+
+    @Query("SELECT s FROM Shipment s WHERE s.status = :status")
+    List<Shipment> findShipmentsByStatus(@Param("status") String status);
+
+    @Query("SELECT s FROM Shipment s WHERE s.destination = :destination")
+    List<Shipment> findShipmentsByDestination(@Param("destination") String destination);
+}
+}
+```[@]```
+26: {
+package com.techsupport.tickets.models;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+@Entity
+public class Ticket {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String description;
+    private String status;
+    private String assignedTo;
+    private String priority;
+
+    public Ticket() {
+    }
+
+    public Ticket(String description, String status, String assignedTo, String priority) {
+        this.description = description;
+        this.status = status;
+        this.assignedTo = assignedTo;
+        this.priority = priority;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getAssignedTo() {
+        return assignedTo;
+    }
+
+    public void setAssignedTo(String assignedTo) {
+        this.assignedTo = assignedTo;
+    }
+
+    public String getPriority() {
+        return priority;
+    }
+
+    public void setPriority(String priority) {
+        this.priority = priority;
+    }
+}
+}

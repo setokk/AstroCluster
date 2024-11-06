@@ -488,3 +488,491 @@ public class EcommerceController {
     }
 }
 }
+```[@]```
+14: {
+package com.ecommerce.orders.services;
+
+import com.ecommerce.orders.models.Order;
+import com.ecommerce.orders.repositories.OrderRepository;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class OrderProcessingService {
+
+    private final OrderRepository orderRepository;
+
+    public OrderProcessingService(OrderRepository orderRepository) {
+        this.orderRepository = orderRepository;
+    }
+
+    public Order findOrderById(Long id) {
+        return orderRepository.findById(id).orElse(null);
+    }
+
+    public List<Order> getOrdersByStatus(String status) {
+        return orderRepository.findOrdersByStatus(status);
+    }
+
+    public Order saveOrder(Order order) {
+        return orderRepository.save(order);
+    }
+
+    public Order updateOrder(Long id, Order orderDetails) {
+        Order existingOrder = findOrderById(id);
+        if (existingOrder != null) {
+            existingOrder.setShippingAddress(orderDetails.getShippingAddress());
+            existingOrder.setOrderStatus(orderDetails.getOrderStatus());
+            return orderRepository.save(existingOrder);
+        }
+        return null;
+    }
+
+    public void cancelOrder(Long id) {
+        Order order = findOrderById(id);
+        if (order != null) {
+            order.setOrderStatus("Cancelled");
+            orderRepository.save(order);
+        }
+    }
+
+    public void deleteOrder(Long id) {
+        orderRepository.deleteById(id);
+    }
+}
+}
+```[@]```
+15: {
+package com.school.students.schedulers;
+
+import com.school.students.services.StudentService;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
+
+@Component
+public class StudentTaskScheduler {
+
+    private final StudentService studentService;
+
+    public StudentTaskScheduler(StudentService studentService) {
+        this.studentService = studentService;
+    }
+
+    @Scheduled(cron = "0 0 1 * * ?")
+    public void refreshStudentRecords() {
+        studentService.refreshAllStudentRecords();
+    }
+
+    @Scheduled(fixedRate = 7200000)
+    public void generatePeriodicReports() {
+        studentService.generateReports();
+    }
+}
+}
+```[@]```
+16: {
+package com.finance.accounts.repositories;
+
+import com.finance.accounts.models.Account;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+public interface AccountRepository extends JpaRepository<Account, Long> {
+
+    @Query("SELECT a FROM Account a WHERE a.balance < :balance")
+    List<Account> findAccountsByBalanceLessThan(@Param("balance") Double balance);
+
+    @Query("SELECT a FROM Account a WHERE a.status = :status")
+    List<Account> findAccountsByStatus(@Param("status") String status);
+}
+}
+```[@]```
+17: {
+package com.marketplace.products.controllers;
+
+import com.marketplace.products.models.Product;
+import com.marketplace.products.services.ProductService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/products")
+public class MarketplaceProductController {
+
+    private final ProductService productService;
+
+    public MarketplaceProductController(ProductService productService) {
+        this.productService = productService;
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Product> getProduct(@PathVariable Long id) {
+        Product product = productService.findProductById(id);
+        return product != null ? ResponseEntity.ok(product) : ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
+
+    @PostMapping
+    public ResponseEntity<Product> createProduct(@RequestBody Product product) {
+        Product newProduct = productService.saveProduct(product);
+        return ResponseEntity.status(HttpStatus.CREATED).body(newProduct);
+    }
+
+    @PutMapping("/{id}/stock")
+    public ResponseEntity<Product> updateProductStock(@PathVariable Long id, @RequestParam Integer newStock) {
+        Product updatedProduct = productService.updateProductStock(id, newStock);
+        return ResponseEntity.ok(updatedProduct);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
+        productService.deleteProduct(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Product>> getAllProducts() {
+        List<Product> products = productService.getAllProducts();
+        return ResponseEntity.ok(products);
+    }
+}
+}
+```[@]```
+18: {
+package com.educational.books.services;
+
+import com.educational.books.models.Book;
+import com.educational.books.repositories.BookRepository;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class LibraryService {
+
+    private final BookRepository bookRepository;
+
+    public LibraryService(BookRepository bookRepository) {
+        this.bookRepository = bookRepository;
+    }
+
+    public Book findBookById(Long id) {
+        return bookRepository.findById(id).orElse(null);
+    }
+
+    public List<Book> findBooksByTitle(String title) {
+        return bookRepository.findBooksByTitle(title);
+    }
+
+    public Book saveBook(Book book) {
+        return bookRepository.save(book);
+    }
+
+    public Book updateBook(Long id, Book bookDetails) {
+        Book existingBook = findBookById(id);
+        if (existingBook != null) {
+            existingBook.setGenre(bookDetails.getGenre());
+            existingBook.setPublisher(bookDetails.getPublisher());
+            return bookRepository.save(existingBook);
+        }
+        return null;
+    }
+
+    public void deleteBook(Long id) {
+        bookRepository.deleteById(id);
+    }
+}
+}
+```[@]```
+19: {
+package com.hr.employees.repositories;
+
+import com.hr.employees.models.Employee;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+public interface EmployeeRepository extends JpaRepository<Employee, Long> {
+
+    @Query("SELECT e FROM Employee e WHERE e.jobTitle = :jobTitle")
+    List<Employee> findEmployeesByJobTitle(@Param("jobTitle") String jobTitle);
+
+    @Query("SELECT e FROM Employee e WHERE e.yearsOfExperience > :yearsOfExperience")
+    List<Employee> findEmployeesByExperienceGreaterThan(@Param("yearsOfExperience") Integer yearsOfExperience);
+}
+}
+```[@]```
+20: {
+package com.medical.patients.controllers;
+
+import com.medical.patients.models.Patient;
+import com.medical.patients.services.PatientService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/patients")
+public class PatientRecordsController {
+
+    private final PatientService patientService;
+
+    public PatientRecordsController(PatientService patientService) {
+        this.patientService = patientService;
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Patient> getPatient(@PathVariable Long id) {
+        Patient patient = patientService.findPatientById(id);
+        return patient != null ? ResponseEntity.ok(patient) : ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
+
+    @PostMapping
+    public ResponseEntity<Patient> createPatient(@RequestBody Patient patient) {
+        Patient newPatient = patientService.savePatient(patient);
+        return ResponseEntity.status(HttpStatus.CREATED).body(newPatient);
+    }
+
+    @PutMapping("/{id}/phone")
+    public ResponseEntity<Patient> updatePatientPhone(@PathVariable Long id, @RequestParam String newPhone) {
+        Patient updatedPatient = patientService.updatePatientPhone(id, newPhone);
+        return ResponseEntity.ok(updatedPatient);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletePatient(@PathVariable Long id) {
+        patientService.deletePatient(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Patient>> getAllPatients() {
+        List<Patient> patients = patientService.getAllPatients();
+        return ResponseEntity.ok(patients);
+    }
+}
+}
+```[@]```
+21: {
+package com.onlineeducation.courses.repositories;
+
+import com.onlineeducation.courses.models.Course;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+public interface CourseRepository extends JpaRepository<Course, Long> {
+
+    @Query("SELECT c FROM Course c WHERE c.category = :category")
+    List<Course> findCoursesByCategory(@Param("category") String category);
+
+    @Query("SELECT c FROM Course c WHERE c.rating > :rating")
+    List<Course> findCoursesByRatingGreaterThan(@Param("rating") Double rating);
+}
+}
+```[@]```
+22: {
+package com.travelagency.bookings.services;
+
+import com.travelagency.bookings.models.Booking;
+import com.travelagency.bookings.repositories.BookingRepository;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class BookingManagementService {
+
+    private final BookingRepository bookingRepository;
+
+    public BookingManagementService(BookingRepository bookingRepository) {
+        this.bookingRepository = bookingRepository;
+    }
+
+    public Booking findBookingById(Long id) {
+        return bookingRepository.findById(id).orElse(null);
+    }
+
+    public List<Booking> findBookingsByDestination(String destination) {
+        return bookingRepository.findBookingsByDestination(destination);
+    }
+
+    public Booking saveBooking(Booking booking) {
+        return bookingRepository.save(booking);
+    }
+
+    public Booking updateBooking(Long id, Booking bookingDetails) {
+        Booking existingBooking = findBookingById(id);
+        if (existingBooking != null) {
+            existingBooking.setFlightDetails(bookingDetails.getFlightDetails());
+            existingBooking.setHotelDetails(bookingDetails.getHotelDetails());
+            return bookingRepository.save(existingBooking);
+        }
+        return null;
+    }
+
+    public void deleteBooking(Long id) {
+        bookingRepository.deleteById(id);
+    }
+}
+}
+```[@]```
+23: {
+package com.fooddelivery.reservations.services;
+
+import com.fooddelivery.reservations.models.Reservation;
+import com.fooddelivery.reservations.repositories.ReservationRepository;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class ReservationManagementService {
+
+    private final ReservationRepository reservationRepository;
+
+    public ReservationManagementService(ReservationRepository reservationRepository) {
+        this.reservationRepository = reservationRepository;
+    }
+
+    public Reservation findReservationById(Long id) {
+        return reservationRepository.findById(id).orElse(null);
+    }
+
+    public List<Reservation> findReservationsByDate(String date) {
+        return reservationRepository.findReservationsByDate(date);
+    }
+
+    public Reservation saveReservation(Reservation reservation) {
+        return reservationRepository.save(reservation);
+    }
+
+    public Reservation updateReservation(Long id, Reservation reservationDetails) {
+        Reservation existingReservation = findReservationById(id);
+        if (existingReservation != null) {
+            existingReservation.setCustomerName(reservationDetails.getCustomerName());
+            existingReservation.setCustomerEmail(reservationDetails.getCustomerEmail());
+            return reservationRepository.save(existingReservation);
+        }
+        return null;
+    }
+
+    public void deleteReservation(Long id) {
+        reservationRepository.deleteById(id);
+    }
+}
+}
+```[@]```
+24: {
+package com.banking.loans.repositories;
+
+import com.banking.loans.models.Loan;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+public interface LoanRepository extends JpaRepository<Loan, Long> {
+
+    @Query("SELECT l FROM Loan l WHERE l.term < :term")
+    List<Loan> findLoansByTermLessThan(@Param("term") Integer term);
+
+    @Query("SELECT l FROM Loan l WHERE l.borrower = :borrower")
+    List<Loan> findLoansByBorrower(@Param("borrower") String borrower);
+}
+}
+```[@]```
+25: {
+package com.shippingcompany.shipments.schedulers;
+
+import com.shippingcompany.shipments.services.ShipmentService;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
+
+@Component
+public class ShipmentStatusScheduler {
+
+    private final ShipmentService shipmentService;
+
+    public ShipmentStatusScheduler(ShipmentService shipmentService) {
+        this.shipmentService = shipmentService;
+    }
+
+    @Scheduled(cron = "0 0 3 * * ?")
+    public void refreshShipmentStatuses() {
+        shipmentService.refreshAllShipmentStatuses();
+    }
+
+    @Scheduled(fixedRate = 180000)
+    public void notifyShipmentUpdates() {
+        shipmentService.notifyShipmentUpdates();
+    }
+}
+}
+```[@]```
+26: {
+package com.techsupport.tickets.services;
+
+import com.techsupport.tickets.models.Ticket;
+import com.techsupport.tickets.repositories.TicketRepository;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class TicketManagementService {
+
+    private final TicketRepository ticketRepository;
+
+    public TicketManagementService(TicketRepository ticketRepository) {
+        this.ticketRepository = ticketRepository;
+    }
+
+    public Ticket findTicketById(Long id) {
+        return ticketRepository.findById(id).orElse(null);
+    }
+
+    public List<Ticket> findTicketsByPriority(String priority) {
+        return ticketRepository.findTicketsByPriority(priority);
+    }
+
+    public Ticket saveTicket(Ticket ticket) {
+        return ticketRepository.save(ticket);
+    }
+
+    public Ticket updateTicket(Long id, Ticket ticketDetails) {
+        Ticket existingTicket = findTicketById(id);
+        if (existingTicket != null) {
+            existingTicket.setAssignedTo(ticketDetails.getAssignedTo());
+            existingTicket.setDescription(ticketDetails.getDescription());
+            return ticketRepository.save(existingTicket);
+        }
+        return null;
+    }
+
+    public void deleteTicket(Long id) {
+        ticketRepository.deleteById(id);
+    }
+}
+}
