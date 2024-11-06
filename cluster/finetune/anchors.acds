@@ -1,406 +1,488 @@
 1: {
-    package com.example.demo.controllers;
+package com.example.demo.controllers;
 
-    import com.example.demo.models.User;
-    import com.example.demo.services.UserService;
-    import org.springframework.http.HttpStatus;
-    import org.springframework.http.ResponseEntity;
-    import org.springframework.web.bind.annotation.*;
+import com.example.demo.models.User;
+import com.example.demo.services.UserService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-    import java.util.List;
+import java.util.List;
 
-    @RestController
-    @RequestMapping("/users")
-    public class UserController {
+@RestController
+@RequestMapping("/users")
+public class UserController {
 
-        private final UserService userService;
+    private final UserService userService;
 
-        public UserController(UserService userService) {
-            this.userService = userService;
-        }
-
-        @GetMapping("/{id}")
-        public ResponseEntity<User> getUser(@PathVariable Long id) {
-            User user = userService.findUserById(id);
-            return user != null ? ResponseEntity.ok(user) : ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-
-        @PostMapping
-        public ResponseEntity<User> createUser(@RequestBody User user) {
-            User newUser = userService.saveUser(user);
-            return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
-        }
-
-        @PutMapping("/{id}")
-        public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User userDetails) {
-            User updatedUser = userService.updateUser(id, userDetails);
-            return ResponseEntity.ok(updatedUser);
-        }
-
-        @DeleteMapping("/{id}")
-        public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-            userService.deleteUser(id);
-            return ResponseEntity.noContent().build();
-        }
-
-        @GetMapping
-        public ResponseEntity<List<User>> getAllUsers() {
-            List<User> users = userService.getAllUsers();
-            return ResponseEntity.ok(users);
-        }
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<User> getUser(@PathVariable Long id) {
+        User user = userService.findUserById(id);
+        return user != null ? ResponseEntity.ok(user) : ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
+
+    @PostMapping
+    public ResponseEntity<User> createUser(@RequestBody User user) {
+        User newUser = userService.saveUser(user);
+        return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User userDetails) {
+        User updatedUser = userService.updateUser(id, userDetails);
+        return ResponseEntity.ok(updatedUser);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<List<User>> getAllUsers() {
+        List<User> users = userService.getAllUsers();
+        return ResponseEntity.ok(users);
+    }
+}
 }
 ```[@]```
 2: {
-    package com.example.demo.services;
+package com.example.demo.services;
 
-    import com.example.demo.models.User;
-    import com.example.demo.repositories.UserRepository;
-    import org.springframework.stereotype.Service;
+import com.example.demo.models.User;
+import com.example.demo.repositories.UserRepository;
+import org.springframework.stereotype.Service;
 
-    import java.util.List;
-    import java.util.Optional;
+import java.util.List;
+import java.util.Optional;
 
-    @Service
-    public class UserService {
+@Service
+public class UserService {
 
-        private final UserRepository userRepository;
+    private final UserRepository userRepository;
 
-        public UserService(UserRepository userRepository) {
-            this.userRepository = userRepository;
-        }
-
-        public User findUserById(Long id) {
-            return userRepository.findById(id).orElse(null);
-        }
-
-        public List<User> getAllUsers() {
-            return userRepository.findAll();
-        }
-
-        public User saveUser(User user) {
-            return userRepository.save(user);
-        }
-
-        public User updateUser(Long id, User userDetails) {
-            User existingUser = findUserById(id);
-            if (existingUser != null) {
-                existingUser.setName(userDetails.getName());
-                return userRepository.save(existingUser);
-            }
-            return null;
-        }
-
-        public void deleteUser(Long id) {
-            userRepository.deleteById(id);
-        }
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
+
+    public User findUserById(Long id) {
+        return userRepository.findById(id).orElse(null);
+    }
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    public User saveUser(User user) {
+        return userRepository.save(user);
+    }
+
+    public User updateUser(Long id, User userDetails) {
+        User existingUser = findUserById(id);
+        if (existingUser != null) {
+            existingUser.setName(userDetails.getName());
+            return userRepository.save(existingUser);
+        }
+        return null;
+    }
+
+    public void deleteUser(Long id) {
+        userRepository.deleteById(id);
+    }
+}
 }
 ```[@]```
 3: {
-    package com.example.demo.repositories;
+package com.example.demo.repositories;
 
-    import com.example.demo.models.User;
-    import org.springframework.data.jpa.repository.JpaRepository;
-    import org.springframework.stereotype.Repository;
+import com.example.demo.models.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-    import java.util.Optional;
+import java.util.Optional;
 
-    @Repository
-    public interface UserRepository extends JpaRepository<User, Long> {
-        Optional<User> findByEmail(String email);
-    }
+@Repository
+public interface UserRepository extends JpaRepository<User, Long> {
+    Optional<User> findByEmail(String email);
+}
 }
 ```[@]```
 4: {
-    package com.example.demo.transactions;
-    
-    import java.math.BigDecimal;
-    import java.util.Date;
-    
-    public class PaymentTransaction {
-    
-        private String transactionId;
-        private String senderAccountId;
-        private String receiverAccountId;
-        private BigDecimal amount;
-        private Date transactionDate;
-    
-        public PaymentTransaction(String transactionId, String senderAccountId, String receiverAccountId, BigDecimal amount, Date transactionDate) {
-            this.transactionId = transactionId;
-            this.senderAccountId = senderAccountId;
-            this.receiverAccountId = receiverAccountId;
-            this.amount = amount;
-            this.transactionDate = transactionDate;
-        }
-    
-        public String getTransactionId() {
-            return transactionId;
-        }
-    
-        public String getSenderAccountId() {
-            return senderAccountId;
-        }
-    
-        public String getReceiverAccountId() {
-            return receiverAccountId;
-        }
-    
-        public BigDecimal getAmount() {
-            return amount;
-        }
-    
-        public Date getTransactionDate() {
-            return transactionDate;
-        }
+package com.example.demo.transactions;
+
+import java.math.BigDecimal;
+import java.util.Date;
+
+public class PaymentTransaction {
+
+    private String transactionId;
+    private String senderAccountId;
+    private String receiverAccountId;
+    private BigDecimal amount;
+    private Date transactionDate;
+
+    public PaymentTransaction(String transactionId, String senderAccountId, String receiverAccountId, BigDecimal amount, Date transactionDate) {
+        this.transactionId = transactionId;
+        this.senderAccountId = senderAccountId;
+        this.receiverAccountId = receiverAccountId;
+        this.amount = amount;
+        this.transactionDate = transactionDate;
     }
+
+    public String getTransactionId() {
+        return transactionId;
+    }
+
+    public String getSenderAccountId() {
+        return senderAccountId;
+    }
+
+    public String getReceiverAccountId() {
+        return receiverAccountId;
+    }
+
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public Date getTransactionDate() {
+        return transactionDate;
+    }
+}
 }
 ```[@]```
 5: {
-    package com.example.demo.inventory;
-    
-    public class InventoryItem {
-    
-        private String itemId;
-        private String itemName;
-        private int quantity;
-        private double price;
-    
-        public InventoryItem(String itemId, String itemName, int quantity, double price) {
-            this.itemId = itemId;
-            this.itemName = itemName;
-            this.quantity = quantity;
-            this.price = price;
-        }
-    
-        public String getItemId() {
-            return itemId;
-        }
-    
-        public String getItemName() {
-            return itemName;
-        }
-    
-        public int getQuantity() {
-            return quantity;
-        }
-    
-        public double getPrice() {
-            return price;
-        }
+package com.example.demo.inventory;
+
+public class InventoryItem {
+
+    private String itemId;
+    private String itemName;
+    private int quantity;
+    private double price;
+
+    public InventoryItem(String itemId, String itemName, int quantity, double price) {
+        this.itemId = itemId;
+        this.itemName = itemName;
+        this.quantity = quantity;
+        this.price = price;
     }
+
+    public String getItemId() {
+        return itemId;
+    }
+
+    public String getItemName() {
+        return itemName;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+}
 }
 ```[@]```
 6: {
-    package com.example.demo.ecommerce;
-    
-    import java.util.ArrayList;
-    import java.util.List;
-    
-    public class ShoppingCart {
-    
-        private String cartId;
-        private List<String> items;
-        private double total;
-    
-        public ShoppingCart(String cartId) {
-            this.cartId = cartId;
-            this.items = new ArrayList<>();
-            this.total = 0.0;
-        }
-    
-        public void addItem(String item) {
-            items.add(item);
-        }
-    
-        public void removeItem(String item) {
-            items.remove(item);
-        }
-    
-        public List<String> getItems() {
-            return items;
-        }
-    
-        public double getTotal() {
-            return total;
-        }
-    
-        public void calculateTotal(double itemPrice) {
-            total += itemPrice;
-        }
+package com.example.demo.ecommerce;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class ShoppingCart {
+
+    private String cartId;
+    private List<String> items;
+    private double total;
+
+    public ShoppingCart(String cartId) {
+        this.cartId = cartId;
+        this.items = new ArrayList<>();
+        this.total = 0.0;
     }
+
+    public void addItem(String item) {
+        items.add(item);
+    }
+
+    public void removeItem(String item) {
+        items.remove(item);
+    }
+
+    public List<String> getItems() {
+        return items;
+    }
+
+    public double getTotal() {
+        return total;
+    }
+
+    public void calculateTotal(double itemPrice) {
+        total += itemPrice;
+    }
+}
 }
 ```[@]```
 7: {
-    package com.example.demo.auth;
-    
-    public class UserLogin {
-    
-        private String username;
-        private String password;
-    
-        public UserLogin(String username, String password) {
-            this.username = username;
-            this.password = password;
-        }
-    
-        public String getUsername() {
-            return username;
-        }
-    
-        public String getPassword() {
-            return password;
-        }
+package com.example.demo.auth;
+
+public class UserLogin {
+
+    private String username;
+    private String password;
+
+    public UserLogin(String username, String password) {
+        this.username = username;
+        this.password = password;
     }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+}
 }
 ```[@]```
 8: {
-    package com.example.demo.socialmedia;
-    
-    public class TextPost {
-    
-        private String postId;
-        private String userId;
-        private String content;
-    
-        public TextPost(String postId, String userId, String content) {
-            this.postId = postId;
-            this.userId = userId;
-            this.content = content;
-        }
-    
-        public String getPostId() {
-            return postId;
-        }
-    
-        public String getUserId() {
-            return userId;
-        }
-    
-        public String getContent() {
-            return content;
-        }
+package com.example.demo.socialmedia;
+
+public class TextPost {
+
+    private String postId;
+    private String userId;
+    private String content;
+
+    public TextPost(String postId, String userId, String content) {
+        this.postId = postId;
+        this.userId = userId;
+        this.content = content;
     }
+
+    public String getPostId() {
+        return postId;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public String getContent() {
+        return content;
+    }
+}
 }
 ```[@]```
 9: {
-    package com.example.demo.education;
-    
-    public class Lesson {
-    
-        private String lessonId;
-        private String lessonTitle;
-        private String content;
-    
-        public Lesson(String lessonId, String lessonTitle, String content) {
-            this.lessonId = lessonId;
-            this.lessonTitle = lessonTitle;
-            this.content = content;
-        }
-    
-        public String getLessonId() {
-            return lessonId;
-        }
-    
-        public String getLessonTitle() {
-            return lessonTitle;
-        }
-    
-        public String getContent() {
-            return content;
-        }
+package com.example.demo.education;
+
+public class Lesson {
+
+    private String lessonId;
+    private String lessonTitle;
+    private String content;
+
+    public Lesson(String lessonId, String lessonTitle, String content) {
+        this.lessonId = lessonId;
+        this.lessonTitle = lessonTitle;
+        this.content = content;
     }
+
+    public String getLessonId() {
+        return lessonId;
+    }
+
+    public String getLessonTitle() {
+        return lessonTitle;
+    }
+
+    public String getContent() {
+        return content;
+    }
+}
 }
 ```[@]```
 10: {
-    package com.example.demo.notifications;
-    
-    public class EmailNotification {
-    
-        private String email;
-        private String subject;
-        private String message;
-    
-        public EmailNotification(String email, String subject, String message) {
-            this.email = email;
-            this.subject = subject;
-            this.message = message;
-        }
-    
-        public String getEmail() {
-            return email;
-        }
-    
-        public String getSubject() {
-            return subject;
-        }
-    
-        public String getMessage() {
-            return message;
-        }
+package com.example.demo.notifications;
+
+public class EmailNotification {
+
+    private String email;
+    private String subject;
+    private String message;
+
+    public EmailNotification(String email, String subject, String message) {
+        this.email = email;
+        this.subject = subject;
+        this.message = message;
     }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getSubject() {
+        return subject;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+}
 }
 ```[@]```
 11: {
-    package com.example.demo.payments;
-    
-    public class CreditCardPayment {
-    
-        private String cardNumber;
-        private String cardHolderName;
-        private String expirationDate;
-        private double amount;
-    
-        public CreditCardPayment(String cardNumber, String cardHolderName, String expirationDate, double amount) {
-            this.cardNumber = cardNumber;
-            this.cardHolderName = cardHolderName;
-            this.expirationDate = expirationDate;
-            this.amount = amount;
-        }
-    
-        public String getCardNumber() {
-            return cardNumber;
-        }
-    
-        public String getCardHolderName() {
-            return cardHolderName;
-        }
-    
-        public String getExpirationDate() {
-            return expirationDate;
-        }
-    
-        public double getAmount() {
-            return amount;
-        }
+package com.example.demo.payments;
+
+public class CreditCardPayment {
+
+    private String cardNumber;
+    private String cardHolderName;
+    private String expirationDate;
+    private double amount;
+
+    public CreditCardPayment(String cardNumber, String cardHolderName, String expirationDate, double amount) {
+        this.cardNumber = cardNumber;
+        this.cardHolderName = cardHolderName;
+        this.expirationDate = expirationDate;
+        this.amount = amount;
     }
+
+    public String getCardNumber() {
+        return cardNumber;
+    }
+
+    public String getCardHolderName() {
+        return cardHolderName;
+    }
+
+    public String getExpirationDate() {
+        return expirationDate;
+    }
+
+    public double getAmount() {
+        return amount;
+    }
+}
 }
 ```[@]```
 12: {
-    package com.example.demo.ecommerce;
-    
-    public class Order {
-    
-        private String orderId;
-        private String productId;
-        private int quantity;
-    
-        public Order(String orderId, String productId, int quantity) {
-            this.orderId = orderId;
-            this.productId = productId;
-            this.quantity = quantity;
-        }
-    
-        public String getOrderId() {
-            return orderId;
-        }
-    
-        public String getProductId() {
-            return productId;
-        }
-    
-        public int getQuantity() {
-            return quantity;
-        }
+package com.example.demo.ecommerce;
+
+public class Order {
+
+    private String orderId;
+    private String productId;
+    private int quantity;
+
+    public Order(String orderId, String productId, int quantity) {
+        this.orderId = orderId;
+        this.productId = productId;
+        this.quantity = quantity;
     }
+
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public String getProductId() {
+        return productId;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+}
+}
+```[@]```
+13: {
+package edu.setokk.atm.user;
+
+import edu.setokk.atm.auth.JwtUtils;
+import edu.setokk.atm.user.request.LoginRequest;
+import edu.setokk.atm.user.request.RegisterRequest;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
+
+import java.math.BigDecimal;
+
+@RestController
+@RequestMapping("/api/users")
+public class UserController {
+    private final UserService userService;
+
+    @Autowired
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> authenticateUser(@RequestBody @Valid LoginRequest loginRequest) {
+        String username = loginRequest.getUsername();
+        String password = loginRequest.getPassword();
+
+        User user = userService.loginUser(username, password);
+
+        // Generate JWT Token
+        return ResponseEntity.ok(JwtUtils.generateJWT(user));
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<?> registerUser(@RequestBody @Valid
+                                          RegisterRequest registerRequest) {
+        String username = registerRequest.getUsername();
+        String password = registerRequest.getPassword();
+        String email = registerRequest.getEmail();
+
+        User user = userService.registerUser(username, password, email);
+
+        // Generate JWT Token
+        return ResponseEntity.ok(JwtUtils.generateJWT(user));
+    }
+
+    @GetMapping("/deposit")
+    public ResponseEntity<?> depositAmount(@RequestParam("amount") @Positive BigDecimal amount) {
+        User authUser = getAuthenticatedUser();
+        if (authUser == null)
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+
+        userService.deposit(authUser, amount);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/withdraw")
+    public ResponseEntity<?> withdrawAmount(@RequestParam("amount") @Positive BigDecimal amount) {
+        User authUser = getAuthenticatedUser();
+        System.out.println(authUser);
+        if (authUser == null)
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+
+        userService.withdraw(authUser, amount);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    private User getAuthenticatedUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !(authentication.getPrincipal() instanceof User))
+            return null;
+
+        return (User) authentication.getPrincipal();
+    }
+}
 }

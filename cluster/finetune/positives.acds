@@ -1,399 +1,490 @@
 1: {
-    package com.example.demo.controllers;
+package com.example.demo.controllers;
 
-    import com.example.demo.models.Product;
-    import com.example.demo.services.ProductService;
-    import org.springframework.http.HttpStatus;
-    import org.springframework.http.ResponseEntity;
-    import org.springframework.web.bind.annotation.*;
-    
-    import java.util.List;
-    
-    @RestController
-    @RequestMapping("/products")
-    public class ProductController {
-    
-        private final ProductService productService;
-    
-        public ProductController(ProductService productService) {
-            this.productService = productService;
-        }
-    
-        @GetMapping("/{id}")
-        public ResponseEntity<Product> getProduct(@PathVariable Long id) {
-            Product product = productService.findProductById(id);
-            return product != null ? ResponseEntity.ok(product) : ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-    
-        @PostMapping
-        public ResponseEntity<Product> createProduct(@RequestBody Product product) {
-            Product newProduct = productService.saveProduct(product);
-            return ResponseEntity.status(HttpStatus.CREATED).body(newProduct);
-        }
-    
-        @PutMapping("/{id}")
-        public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody Product productDetails) {
-            Product updatedProduct = productService.updateProduct(id, productDetails);
-            return ResponseEntity.ok(updatedProduct);
-        }
-    
-        @DeleteMapping("/{id}")
-        public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
-            productService.deleteProduct(id);
-            return ResponseEntity.noContent().build();
-        }
-    
-        @GetMapping
-        public ResponseEntity<List<Product>> getAllProducts() {
-            List<Product> products = productService.getAllProducts();
-            return ResponseEntity.ok(products);
-        }
+import com.example.demo.models.Product;
+import com.example.demo.services.ProductService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/products")
+public class ProductController {
+
+    private final ProductService productService;
+
+    public ProductController(ProductService productService) {
+        this.productService = productService;
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Product> getProduct(@PathVariable Long id) {
+        Product product = productService.findProductById(id);
+        return product != null ? ResponseEntity.ok(product) : ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
+
+    @PostMapping
+    public ResponseEntity<Product> createProduct(@RequestBody Product product) {
+        Product newProduct = productService.saveProduct(product);
+        return ResponseEntity.status(HttpStatus.CREATED).body(newProduct);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody Product productDetails) {
+        Product updatedProduct = productService.updateProduct(id, productDetails);
+        return ResponseEntity.ok(updatedProduct);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
+        productService.deleteProduct(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Product>> getAllProducts() {
+        List<Product> products = productService.getAllProducts();
+        return ResponseEntity.ok(products);
+    }
+}
 }
 ```[@]```
 2: {
-    package com.example.demo.services;
-    
-    import com.example.demo.models.Product;
-    import com.example.demo.repositories.ProductRepository;
-    import org.springframework.stereotype.Service;
-    
-    import java.util.List;
-    
-    @Service
-    public class ProductService {
-    
-        private final ProductRepository productRepository;
-    
-        public ProductService(ProductRepository productRepository) {
-            this.productRepository = productRepository;
-        }
-    
-        public Product findProductById(Long id) {
-            return productRepository.findById(id).orElse(null);
-        }
-    
-        public List<Product> getAllProducts() {
-            return productRepository.findAll();
-        }
-    
-        public Product saveProduct(Product product) {
-            return productRepository.save(product);
-        }
-    
-        public Product updateProduct(Long id, Product productDetails) {
-            Product existingProduct = findProductById(id);
-            if (existingProduct != null) {
-                existingProduct.setName(productDetails.getName());
-                existingProduct.setPrice(productDetails.getPrice());
-                return productRepository.save(existingProduct);
-            }
-            return null;
-        }
-    
-        public void deleteProduct(Long id) {
-            productRepository.deleteById(id);
-        }
+package com.example.demo.services;
+
+import com.example.demo.models.Product;
+import com.example.demo.repositories.ProductRepository;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class ProductService {
+
+    private final ProductRepository productRepository;
+
+    public ProductService(ProductRepository productRepository) {
+        this.productRepository = productRepository;
     }
+
+    public Product findProductById(Long id) {
+        return productRepository.findById(id).orElse(null);
+    }
+
+    public List<Product> getAllProducts() {
+        return productRepository.findAll();
+    }
+
+    public Product saveProduct(Product product) {
+        return productRepository.save(product);
+    }
+
+    public Product updateProduct(Long id, Product productDetails) {
+        Product existingProduct = findProductById(id);
+        if (existingProduct != null) {
+            existingProduct.setName(productDetails.getName());
+            existingProduct.setPrice(productDetails.getPrice());
+            return productRepository.save(existingProduct);
+        }
+        return null;
+    }
+
+    public void deleteProduct(Long id) {
+        productRepository.deleteById(id);
+    }
+}
 }
 ```[@]```
 3: {
-    package com.example.demo.repositories;
-    
-    import com.example.demo.models.Product;
-    import org.springframework.data.jpa.repository.JpaRepository;
-    import org.springframework.stereotype.Repository;
-    
-    import java.util.Optional;
-    
-    @Repository
-    public interface ProductRepository extends JpaRepository<Product, Long> {
-        Optional<Product> findById(Long id);
-    }
+package com.example.demo.repositories;
+
+import com.example.demo.models.Product;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
+
+@Repository
+public interface ProductRepository extends JpaRepository<Product, Long> {
+    Optional<Product> findById(Long id);
+}
 }
 ```[@]```
 4: {
-    package com.example.demo.transactions;
-    
-    import java.math.BigDecimal;
-    import java.util.Date;
-    
-    public class BankTransferTransaction {
-    
-        private String transferId;
-        private String fromBankAccount;
-        private String toBankAccount;
-        private BigDecimal transferAmount;
-        private Date transferDate;
-    
-        public BankTransferTransaction(String transferId, String fromBankAccount, String toBankAccount, BigDecimal transferAmount, Date transferDate) {
-            this.transferId = transferId;
-            this.fromBankAccount = fromBankAccount;
-            this.toBankAccount = toBankAccount;
-            this.transferAmount = transferAmount;
-            this.transferDate = transferDate;
-        }
-    
-        public String getTransferId() {
-            return transferId;
-        }
-    
-        public String getFromBankAccount() {
-            return fromBankAccount;
-        }
-    
-        public String getToBankAccount() {
-            return toBankAccount;
-        }
-    
-        public BigDecimal getTransferAmount() {
-            return transferAmount;
-        }
-    
-        public Date getTransferDate() {
-            return transferDate;
-        }
+package com.example.demo.transactions;
+
+import java.math.BigDecimal;
+import java.util.Date;
+
+public class BankTransferTransaction {
+
+    private String transferId;
+    private String fromBankAccount;
+    private String toBankAccount;
+    private BigDecimal transferAmount;
+    private Date transferDate;
+
+    public BankTransferTransaction(String transferId, String fromBankAccount, String toBankAccount, BigDecimal transferAmount, Date transferDate) {
+        this.transferId = transferId;
+        this.fromBankAccount = fromBankAccount;
+        this.toBankAccount = toBankAccount;
+        this.transferAmount = transferAmount;
+        this.transferDate = transferDate;
     }
+
+    public String getTransferId() {
+        return transferId;
+    }
+
+    public String getFromBankAccount() {
+        return fromBankAccount;
+    }
+
+    public String getToBankAccount() {
+        return toBankAccount;
+    }
+
+    public BigDecimal getTransferAmount() {
+        return transferAmount;
+    }
+
+    public Date getTransferDate() {
+        return transferDate;
+    }
+}
 }
 ```[@]```
 5: {
-    package com.example.demo.inventory;
-    
-    public class WarehouseItem {
-    
-        private String warehouseItemId;
-        private String warehouseItemName;
-        private int stock;
-        private double cost;
-    
-        public WarehouseItem(String warehouseItemId, String warehouseItemName, int stock, double cost) {
-            this.warehouseItemId = warehouseItemId;
-            this.warehouseItemName = warehouseItemName;
-            this.stock = stock;
-            this.cost = cost;
-        }
-    
-        public String getWarehouseItemId() {
-            return warehouseItemId;
-        }
-    
-        public String getWarehouseItemName() {
-            return warehouseItemName;
-        }
-    
-        public int getStock() {
-            return stock;
-        }
-    
-        public double getCost() {
-            return cost;
-        }
+package com.example.demo.inventory;
+
+public class WarehouseItem {
+
+    private String warehouseItemId;
+    private String warehouseItemName;
+    private int stock;
+    private double cost;
+
+    public WarehouseItem(String warehouseItemId, String warehouseItemName, int stock, double cost) {
+        this.warehouseItemId = warehouseItemId;
+        this.warehouseItemName = warehouseItemName;
+        this.stock = stock;
+        this.cost = cost;
     }
+
+    public String getWarehouseItemId() {
+        return warehouseItemId;
+    }
+
+    public String getWarehouseItemName() {
+        return warehouseItemName;
+    }
+
+    public int getStock() {
+        return stock;
+    }
+
+    public double getCost() {
+        return cost;
+    }
+}
 }
 ```[@]```
 6: {
-    package com.example.demo.ecommerce;
-    
-    import java.util.List;
-    
-    public class Order {
-    
-        private String orderId;
-        private List<String> orderItems;
-        private double totalAmount;
-    
-        public Order(String orderId, List<String> orderItems, double totalAmount) {
-            this.orderId = orderId;
-            this.orderItems = orderItems;
-            this.totalAmount = totalAmount;
-        }
-    
-        public String getOrderId() {
-            return orderId;
-        }
-    
-        public List<String> getOrderItems() {
-            return orderItems;
-        }
-    
-        public double getTotalAmount() {
-            return totalAmount;
-        }
+package com.example.demo.ecommerce;
+
+import java.util.List;
+
+public class Order {
+
+    private String orderId;
+    private List<String> orderItems;
+    private double totalAmount;
+
+    public Order(String orderId, List<String> orderItems, double totalAmount) {
+        this.orderId = orderId;
+        this.orderItems = orderItems;
+        this.totalAmount = totalAmount;
     }
+
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public List<String> getOrderItems() {
+        return orderItems;
+    }
+
+    public double getTotalAmount() {
+        return totalAmount;
+    }
+}
 }
 ```[@]```
 7: {
-    package com.example.demo.auth;
-    
-    public class AdminLogin {
-    
-        private String adminUsername;
-        private String adminPassword;
-    
-        public AdminLogin(String adminUsername, String adminPassword) {
-            this.adminUsername = adminUsername;
-            this.adminPassword = adminPassword;
-        }
-    
-        public String getAdminUsername() {
-            return adminUsername;
-        }
-    
-        public String getAdminPassword() {
-            return adminPassword;
-        }
+package com.example.demo.auth;
+
+public class AdminLogin {
+
+    private String adminUsername;
+    private String adminPassword;
+
+    public AdminLogin(String adminUsername, String adminPassword) {
+        this.adminUsername = adminUsername;
+        this.adminPassword = adminPassword;
     }
+
+    public String getAdminUsername() {
+        return adminUsername;
+    }
+
+    public String getAdminPassword() {
+        return adminPassword;
+    }
+}
 }
 ```[@]```
 8: {
-    package com.example.demo.socialmedia;
-    
-    public class Comment {
-    
-        private String commentId;
-        private String postId;
-        private String userId;
-        private String text;
-    
-        public Comment(String commentId, String postId, String userId, String text) {
-            this.commentId = commentId;
-            this.postId = postId;
-            this.userId = userId;
-            this.text = text;
-        }
-    
-        public String getCommentId() {
-            return commentId;
-        }
-    
-        public String getPostId() {
-            return postId;
-        }
-    
-        public String getUserId() {
-            return userId;
-        }
-    
-        public String getText() {
-            return text;
-        }
+package com.example.demo.socialmedia;
+
+public class Comment {
+
+    private String commentId;
+    private String postId;
+    private String userId;
+    private String text;
+
+    public Comment(String commentId, String postId, String userId, String text) {
+        this.commentId = commentId;
+        this.postId = postId;
+        this.userId = userId;
+        this.text = text;
     }
+
+    public String getCommentId() {
+        return commentId;
+    }
+
+    public String getPostId() {
+        return postId;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public String getText() {
+        return text;
+    }
+}
 }
 ```[@]```
 9: {
-    package com.example.demo.education;
-    
-    import java.util.List;
-    
-    public class Module {
-    
-        private String moduleId;
-        private String moduleName;
-        private List<Lesson> lessons;
-    
-        public Module(String moduleId, String moduleName, List<Lesson> lessons) {
-            this.moduleId = moduleId;
-            this.moduleName = moduleName;
-            this.lessons = lessons;
-        }
-    
-        public String getModuleId() {
-            return moduleId;
-        }
-    
-        public String getModuleName() {
-            return moduleName;
-        }
-    
-        public List<Lesson> getLessons() {
-            return lessons;
-        }
+package com.example.demo.education;
+
+import java.util.List;
+
+public class Module {
+
+    private String moduleId;
+    private String moduleName;
+    private List<Lesson> lessons;
+
+    public Module(String moduleId, String moduleName, List<Lesson> lessons) {
+        this.moduleId = moduleId;
+        this.moduleName = moduleName;
+        this.lessons = lessons;
     }
+
+    public String getModuleId() {
+        return moduleId;
+    }
+
+    public String getModuleName() {
+        return moduleName;
+    }
+
+    public List<Lesson> getLessons() {
+        return lessons;
+    }
+}
 }
 ```[@]```
 10: {
-    package com.example.demo.notifications;
-    
-    public class SMSNotification {
-    
-        private String phoneNumber;
-        private String message;
-    
-        public SMSNotification(String phoneNumber, String message) {
-            this.phoneNumber = phoneNumber;
-            this.message = message;
-        }
-    
-        public String getPhoneNumber() {
-            return phoneNumber;
-        }
-    
-        public String getMessage() {
-            return message;
-        }
+package com.example.demo.notifications;
+
+public class SMSNotification {
+
+    private String phoneNumber;
+    private String message;
+
+    public SMSNotification(String phoneNumber, String message) {
+        this.phoneNumber = phoneNumber;
+        this.message = message;
     }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+}
 }
 ```[@]```
 11: {
-    package com.example.demo.payments;
-    
-    public class DebitCardPayment {
-    
-        private String debitCardNumber;
-        private String holderName;
-        private String expirationDate;
-        private double amount;
-    
-        public DebitCardPayment(String debitCardNumber, String holderName, String expirationDate, double amount) {
-            this.debitCardNumber = debitCardNumber;
-            this.holderName = holderName;
-            this.expirationDate = expirationDate;
-            this.amount = amount;
-        }
-    
-        public String getDebitCardNumber() {
-            return debitCardNumber;
-        }
-    
-        public String getHolderName() {
-            return holderName;
-        }
-    
-        public String getExpirationDate() {
-            return expirationDate;
-        }
-    
-        public double getAmount() {
-            return amount;
-        }
+package com.example.demo.payments;
+
+public class DebitCardPayment {
+
+    private String debitCardNumber;
+    private String holderName;
+    private String expirationDate;
+    private double amount;
+
+    public DebitCardPayment(String debitCardNumber, String holderName, String expirationDate, double amount) {
+        this.debitCardNumber = debitCardNumber;
+        this.holderName = holderName;
+        this.expirationDate = expirationDate;
+        this.amount = amount;
     }
+
+    public String getDebitCardNumber() {
+        return debitCardNumber;
+    }
+
+    public String getHolderName() {
+        return holderName;
+    }
+
+    public String getExpirationDate() {
+        return expirationDate;
+    }
+
+    public double getAmount() {
+        return amount;
+    }
+}
 }
 ```[@]```
 12: {
-    package com.example.demo.ecommerce;
-    
-    public class Invoice {
-    
-        private String invoiceId;
-        private String orderId;
-        private double totalAmount;
-    
-        public Invoice(String invoiceId, String orderId, double totalAmount) {
-            this.invoiceId = invoiceId;
-            this.orderId = orderId;
-            this.totalAmount = totalAmount;
-        }
-    
-        public String getInvoiceId() {
-            return invoiceId;
-        }
-    
-        public String getOrderId() {
-            return orderId;
-        }
-    
-        public double getTotalAmount() {
-            return totalAmount;
-        }
+package com.example.demo.ecommerce;
+
+public class Invoice {
+
+    private String invoiceId;
+    private String orderId;
+    private double totalAmount;
+
+    public Invoice(String invoiceId, String orderId, double totalAmount) {
+        this.invoiceId = invoiceId;
+        this.orderId = orderId;
+        this.totalAmount = totalAmount;
     }
+
+    public String getInvoiceId() {
+        return invoiceId;
+    }
+
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public double getTotalAmount() {
+        return totalAmount;
+    }
+}
+}
+```[@]```
+13: {
+package com.example.ecommerce.controller;
+
+import com.example.ecommerce.dto.OrderDTO;
+import com.example.ecommerce.dto.ProductDTO;
+import com.example.ecommerce.exception.ResourceNotFoundException;
+import com.example.ecommerce.model.Order;
+import com.example.ecommerce.model.Product;
+import com.example.ecommerce.service.OrderService;
+import com.example.ecommerce.service.ProductService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/v1")
+@Validated
+public class EcommerceController {
+
+    @Autowired
+    private ProductService productService;
+
+    @Autowired
+    private OrderService orderService;
+
+    @GetMapping("/products")
+    public ResponseEntity<List<ProductDTO>> getAllProducts() {
+        List<ProductDTO> products = productService.getAllProducts();
+        return ResponseEntity.ok(products);
+    }
+
+    @GetMapping("/products/{id}")
+    public ResponseEntity<ProductDTO> getProductById(@PathVariable Long id) throws ResourceNotFoundException {
+        ProductDTO product = productService.getProductById(id);
+        return ResponseEntity.ok(product);
+    }
+
+    @PostMapping("/products")
+    public ResponseEntity<ProductDTO> createProduct(@Valid @RequestBody ProductDTO productDTO) {
+        ProductDTO createdProduct = productService.createProduct(productDTO);
+        return ResponseEntity.ok(createdProduct);
+    }
+
+    @PutMapping("/products/{id}")
+    public ResponseEntity<ProductDTO> updateProduct(@PathVariable Long id, @Valid @RequestBody ProductDTO productDTO) throws ResourceNotFoundException {
+        ProductDTO updatedProduct = productService.updateProduct(id, productDTO);
+        return ResponseEntity.ok(updatedProduct);
+    }
+
+    @DeleteMapping("/products/{id}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) throws ResourceNotFoundException {
+        productService.deleteProduct(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/orders")
+    public ResponseEntity<List<OrderDTO>> getAllOrders() {
+        List<OrderDTO> orders = orderService.getAllOrders();
+        return ResponseEntity.ok(orders);
+    }
+
+    @GetMapping("/orders/{id}")
+    public ResponseEntity<OrderDTO> getOrderById(@PathVariable Long id) throws ResourceNotFoundException {
+        OrderDTO order = orderService.getOrderById(id);
+        return ResponseEntity.ok(order);
+    }
+
+    @PostMapping("/orders")
+    public ResponseEntity<OrderDTO> createOrder(@Valid @RequestBody OrderDTO orderDTO) {
+        OrderDTO createdOrder = orderService.createOrder(orderDTO);
+        return ResponseEntity.ok(createdOrder);
+    }
+
+    @PutMapping("/orders/{id}")
+    public ResponseEntity<OrderDTO> updateOrder(@PathVariable Long id, @Valid @RequestBody OrderDTO orderDTO) throws ResourceNotFoundException {
+        OrderDTO updatedOrder = orderService.updateOrder(id, orderDTO);
+        return ResponseEntity.ok(updatedOrder);
+    }
+
+    @DeleteMapping("/orders/{id}")
+    public ResponseEntity<Void> deleteOrder(@PathVariable Long id) throws ResourceNotFoundException {
+        orderService.deleteOrder(id);
+        return ResponseEntity.noContent().build();
+    }
+}
 }
