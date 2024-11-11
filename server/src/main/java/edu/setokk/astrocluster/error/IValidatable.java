@@ -31,4 +31,8 @@ public interface IValidatable {
      */
     default void postValidate() throws BusinessLogicException {
     }
+
+    default String errorPrefix() {
+        return "[" + getClass().getSimpleName() + "]:";
+    }
 }
