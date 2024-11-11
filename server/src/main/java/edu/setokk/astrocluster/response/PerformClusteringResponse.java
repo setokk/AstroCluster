@@ -3,11 +3,7 @@ package edu.setokk.astrocluster.response;
 import edu.setokk.astrocluster.core.cluster.PercentagePerCluster;
 import edu.setokk.astrocluster.model.dto.AnalysisDto;
 import jakarta.validation.constraints.NotNull;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.Singular;
+import lombok.*;
 
 import java.util.List;
 
@@ -15,6 +11,7 @@ import java.util.List;
 @Setter
 @Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public final class PerformClusteringResponse {
     @NotNull(message = "analysisData is mandatory")
     private AnalysisDto analysisData;

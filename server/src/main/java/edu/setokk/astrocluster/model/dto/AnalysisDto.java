@@ -1,10 +1,6 @@
 package edu.setokk.astrocluster.model.dto;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.Singular;
+import lombok.*;
 
 import java.util.List;
 
@@ -12,6 +8,7 @@ import java.util.List;
 @Setter
 @Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public final class AnalysisDto {
     private long id;
     private String gitProjectName;

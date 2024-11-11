@@ -30,15 +30,16 @@ public class ClusterController {
     public ResponseEntity<?> performClustering(@RequestBody @Valid PerformClusteringRequest requestBody) throws IOException, InterruptedException {
         requestBody.validate();
         /*clusterService.performClustering(requestBody);*/
-        AnalysisDto analysisDto = new AnalysisDto();
-        analysisDto.setId(1L);
-        analysisDto.setGitProjectName("AstroCluster!");
-        analysisDto.setGitUrl("https://www.github.com/setokk/AstroCluster.git");
-        analysisDto.addClusterResult(ClusterResultDto.builder()
+        AnalysisDto analysisDto = AnalysisDto.builder()
                 .id(1L)
-                .filename("Something.java")
-                .filepath("src/java/main/Something.java")
-                .clusterLabel(0L).build());
+                .gitProjectName("AstroCluster!")
+                .gitUrl("https://www.github.com/setokk/AstroCluster.git")
+                .addClusterResult(ClusterResultDto.builder()
+                        .id(1L)
+                        .filename("Something.java")
+                        .filepath("src/java/main/Something.java")
+                        .clusterLabel(0).build())
+                .build();
 
         PerformClusteringResponse responseBody = PerformClusteringResponse.builder()
                 .analysisData(analysisDto)

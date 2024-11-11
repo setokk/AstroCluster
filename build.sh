@@ -2,7 +2,9 @@
 set -eo pipefail
 
 MAN=$(cat <<-END
-Usage: $0 [--skip-ui <SKIP_UI: boolean>] [--skip-grpc <SKIP_GRPC: boolean>]
+Usage: $0 [--skip-ui <SKIP_UI: boolean>] [--skip-server <SKIP_SERVER: boolean>]
+          [--skip-grpc <SKIP_GRPC: boolean>] [--skip-ac <SKIP_AC: boolean>]
+          [--skip-db <SKIP_DB: boolean>]
 
 List of available options:
 
@@ -20,12 +22,13 @@ END
 )
 
 # Load build script configurations
-source ./docker-compose.config.sh
 source ./proto/grpc.config.sh
+source ./docker-compose.config.sh
 
 # Colors for terminal
-readonly BLUE="\033[0;34m"
 readonly RED="\033[0;31m"
+readonly GREEN='\033[0;32m'
+readonly BLUE="\033[0;34m"
 readonly NC="\033[0m"
 
 SKIP_UI=false
@@ -58,8 +61,8 @@ if [ $SKIP_GRPC = false ]; then
     AC_MAVEN_PROFILES+="grpc"
     AC_GENERATE_GRPC=true
     # Temporarily copy .proto files to cluster and server directories (in order to be visible for copying via Dockerfile)
-    cp ./proto/cluster.proto ./server/cluster.proto
-    cp ./proto/cluster.proto ./cluster/cluster.proto
+    cp ./proto/cluster.proto ./server/cluster.proto && echo -e "[${BLUE}BUILD INFO${NC}]: Copied cluster.proto in server"
+    cp ./proto/cluster.proto ./cluster/cluster.proto && echo -e "[${BLUE}BUILD INFO${NC}]: Copied cluster.proto in cluster"
 fi
 export MAVEN_PROFILES="${AC_MAVEN_PROFILES}"
 export GENERATE_GRPC="${AC_GENERATE_GRPC}"
@@ -86,18 +89,18 @@ if [ "${#SERVICES_TO_BUILD[@]}" -eq 0 ]; then
     echo -e "[${RED}BUILD ERROR${NC}]: Services to build cannot be zero. Please remove a --skip flag to continue..."
     exit 1
 fi
-echo -e "[${BLUE}BUILD INFO${NC}]: Building ${SERVICES_TO_BUILD[@]}"
+echo -e "[${BLUE}BUILD INFO${NC}]: Building ${GREEN}${SERVICES_TO_BUILD[@]}${NC}"
 sudo docker-compose up -d --build "${SERVICES_TO_BUILD[@]}"
 
 # Copy generated gRPC files from containers to the actual project directory
 if [ $SKIP_GRPC = false ]; then
     # Delete temporary .proto files
-    rm -rf ./server/cluster.proto
-    rm -rf ./cluster/cluster.proto
+    sudo rm -rf ./server/cluster.proto
+    sudo rm -rf ./cluster/cluster.proto
 
     # Copy generated files from containers to actual project directory
-    docker cp "${SERVER_CONTAINER_ID}:${BE_GRPC_DOCKER_PATH}" "${BE_GRPC_PROJECT_PATH}"
-    echo -e "[${BLUE}INFO${NC}]: Server gRPC update finished. Copied docker gRPC files to project directory."
-    docker cp "${CLUSTER_SERVICE_CONTAINER_ID}:${CS_GRPC_DOCKER_PATH}" "${CS_GRPC_PROJECT_PATH}"
-    echo -e "[${BLUE}INFO${NC}: Cluster service gRPC update finished. Copied docker gRPC files to project directory."
+    sudo docker cp "${SERVER_CONTAINER_ID}:${BE_GRPC_DOCKER_PATH}" "${BE_GRPC_PROJECT_PATH}"
+    echo -e "[${BLUE}BUILD INFO${NC}]: Server gRPC update finished. Copied docker gRPC files to project directory."
+    sudo docker cp "${CLUSTER_SERVICE_CONTAINER_ID}:${CS_GRPC_DOCKER_PATH}" "${CS_GRPC_PROJECT_PATH}"
+    echo -e "[${BLUE}BUILD INFO${NC}: Cluster service gRPC update finished. Copied docker gRPC files to project directory."
 fi
