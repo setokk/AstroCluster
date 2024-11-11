@@ -10,9 +10,9 @@ import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
-@AllArgsConstructor
 @Getter
-public class ClusterRequestBody implements IValidatable {
+@AllArgsConstructor
+public final class PerformClusteringRequest implements IValidatable {
     @NotNull(message = "gitUrl field is mandatory")
     private String gitUrl;
     @NotNull(message = "lang field is mandatory")

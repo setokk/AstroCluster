@@ -45,7 +45,7 @@ public class AnalysisJpo {
     private String gitUrl;
 
     @OneToMany(mappedBy = "analysis", orphanRemoval = true, fetch = FetchType.LAZY)
-    private Set<ClusteringResultJpo> clusteringResults;
+    private Set<ClusterResultJpo> clusteringResults;
 
     public String getGitProjectName() {
         String splitGitUrl = StringUtils.splitByAndGetLast(gitUrl, "\\/");

@@ -1,6 +1,10 @@
 package edu.setokk.astrocluster.controller;
 
-import edu.setokk.astrocluster.request.ClusterRequestBody;
+import edu.setokk.astrocluster.core.cluster.PercentagePerCluster;
+import edu.setokk.astrocluster.model.dto.AnalysisDto;
+import edu.setokk.astrocluster.model.dto.ClusterResultDto;
+import edu.setokk.astrocluster.request.PerformClusteringRequest;
+import edu.setokk.astrocluster.response.PerformClusteringResponse;
 import edu.setokk.astrocluster.service.ClusterService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.util.Collections;
 
 @RestController
 @RequestMapping("/api/cluster")
@@ -23,9 +28,23 @@ public class ClusterController {
     }
 
     @PostMapping("/perform-clustering")
-    public ResponseEntity<?> performClustering(@RequestBody @Valid ClusterRequestBody requestBody) throws IOException, InterruptedException {
+    public ResponseEntity<?> performClustering(@RequestBody @Valid PerformClusteringRequest requestBody) throws IOException, InterruptedException {
         requestBody.validate();
-        clusterService.performClustering(requestBody);
-        return ResponseEntity.ok(null);
+        /*clusterService.performClustering(requestBody);*/
+        AnalysisDto analysisDto = new AnalysisDto();
+        analysisDto.setId(1L);
+        analysisDto.setGitProjectName("AstroCluster!");
+        analysisDto.setGitUrl("https://www.github.com/setokk/AstroCluster.git");
+        analysisDto.setClusterResults(Collections.singletonList(ClusterResultDto.builder()
+                .id(1L)
+                .filename("Something.java")
+                .filepath("src/java/main/Something.java")
+                .clusterLabel(0L).build()));
+
+        PerformClusteringResponse responseBody = PerformClusteringResponse.builder()
+                .analysisData(analysisDto)
+                .percentagesPerCluster(Collections.singletonList(new PercentagePerCluster(0, 100.0)))
+                .build();
+        return ResponseEntity.ok(responseBody);
     }
 }

@@ -18,7 +18,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ClusteringResultJpo {
+public class ClusterResultJpo {
 
     @Id
     @SequenceGenerator(
@@ -33,11 +33,8 @@ public class ClusteringResultJpo {
     @Column(name = "id", updatable = false)
     private Long id;
 
-    @Column(name = "file_path", nullable = false)
-    private String filePath;
-
-    @Column(name = "similarity_score", nullable = false)
-    private String similarityScore;
+    @Column(name = "filepath", nullable = false)
+    private String filepath;
 
     @Column(name = "cluster_label", nullable = false)
     private String clusterLabel;
@@ -47,6 +44,6 @@ public class ClusteringResultJpo {
     private AnalysisJpo analysis;
 
     public String getFileName() {
-        return StringUtils.splitByAndGetLast(filePath, "[\\\\/]");
+        return StringUtils.splitByAndGetLast(filepath, "[\\\\/]");
     }
 }

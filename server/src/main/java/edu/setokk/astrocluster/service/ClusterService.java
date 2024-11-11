@@ -4,7 +4,7 @@ import edu.setokk.astrocluster.grpc.ClusterRequest;
 import edu.setokk.astrocluster.grpc.ClusterResponse;
 import edu.setokk.astrocluster.grpc.ClusterServiceGrpc;
 import edu.setokk.astrocluster.error.BusinessLogicException;
-import edu.setokk.astrocluster.request.ClusterRequestBody;
+import edu.setokk.astrocluster.request.PerformClusteringRequest;
 import edu.setokk.astrocluster.util.IOUtils;
 import io.grpc.ManagedChannel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ public class ClusterService {
         this.clusterBlockingStub = ClusterServiceGrpc.newBlockingStub(managedChannel);
     }
 
-    public void performClustering(ClusterRequestBody requestBody) throws IOException, InterruptedException {
+    public void performClustering(PerformClusteringRequest requestBody) throws IOException, InterruptedException {
         String projectPath = IOUtils.PROJECTS_DIR + UUID.randomUUID();
         Process gcProcess = Runtime.getRuntime().exec(new String[]{"git", "clone", requestBody.getGitUrl(), projectPath});
         if (gcProcess.waitFor() != 0)
