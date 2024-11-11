@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
-import java.util.Collections;
 
 @RestController
 @RequestMapping("/api/cluster")
@@ -35,15 +34,15 @@ public class ClusterController {
         analysisDto.setId(1L);
         analysisDto.setGitProjectName("AstroCluster!");
         analysisDto.setGitUrl("https://www.github.com/setokk/AstroCluster.git");
-        analysisDto.setClusterResults(Collections.singletonList(ClusterResultDto.builder()
+        analysisDto.addClusterResult(ClusterResultDto.builder()
                 .id(1L)
                 .filename("Something.java")
                 .filepath("src/java/main/Something.java")
-                .clusterLabel(0L).build()));
+                .clusterLabel(0L).build());
 
         PerformClusteringResponse responseBody = PerformClusteringResponse.builder()
                 .analysisData(analysisDto)
-                .percentagesPerCluster(Collections.singletonList(new PercentagePerCluster(0, 100.0)))
+                .addPercentagePerCluster(new PercentagePerCluster(0, 100.0))
                 .build();
         return ResponseEntity.ok(responseBody);
     }

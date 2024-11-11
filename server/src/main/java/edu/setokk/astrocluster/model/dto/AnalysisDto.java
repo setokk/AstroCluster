@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.Singular;
 
 import java.util.List;
 
@@ -15,5 +16,5 @@ public final class AnalysisDto {
     private long id;
     private String gitProjectName;
     private String gitUrl;
-    private List<ClusterResultDto> clusterResults;
+    @Singular("addClusterResult") private List<ClusterResultDto> clusterResults;
 }

@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.Singular;
 
 import java.util.List;
 
@@ -15,9 +16,9 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 public final class PerformClusteringResponse {
-    @NotNull
+    @NotNull(message = "analysisData is mandatory")
     private AnalysisDto analysisData;
 
-    @NotNull
-    private List<PercentagePerCluster> percentagesPerCluster;
+    @NotNull(message = "percentagesPerCluster is mandatory")
+    @Singular("addPercentagePerCluster") private List<PercentagePerCluster> percentagesPerCluster;
 }
