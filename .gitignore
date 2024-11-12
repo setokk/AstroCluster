@@ -14,6 +14,23 @@ server/!**/src/test/**/target/
 server/projects/
 server/.idea/
 
+### Client ###
+client/node_modules
+client/package-lock.json
+client/.angular/cache
+client/dist
+client/tmp
+client/out-tsc
+client/bazel-out
+client/npm-debug.log
+client/yarn-error.log
+client/.sass-cache/
+client/connect.lock
+client/coverage
+client/libpeerconnection.log
+client/testem.log
+client/typings
+
 ### IntelliJ IDEA ###
 server/.idea
 server/*.iws
