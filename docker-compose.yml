@@ -29,12 +29,12 @@ services:
       dockerfile: Dockerfile
       args:
         MAVEN_PROFILES: "${MAVEN_PROFILES}"
+        BE_GRPC_DOCKER_PATH: "${BE_GRPC_DOCKER_PATH}"
     ports:
       - "8080:8080"
     environment:
       spring.datasource.url: "jdbc:postgresql://db:5432/astrocluster"
-      MAVEN_PROFILES: "${AC_MAVEN_PROFILES}"
-      GRPC_OUTPUT_PATH: "${BE_GRPC_OUTPUT_PATH}"
+      BE_GRPC_DOCKER_PATH: "${BE_GRPC_DOCKER_PATH}"
 
   client:
     container_name: "${CLIENT_CONTAINER_ID}"

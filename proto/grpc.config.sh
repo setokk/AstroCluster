@@ -6,8 +6,7 @@ set -eo pipefail
 #
 # The following paths are used for copying generated gRPC files from docker containers to the actual project directory.
 # Project paths must be relative to build.sh.
-export BE_GRPC_OUTPUT_PATH="src/main/java/edu/setokk/astrocluster/grpc"
-export BE_GRPC_PROJECT_PATH="./server/${BE_GRPC_OUTPUT_PATH}"
-export BE_GRPC_DOCKER_PATH="/home/app/${BE_GRPC_OUTPUT_PATH}"
-export CS_GRPC_PROJECT_PATH="./cluster/service"
+export BE_GRPC_PROJECT_PATH="./server/src/main/java/edu/setokk/astrocluster"
+export CS_GRPC_PROJECT_PATH="./cluster"
+export BE_GRPC_DOCKER_PATH="/ac-server/src/main/java/edu/setokk/astrocluster/grpc"
 export CS_GRPC_DOCKER_PATH="/ac-clustering-service/service"

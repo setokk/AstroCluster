@@ -21,16 +21,29 @@ List of available options:
 END
 )
 
-# Load build script configurations
-source ./proto/grpc.config.sh
+# Imports
 source ./docker-compose.config.sh
+source ./colors.config.sh
 
-# Colors for terminal
-readonly RED="\033[0;31m"
-readonly GREEN='\033[0;32m'
-readonly BLUE="\033[0;34m"
-readonly NC="\033[0m"
+# Helper functions
+update_dynamic_env_variables() {
+    # Append all dynamic environment variables to docker-compose .env file before building
+    {
+        echo "MAVEN_PROFILES=${AC_MAVEN_PROFILES}"
+        echo "GENERATE_GRPC=${AC_GENERATE_GRPC}"
+    } >> "${DOCKER_COMPOSE_ENV_FILE}"
+}
 
+build_services() {
+  if [ "${#SERVICES_TO_BUILD[@]}" -eq 0 ]; then
+      echo -e "[${RED}BUILD ERROR${NC}]: Services to build cannot be zero. Please remove a --skip flag to continue..."
+      exit 1
+  fi
+  echo -e "[${BLUE}BUILD INFO${NC}]: Building ${GREEN}${SERVICES_TO_BUILD[@]}${NC}"
+  sudo docker-compose up -d --build "${SERVICES_TO_BUILD[@]}"
+}
+
+# Main script
 SKIP_UI=false
 SKIP_SERVER=false
 SKIP_GRPC=false
@@ -64,8 +77,6 @@ if [ $SKIP_GRPC = false ]; then
     cp ./proto/cluster.proto ./server/cluster.proto && echo -e "[${BLUE}BUILD INFO${NC}]: Copied cluster.proto in server"
     cp ./proto/cluster.proto ./cluster/cluster.proto && echo -e "[${BLUE}BUILD INFO${NC}]: Copied cluster.proto in cluster"
 fi
-export MAVEN_PROFILES="${AC_MAVEN_PROFILES}"
-export GENERATE_GRPC="${AC_GENERATE_GRPC}"
 
 # Services to build and deploy
 declare -a SERVICES_TO_BUILD
@@ -85,12 +96,8 @@ if [ $SKIP_UI = false ]; then
     SERVICES_TO_BUILD+=("client")
 fi
 
-if [ "${#SERVICES_TO_BUILD[@]}" -eq 0 ]; then
-    echo -e "[${RED}BUILD ERROR${NC}]: Services to build cannot be zero. Please remove a --skip flag to continue..."
-    exit 1
-fi
-echo -e "[${BLUE}BUILD INFO${NC}]: Building ${GREEN}${SERVICES_TO_BUILD[@]}${NC}"
-sudo docker-compose up -d --build "${SERVICES_TO_BUILD[@]}"
+update_dynamic_env_variables
+build_services
 
 # Copy generated gRPC files from containers to the actual project directory
 if [ $SKIP_GRPC = false ]; then
@@ -101,6 +108,6 @@ if [ $SKIP_GRPC = false ]; then
     # Copy generated files from containers to actual project directory
     sudo docker cp "${SERVER_CONTAINER_ID}:${BE_GRPC_DOCKER_PATH}" "${BE_GRPC_PROJECT_PATH}"
     echo -e "[${BLUE}BUILD INFO${NC}]: Server gRPC update finished. Copied docker gRPC files to project directory."
-    sudo docker cp "${CLUSTER_SERVICE_CONTAINER_ID}:${CS_GRPC_DOCKER_PATH}" "${CS_GRPC_PROJECT_PATH}"
+    sudo docker cp "${CLUSTER_SERVICE_CONTAINER_ID}:${CS_GRPC_DOCKER_PATH}" "${CS_GRPC_PROJECT_PATH}" && sudo rm -rf "${CS_GRPC_PROJECT_PATH}/service/__pycache__"
     echo -e "[${BLUE}BUILD INFO${NC}: Cluster service gRPC update finished. Copied docker gRPC files to project directory."
 fi

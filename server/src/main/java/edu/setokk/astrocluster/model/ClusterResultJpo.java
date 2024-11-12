@@ -1,7 +1,16 @@
 package edu.setokk.astrocluster.model;
 
-import edu.setokk.astrocluster.util.StringUtils;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,9 +18,9 @@ import lombok.Setter;
 
 @Entity
 @Table(
-        name = "clustering_result",
+        name = "cluster_result",
         uniqueConstraints = {
-                @UniqueConstraint(name = "clustering_result_file_path_unique", columnNames = "file_path")
+                @UniqueConstraint(name = "cluster_result_file_path_unique", columnNames = "filepath")
         }
 )
 @Getter
@@ -22,13 +31,13 @@ public class ClusterResultJpo {
 
     @Id
     @SequenceGenerator(
-            name = "clusteringResultSeqGen",
-            sequenceName = "clustering_result_seq",
+            name = "clusterResultSeqGen",
+            sequenceName = "cluster_result_seq",
             allocationSize = 1
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator = "clusteringResultSeqGen"
+            generator = "clusterResultSeqGen"
     )
     @Column(name = "id", updatable = false)
     private Long id;
@@ -42,8 +51,4 @@ public class ClusterResultJpo {
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "analysis_id", nullable = false)
     private AnalysisJpo analysis;
-
-    public String getFileName() {
-        return StringUtils.splitByAndGetLast(filepath, "[\\\\/]");
-    }
 }

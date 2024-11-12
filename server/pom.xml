@@ -18,7 +18,7 @@
         <protobuf.version>4.27.2</protobuf.version>
         <grpc.version>1.63.0</grpc.version>
         <os.detected.classifier>linux-x86_32</os.detected.classifier>
-        <ac.grpc.output.path>${project.basedir}/${env.GRPC_OUTPUT_PATH}</ac.grpc.output.path>
+        <ac.grpc.output.path>${env.BE_GRPC_DOCKER_PATH}</ac.grpc.output.path>
     </properties>
     <dependencies>
         <!-- WEB DEPENDENCIES -->
