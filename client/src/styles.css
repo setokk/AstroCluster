@@ -19,6 +19,24 @@
     font-style: normal;
 }
 
+@keyframes slide-top-to-bottom {
+    0% {
+        top: -100px;
+    }
+    100% {
+        top: 0;
+    }
+}
+
+@keyframes slide-left-to-right {
+    0% {
+        left: -100px;
+    }
+    100% {
+        left: 0;
+    }
+}
+
 html {
     font-family: 'Ubuntu', sans-serif;
     font-size: 24px;
