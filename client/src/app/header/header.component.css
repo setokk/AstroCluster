@@ -1,0 +1,40 @@
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: var(--font-color);
+}
+
+nav {
+    flex-grow: 1;
+}
+
+ul {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    justify-content: space-around;
+}
+
+li {
+    margin: 0 0.7rem;
+}
+
+#logo {
+    display: flex;
+    align-items: center;
+    margin-right: auto;
+}
+
+#logo img {
+    height: 40px;
+    margin-right: 10px;
+}
+
+a {
+    text-decoration: none;
+}

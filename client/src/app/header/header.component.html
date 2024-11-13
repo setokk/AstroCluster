@@ -1,0 +1,12 @@
+<header>
+  <nav>
+    <ul>
+      <li id="logo"><a href="/"><img src="media/icons/logo-transparent.png" alt="AstroCluster Logo"><span>AstroCluster</span></a></li>
+      @for (menu_item of menu_items; track menu_item.name) {
+        <li>
+          <a [href]="menu_item.href">{{ menu_item.name }}</a>
+        </li>
+      }
+    </ul>
+  </nav>
+</header>

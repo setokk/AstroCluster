@@ -1,1 +1,44 @@
-/* You can add global styles to this file, and also import other style files */
+/* Global Styles */
+:root {
+    --font-color: rgba(248, 249, 250, 1);
+    --secondary-font-color: #C2B280;
+    --menu-color: #333333;
+    --hover-font-color: #3d97f2;
+    --background-color: #242424;
+    --secondary-background-color: #111111;
+}
+
+::selection {
+    background: #3f3f40;
+}
+
+@font-face {
+    font-family: 'Ubuntu';
+    src: url('../public/fonts/Dosis-Medium.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+html {
+    font-family: 'Ubuntu', sans-serif;
+    font-size: 24px;
+    color: var(--font-color);
+    scrollbar-color: var(--secondary-font-color) #666;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  overflow-x: hidden;
+}
+
+a {
+    color: var(--menu-color);
+    transition: color 150ms;
+}
+
+a:hover {
+    color: var(--hover-font-color);
+    transition: color 150ms;
+}
