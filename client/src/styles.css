@@ -1,11 +1,11 @@
 /* Global Styles */
 :root {
-    --font-color: rgba(248, 249, 250, 1);
-    --secondary-font-color: #C2B280;
-    --menu-color: #333333;
-    --hover-font-color: #3d97f2;
-    --background-color: #242424;
-    --secondary-background-color: #111111;
+    --silver-white: rgba(248, 249, 250, 1);
+    --gold: #c2b280;
+    --menu-font-color: #333333;
+    --cyan-blue: #3d97f2;
+    --transparent-black: rgba(0, 0, 0, 0.4);
+    --black-gray: #111111;
 }
 
 ::selection {
@@ -30,33 +30,66 @@
 
 @keyframes slide-left-to-right {
     0% {
-        left: -100px;
+        left: -200px;
     }
     100% {
         left: 0;
     }
 }
 
+@keyframes fade-in {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
 html {
     font-family: 'Ubuntu', sans-serif;
     font-size: 24px;
-    color: var(--font-color);
-    scrollbar-color: var(--secondary-font-color) #666;
+    color: var(--silver-white);
+    scrollbar-color: #000 #111;
 }
 
 body {
-  margin: 0;
-  padding: 0;
-  background: transparent;
-  overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+}
+
+app-root {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+    position: relative;
+}
+
+h1 {
+    font-size: 4rem;
+    display: block;
 }
 
 a {
-    color: var(--menu-color);
+    color: var(--menu-font-color);
+    text-decoration: none;
     transition: color 150ms;
 }
 
 a:hover {
-    color: var(--hover-font-color);
+    color: var(--cyan-blue);
+    transition: color 150ms;
+}
+
+#get-started-h2 a {
+    color: var(--silver-white);
+    text-decoration: none;
+    transition: color 150ms;
+}
+
+#get-started-h2 a:hover {
+    color: var(--cyan-blue);
     transition: color 150ms;
 }

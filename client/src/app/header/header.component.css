@@ -3,7 +3,7 @@ header {
     justify-content: space-between;
     align-items: center;
     padding: 10px 20px;
-    background-color: var(--font-color);
+    background-color: var(--silver-white);
 }
 
 nav {
@@ -35,10 +35,6 @@ li {
     margin-right: 10px;
 }
 
-a {
-    text-decoration: none;
-}
-
 li:nth-child(1) {
     position: relative;
     animation: slide-left-to-right 1s normal;
@@ -60,4 +56,14 @@ li:nth-child(4) {
 li:nth-child(5) {
     position: relative;
     animation: slide-top-to-bottom 1.5s normal;
+}
+
+li:nth-child(5) a {
+    color: var(--gold);
+    transition: color 150ms
+}
+
+li:nth-child(5) a:hover {
+    color: var(--cyan-blue);
+    transition: color 150ms
 }
