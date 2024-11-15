@@ -1,7 +1,19 @@
-<app-header></app-header>
+<header>
+  <nav>
+    <ul>
+      <li id="logo">
+        <a routerLink="/" routerLinkActive="active" ariaCurrentWhenActive="page">
+        <img src="media/icons/logo-transparent.png" alt="AstroCluster Logo">
+        <span>AstroCluster</span>
+        </a>
+      </li>
+      <li><a routerLink="/">What is AstroCluster</a></li>
+      <li><a routerLink="/">Dashboard</a></li>
+      <li><a routerLink="/">History</a></li>
+      <li><a routerLink="/">Login</a></li>
+    </ul>
+  </nav>
+</header>
+<router-outlet></router-outlet>
 <div class="overlay"></div>
-  <div class="content-container">
-    <h1>AstroCluster</h1>
-    <h2 id="get-started-h2"><a href="/dashboard">Get started</a></h2>
-  </div>
 <app-background-video></app-background-video>
