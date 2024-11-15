@@ -1,6 +1,7 @@
 /* Global Styles */
 :root {
     --silver-white: rgba(248, 249, 250, 1);
+    --transparent-silver-white: rgba(248, 249, 250, 0.9);
     --gold: #c2b280;
     --menu-font-color: #333333;
     --cyan-blue: #3d97f2;
@@ -68,12 +69,12 @@ app-root {
 }
 
 h1 {
-    font-size: 4rem;
+    font-size: 3.5rem;
     display: block;
 }
 
 h2 {
-    font-size: 2rem;
+    font-size: 1.5rem;
     display: block;
 }
 
@@ -88,6 +89,27 @@ a:hover {
     transition: color 150ms;
 }
 
+button {
+    background: var(--transparent-black);
+    color: var(--silver-white);
+    border-radius: 5px;
+    border-color: transparent;
+    padding-right: 20px;
+    padding-left: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-size: 1rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition: color 150ms, background 150ms;
+}
+
+button:hover {
+    background: var(--cyan-blue);
+    color: var(--silver-white);
+    transition: color 150ms, background 150ms;
+}
+
 form label, form input, select {
     font-family: inherit;
     margin: 5px;
@@ -97,10 +119,15 @@ form label {
     font-size: 1rem;
 }
 
-form input, form select {
+form input {
     font-size: 0.8rem;
     background: var(--transparent-black);
     color: var(--silver-white);
+    padding: 5px;
     border-radius: 10px;
     border-color: transparent;
+}
+
+form input:focus {
+    outline: transparent;
 }

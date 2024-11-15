@@ -16,6 +16,8 @@ export class AnalysisComponent {
     { label: 'Java', value: 'java' }
   ];
 
+  constructor() {}
+
   onLanguageChange(lang: string) {
     this.selectedLang = lang;
   }
