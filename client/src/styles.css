@@ -9,7 +9,7 @@
 }
 
 ::selection {
-    background: #3f3f40;
+    background: #455063;
 }
 
 @font-face {
@@ -72,6 +72,11 @@ h1 {
     display: block;
 }
 
+h2 {
+    font-size: 2rem;
+    display: block;
+}
+
 a {
     color: var(--menu-font-color);
     text-decoration: none;
@@ -83,13 +88,19 @@ a:hover {
     transition: color 150ms;
 }
 
-#get-started-h2 a {
-    color: var(--silver-white);
-    text-decoration: none;
-    transition: color 150ms;
+form label, form input, select {
+    font-family: inherit;
+    margin: 5px;
 }
 
-#get-started-h2 a:hover {
-    color: var(--cyan-blue);
-    transition: color 150ms;
+form label {
+    font-size: 1rem;
+}
+
+form input, form select {
+    font-size: 0.8rem;
+    background: var(--transparent-black);
+    color: var(--silver-white);
+    border-radius: 10px;
+    border-color: transparent;
 }

@@ -36,6 +36,10 @@ nav li {
     margin: 0 0.7rem;
 }
 
+nav a {
+    user-select: none;
+}
+
 #logo {
     display: flex;
     align-items: center;

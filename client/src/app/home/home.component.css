@@ -10,3 +10,14 @@
     align-items: center;
     animation: fade-in 1s normal;
 }
+
+#get-started-h2 {
+    color: var(--silver-white);
+    transition: color 150ms;
+}
+
+#get-started-h2:hover {
+    color: var(--cyan-blue);
+    cursor: pointer;
+    transition: color 150ms;
+}

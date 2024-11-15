@@ -1,0 +1,23 @@
+<div class="ac-dropdown">
+    <label for="dropdown">{{ label }}</label>
+    <div class="ac-select-wrapper">
+      <div class="ac-select" (click)="onToggleDropdown()">
+        <div class="ac-select-trigger">
+          <span>{{ selectedOption ? selectedOption.label : placeholder }}</span>
+          <div class="arrow" [class.open]="isOpen"></div>
+        </div>
+        @if (isOpen) {
+          <div class="ac-options">
+            @for (option of options; track $index) {
+              <span class="ac-option" 
+                (click)="onSelectOption(option)">
+                {{ option.label }}
+              </span>
+            }
+          </div>
+        }
+      </div>
+    </div>
+    <input type="hidden" [name]="name" [value]="selectedOption?.value">
+  </div>
+  

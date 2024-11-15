@@ -1,0 +1,16 @@
+<div id="analysis-content">
+  <h1>Analysis</h1>
+  <form action="" method="post">
+    <div class="form-container">
+      <label for="git-url">Git URL: </label>
+      <input type="text" name="git-url" id="git-url" required />
+      <app-dropdown-list
+        [label]="'Main language of project:'"
+        [name]="'lang'"
+        [options]="languages"
+        (selectionChange)="onLanguageChange($event)">
+      </app-dropdown-list>
+      <button type="submit">To the moon!</button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,16 @@
+#analysis-content {
+    animation: fade-in 1s normal;
+}
+
+#analysis-content form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+#analysis-content form .form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
