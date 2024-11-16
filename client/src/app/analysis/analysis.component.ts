@@ -1,31 +1,35 @@
 import { Component } from '@angular/core';
+import { FormsModule, NgForm } from '@angular/forms';
 import { DropdownListComponent } from '../dropdown-list/dropdown-list.component';
+import { SupportedLanguagesEnum } from '../enums/supported-languages-enum';
+import { ClusteringParadigmsEnum } from '../enums/clustering-paradigms-enum';
+import { ActivatedRoute, Params } from '@angular/router';
 
 @Component({
   selector: 'app-analysis',
   standalone: true,
-  imports: [ DropdownListComponent ],
+  imports: [ DropdownListComponent, FormsModule ],
   templateUrl: './analysis.component.html',
   styleUrl: './analysis.component.css'
 })
 export class AnalysisComponent {
-  gitUrl: string = '';
-  lang: string = '';
-  selectedLang: string = '';
-  languages = [
-    { label: 'Java', value: 'java' }
-  ];
+  formModel: any = {
+    gitUrl: '',
+    lang: '',
+    clusteringParadigm: ''
+  };
 
-  constructor() {}
+  supportedLanguages = SupportedLanguagesEnum.entries();
+  clusteringParadigms = ClusteringParadigmsEnum.entries();
 
-  onLanguageChange(lang: string) {
-    this.selectedLang = lang;
+  constructor(private route: ActivatedRoute) {}
+
+  onDropdownChange(field: string, value: string) {
+    this.formModel[field] = value; // Dynamically update form model
   }
 
-  onSubmit() {
-    console.log({
-      gitUrl: this.gitUrl,
-      lang: this.lang
-    });
+  onSubmit(form: NgForm): void {
+    this.formModel.gitUrl = form.form.value.gitUrl;
+    console.log(this.formModel);
   }
 }

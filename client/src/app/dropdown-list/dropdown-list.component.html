@@ -1,9 +1,10 @@
 <div class="ac-dropdown">
-    <label for="dropdown">{{ label }}</label>
+    <label [for]="name">{{ label }}</label>
+    <input type="hidden" [id]="name" [name]="name" [(ngModel)]="formData[name]">
     <div class="ac-select-wrapper">
       <div class="ac-select" (click)="onToggleDropdown()">
         <div class="ac-select-trigger">
-          <span>{{ selectedOption ? selectedOption.label : placeholder }}</span>
+          <span>{{ selectedOptionKey ? selectedOptionKey : placeholder }}</span>
           <div class="arrow" [class.open]="isOpen"></div>
         </div>
         @if (isOpen) {
@@ -11,13 +12,12 @@
             @for (option of options; track $index) {
               <span class="ac-option" 
                 (click)="onSelectOption(option)">
-                {{ option.label }}
+                {{ option.key }}
               </span>
             }
           </div>
         }
       </div>
     </div>
-    <input type="hidden" [name]="name" [value]="selectedOption?.value">
   </div>
   

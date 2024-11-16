@@ -131,3 +131,9 @@ form input {
 form input:focus {
     outline: transparent;
 }
+
+.inline-div {
+    display: flex;
+    justify-content: space-between;
+    gap: 50px;
+}
