@@ -12,7 +12,7 @@ export class HomeComponent {
 
   constructor(private router: Router) {}
 
-  onGetStartedClick() {
+  onClickGetStarted() {
     this.router.navigate(['/analysis']);
   }
 }

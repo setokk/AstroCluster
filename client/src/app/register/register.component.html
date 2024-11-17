@@ -1,0 +1,24 @@
+<div class="centered-content">
+    <div class="title-container">
+      <h1>Register</h1>
+    </div>
+    <div class="form-container">
+      <form (ngSubmit)="onSubmit(f)" #f="ngForm">
+        <label for="username">Username: </label>
+        <input type="text" name="username" id="username" ngModel required />
+        <label for="email">Email: </label>
+        <input type="email" name="email" id="email" ngModel required />
+        <label for="password">Password: </label>
+        <input type="password" name="password" id="password" ngModel required />
+        <button id="register-btn" type="submit">Register</button>
+      </form>
+      <span>Already have an account? Log-in 
+        <a id="login-anchor" 
+          routerLink="/log-in" 
+          routerLinkActive="active" 
+          ariaCurrentWhenActive="page" 
+          (click)="onClickLoginAnchor()">here</a>.
+      </span>
+    </div>
+  </div>
+  

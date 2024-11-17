@@ -1,1 +1,21 @@
-<p>login works!</p>
+<div class="centered-content">
+  <div class="title-container">
+    <h1>Login</h1>
+  </div>
+  <div class="form-container">
+    <form (ngSubmit)="onSubmit(f)" #f="ngForm">
+      <label for="username">Username: </label>
+      <input type="text" name="username" id="username" ngModel required />
+      <label for="password">Password: </label>
+      <input type="password" name="password" id="password" ngModel required />
+      <button id="login-btn" type="submit">Login</button>
+    </form>
+    <span>Don't have an account? Register 
+      <a id="register-anchor" 
+        routerLink="/register" 
+        routerLinkActive="active" 
+        ariaCurrentWhenActive="page" 
+        (click)="onClickRegisterAnchor()">here</a>.
+    </span>
+  </div>
+</div>

@@ -1,24 +1,3 @@
-#analysis-content {
-    animation: fade-in 1s normal;
-}
-
-#analysis-content h1 {
-    padding: 20px;
-}
-
-#analysis-content form {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-}
-
-#analysis-content form .form-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
 #analysis-btn {
     margin-top: 50px;
 }

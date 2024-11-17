@@ -26,7 +26,7 @@ export class DropdownListComponent {
 
   onSelectOption(option: { key: string, value: any }) {
     this.selectedOptionKey = option.key;
-    this.valueChange.emit(option.key);
+    this.valueChange.emit(option.value);
     this.formData[this.name] = option.value;
   }
 }

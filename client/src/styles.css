@@ -78,6 +78,11 @@ h2 {
     display: block;
 }
 
+h3 {
+    font-size: 1rem;
+    display: block;
+}
+
 a {
     color: var(--menu-font-color);
     text-decoration: none;
@@ -136,4 +141,35 @@ form input:focus {
     display: flex;
     justify-content: space-between;
     gap: 50px;
+}
+
+.centered-content {
+    animation: fade-in 1s normal;
+}
+
+.centered-content h1 {
+    padding: 20px;
+}
+
+.centered-content form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.centered-content form .form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.centered-content p {
+    text-align: center;
+    margin: 0;
+    padding-top: 10px;
+}
+
+.title-container {
+    text-align: center;
 }
