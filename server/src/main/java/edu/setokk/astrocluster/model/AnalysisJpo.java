@@ -29,7 +29,7 @@ public class AnalysisJpo {
     @SequenceGenerator(
             name = "analysisSeqGen",
             sequenceName = "analysis_seq",
-            allocationSize = 2
+            allocationSize = 1
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,

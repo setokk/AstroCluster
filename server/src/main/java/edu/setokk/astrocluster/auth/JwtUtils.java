@@ -1,6 +1,6 @@
-/*
 package edu.setokk.astrocluster.auth;
 
+import edu.setokk.astrocluster.model.UserJpo;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.springframework.stereotype.Component;
@@ -14,7 +14,6 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Function;
 
 @Component
 public class JwtUtils
@@ -30,12 +29,11 @@ public class JwtUtils
         }
     }
 
-    public static String generateJWT(User user) {
+    public static String generateJWT(UserJpo user) {
         Map<String, Object> claims = new HashMap<>(4);
         claims.put("id", user.getId());
         claims.put("username", user.getUsername());
         claims.put("email", user.getEmail());
-        claims.put("balance", user.getBalance());
 
         Instant currentInstant = Instant.now();
         return Jwts.builder()
@@ -56,4 +54,3 @@ public class JwtUtils
                 .getBody();
     }
 }
-*/

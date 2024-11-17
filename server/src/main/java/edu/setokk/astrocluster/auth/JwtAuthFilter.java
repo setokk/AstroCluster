@@ -1,6 +1,6 @@
-/*
 package edu.setokk.astrocluster.auth;
 
+import edu.setokk.astrocluster.model.UserJpo;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -10,12 +10,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.Collections;
 
 @Component
@@ -40,13 +38,11 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         long id = Long.parseLong(claims.getSubject());
         String username = (String) claims.get("username");
         String email = (String) claims.get("email");
-        BigDecimal balance = BigDecimal.valueOf((Double) claims.get("balance"));
 
-        User authUser = new User();
-        authUser.setId(id);
-        authUser.setUsername(username);
-        authUser.setEmail(email);
-        authUser.setBalance(balance);
+        UserJpo authUser = UserJpo.builder()
+                .id(id);
+                .username(username);
+                .email(email);
 
         Authentication authentication =
                 new UsernamePasswordAuthenticationToken(authUser, null, Collections.emptyList());
@@ -55,4 +51,3 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 }
-*/
