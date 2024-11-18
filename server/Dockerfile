@@ -4,7 +4,7 @@ COPY src /ac-server/src
 COPY pom.xml /ac-server
 
 ARG MAVEN_PROFILES
-RUN if [ -z "${MAVEN_PROFILES}" ]; then mvn -f /ac-server/pom.xml clean package -DskipTests; else mvn -f /ac-server/pom.xml clean package -P${MAVEN_PROFILES} -DskipTests; fi
+RUN if [ -z ${MAVEN_PROFILES} ]; then mvn -f /ac-server/pom.xml clean package -DskipTests; else mvn -f /ac-server/pom.xml clean package -P${MAVEN_PROFILES} -DskipTests; fi
 
 # Package stage
 FROM openjdk:21-jdk-bullseye

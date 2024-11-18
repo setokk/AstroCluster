@@ -1,6 +1,5 @@
-package edu.setokk.astrocluster.response;
+package edu.setokk.astrocluster.model.dto;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,7 +11,8 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public final class PerformClusteringResponse {
-    @NotNull(message = "ack is required")
-    private short ack;
+public class UserDto {
+    private long id;
+    private String username;
+    private String email;
 }

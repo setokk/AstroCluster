@@ -19,10 +19,12 @@ import lombok.Setter;
 @Table(
         name = "user_ac",
         indexes = {
-                @Index(name = "user_ac_email_index", columnList = "email")
+                @Index(name = "user_ac_email_index", columnList = "email"),
+                @Index(name = "user_ac_username_index", columnList = "username")
         },
         uniqueConstraints = {
-                @UniqueConstraint(name = "user_ac_email_unique", columnNames = "email")
+                @UniqueConstraint(name = "user_ac_email_unique", columnNames = "email"),
+                @UniqueConstraint(name = "user_ac_username_unique", columnNames = "username")
         }
 )
 @Getter
@@ -43,6 +45,9 @@ public class UserJpo {
     )
     @Column(name = "id", updatable = false, nullable = false)
     private Long id;
+
+    @Column(name = "username", updatable = false, nullable = false)
+    private String username;
 
     @Column(name = "email", updatable = false, nullable = false)
     private String email;

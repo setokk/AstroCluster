@@ -1,6 +1,6 @@
 package edu.setokk.astrocluster.auth;
 
-import edu.setokk.astrocluster.model.UserJpo;
+import edu.setokk.astrocluster.model.dto.UserDto;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -39,10 +39,10 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         String username = (String) claims.get("username");
         String email = (String) claims.get("email");
 
-        UserJpo authUser = UserJpo.builder()
-                .id(id);
-                .username(username);
-                .email(email);
+        UserDto authUser = UserDto.builder()
+                .id(id)
+                .username(username)
+                .email(email).build();
 
         Authentication authentication =
                 new UsernamePasswordAuthenticationToken(authUser, null, Collections.emptyList());

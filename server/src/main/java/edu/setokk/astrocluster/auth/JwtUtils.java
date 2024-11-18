@@ -1,6 +1,6 @@
 package edu.setokk.astrocluster.auth;
 
-import edu.setokk.astrocluster.model.UserJpo;
+import edu.setokk.astrocluster.model.dto.UserDto;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.springframework.stereotype.Component;
@@ -29,7 +29,7 @@ public class JwtUtils
         }
     }
 
-    public static String generateJWT(UserJpo user) {
+    public static String generateJWT(UserDto user) {
         Map<String, Object> claims = new HashMap<>(4);
         claims.put("id", user.getId());
         claims.put("username", user.getUsername());
