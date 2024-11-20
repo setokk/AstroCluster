@@ -74,7 +74,8 @@ if [ $SKIP_GRPC = false ]; then
     AC_MAVEN_PROFILES+="grpc"
     AC_GENERATE_GRPC=true
     # Temporarily copy .proto files to cluster and server directories (in order to be visible for copying via Dockerfile)
-    cp ./proto/cluster.proto ./server/cluster.proto && echo -e "[${BLUE}BUILD INFO${NC}]: Copied cluster.proto in server"
+    cp ./proto/cluster.proto ./server/default/cluster.proto && echo -e "[${BLUE}BUILD INFO${NC}]: Copied cluster.proto in server"
+    cp ./proto/cluster.proto ./server/custom/cluster.proto && echo -e "[${BLUE}BUILD INFO${NC}]: Copied cluster.proto in server custom"
     cp ./proto/cluster.proto ./cluster/cluster.proto && echo -e "[${BLUE}BUILD INFO${NC}]: Copied cluster.proto in cluster"
 fi
 
@@ -102,7 +103,8 @@ build_services
 # Copy generated gRPC files from containers to the actual project directory
 if [ $SKIP_GRPC = false ]; then
     # Delete temporary .proto files
-    sudo rm -rf ./server/cluster.proto
+    sudo rm -rf ./server/default/cluster.proto
+    sudo rm -rf ./server/custom/cluster.proto
     sudo rm -rf ./cluster/cluster.proto
 
     # Copy generated files from containers to actual project directory
