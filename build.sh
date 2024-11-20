@@ -74,6 +74,7 @@ if [ $SKIP_GRPC = false ]; then
     AC_MAVEN_PROFILES+="grpc"
     AC_GENERATE_GRPC=true
     # Temporarily copy .proto files to cluster and server directories (in order to be visible for copying via Dockerfile)
+    mkdir ./server/default && mkdir ./server/custom
     cp ./proto/cluster.proto ./server/default/cluster.proto && echo -e "[${BLUE}BUILD INFO${NC}]: Copied cluster.proto in server"
     cp ./proto/cluster.proto ./server/custom/cluster.proto && echo -e "[${BLUE}BUILD INFO${NC}]: Copied cluster.proto in server custom"
     cp ./proto/cluster.proto ./cluster/cluster.proto && echo -e "[${BLUE}BUILD INFO${NC}]: Copied cluster.proto in cluster"
