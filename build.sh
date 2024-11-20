@@ -2,9 +2,9 @@
 set -eo pipefail
 
 MAN=$(cat <<-END
-Usage: $0 [--skip-ui <SKIP_UI: boolean>] [--skip-server <SKIP_SERVER: boolean>]
-          [--skip-grpc <SKIP_GRPC: boolean>] [--skip-ac <SKIP_AC: boolean>]
-          [--skip-db <SKIP_DB: boolean>]
+Usage: $0 [--skip-ui <SKIP_UI: boolean>]     [--skip-server <SKIP_SERVER: boolean>]
+                  [--skip-grpc <SKIP_GRPC: boolean>] [--skip-ac <SKIP_AC: boolean>]
+                  [--skip-db <SKIP_DB: boolean>]
 
 List of available options:
 

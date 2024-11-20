@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 option java_multiple_files = true;
-option java_package = "edu.setokk.astrocluster.cluster.proto";
+option java_package = "edu.setokk.astrocluster.grpc";
 option java_outer_classname = "ClusterStubGrpc";
 
 package cluster.proto;
@@ -13,7 +13,7 @@ message ClusterRequest {
 }
 
 message ClusterResponse {
-    repeated string clusterLabels = 1;
+    repeated int64 clusterLabels = 1;
     repeated string filePaths = 2;
 }
 
