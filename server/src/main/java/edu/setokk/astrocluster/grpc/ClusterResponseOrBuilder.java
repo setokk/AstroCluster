@@ -10,8 +10,44 @@ public interface ClusterResponseOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>int32 status = 1;</code>
-   * @return The status.
+   * <code>repeated int64 clusterLabels = 1;</code>
+   * @return A list containing the clusterLabels.
    */
-  int getStatus();
+  java.util.List<java.lang.Long> getClusterLabelsList();
+  /**
+   * <code>repeated int64 clusterLabels = 1;</code>
+   * @return The count of clusterLabels.
+   */
+  int getClusterLabelsCount();
+  /**
+   * <code>repeated int64 clusterLabels = 1;</code>
+   * @param index The index of the element to return.
+   * @return The clusterLabels at the given index.
+   */
+  long getClusterLabels(int index);
+
+  /**
+   * <code>repeated string filePaths = 2;</code>
+   * @return A list containing the filePaths.
+   */
+  java.util.List<java.lang.String>
+      getFilePathsList();
+  /**
+   * <code>repeated string filePaths = 2;</code>
+   * @return The count of filePaths.
+   */
+  int getFilePathsCount();
+  /**
+   * <code>repeated string filePaths = 2;</code>
+   * @param index The index of the element to return.
+   * @return The filePaths at the given index.
+   */
+  java.lang.String getFilePaths(int index);
+  /**
+   * <code>repeated string filePaths = 2;</code>
+   * @param index The index of the value to return.
+   * @return The bytes of the filePaths at the given index.
+   */
+  com.google.protobuf.ByteString
+      getFilePathsBytes(int index);
 }

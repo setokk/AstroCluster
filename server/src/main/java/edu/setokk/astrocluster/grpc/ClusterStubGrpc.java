@@ -46,12 +46,12 @@ public final class ClusterStubGrpc {
     java.lang.String[] descriptorData = {
       "\n\rcluster.proto\022\rcluster.proto\"@\n\016Cluste" +
       "rRequest\022\014\n\004path\030\001 \001(\t\022\014\n\004lang\030\002 \001(\t\022\022\n\n" +
-      "extensions\030\003 \003(\t\"!\n\017ClusterResponse\022\016\n\006s" +
-      "tatus\030\001 \001(\0052d\n\016ClusterService\022R\n\021Perform" +
-      "Clustering\022\035.cluster.proto.ClusterReques" +
-      "t\032\036.cluster.proto.ClusterResponseB:\n%edu" +
-      ".setokk.astrocluster.cluster.protoB\017Clus" +
-      "terStubGrpcP\001b\006proto3"
+      "extensions\030\003 \003(\t\";\n\017ClusterResponse\022\025\n\rc" +
+      "lusterLabels\030\001 \003(\003\022\021\n\tfilePaths\030\002 \003(\t2d\n" +
+      "\016ClusterService\022R\n\021PerformClustering\022\035.c" +
+      "luster.proto.ClusterRequest\032\036.cluster.pr" +
+      "oto.ClusterResponseB1\n\034edu.setokk.astroc" +
+      "luster.grpcB\017ClusterStubGrpcP\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -68,7 +68,7 @@ public final class ClusterStubGrpc {
     internal_static_cluster_proto_ClusterResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_cluster_proto_ClusterResponse_descriptor,
-        new java.lang.String[] { "Status", });
+        new java.lang.String[] { "ClusterLabels", "FilePaths", });
     descriptor.resolveAllFeaturesImmutable();
   }
 

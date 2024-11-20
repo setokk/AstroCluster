@@ -18,7 +18,7 @@
         <protobuf.version>4.27.2</protobuf.version>
         <grpc.version>1.63.0</grpc.version>
         <os.detected.classifier>linux-x86_32</os.detected.classifier>
-        <ac.grpc.output.path>${env.BE_GRPC_DOCKER_PATH}</ac.grpc.output.path>
+        <ac.grpc.output.path>${project.basedir}/src/main/java/edu/setokk/astrocluster/grpc</ac.grpc.output.path>
     </properties>
     <dependencies>
         <!-- WEB DEPENDENCIES -->
@@ -162,14 +162,12 @@
             <id>grpc</id>
             <build>
                 <plugins>
-                    <!-- GENERATE INITIAL GRPC RESPONSE/REQUEST/STUB CLASSES -->
+                    <!--  GRPC RESPONSE/REQUEST/STUB CLASSES -->
                     <plugin>
                         <groupId>org.xolstice.maven.plugins</groupId>
                         <artifactId>protobuf-maven-plugin</artifactId>
                         <version>0.6.1</version>
                         <configuration>
-                            <protoSourceRoot>${project.basedir}</protoSourceRoot>
-                            <outputDirectory>${project.basedir}/target/protoc-classes-ac</outputDirectory>
                             <protocArtifact>com.google.protobuf:protoc:${protobuf.version}:exe:${os.detected.classifier}</protocArtifact>
                             <pluginId>grpc-java</pluginId>
                             <pluginArtifact>io.grpc:protoc-gen-grpc-java:${grpc.version}:exe:${os.detected.classifier}</pluginArtifact>
@@ -177,14 +175,30 @@
                         <executions>
                             <execution>
                                 <id>protobuf-compile</id>
+                                <phase>process-sources</phase>
+                                <configuration>
+                                    <protoSourceRoot>${project.basedir}/default</protoSourceRoot>
+                                    <outputDirectory>${project.basedir}/target/protoc-classes-ac</outputDirectory>
+                                </configuration>
                                 <goals>
                                     <goal>compile</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>protobuf-compile-custom</id>
+                                <phase>process-sources</phase>
+                                <configuration>
+                                    <protoSourceRoot>${project.basedir}/custom</protoSourceRoot>
+                                    <outputDirectory>${project.basedir}/target/protoc-classes-ac-service</outputDirectory>
+                                </configuration>
+                                <goals>
+                                    <goal>compile-custom</goal>
                                 </goals>
                             </execution>
                         </executions>
                     </plugin>
 
-                    <!-- INTERMEDIATE COPY PROTO GENERATED FILES TO gRPC PACKAGE inside src -->
+                    <!-- COPY PROTO GENERATED FILES TO gRPC PACKAGE inside src -->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-resources-plugin</artifactId>
@@ -205,77 +219,13 @@
                                                 <include>**/*.java</include>
                                             </includes>
                                         </resource>
-                                    </resources>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-
-                    <!-- GENERATE SERVICE GRPC CLASS -->
-                    <plugin>
-                        <groupId>org.xolstice.maven.plugins</groupId>
-                        <artifactId>protobuf-maven-plugin</artifactId>
-                        <version>0.6.1</version>
-                        <configuration>
-                            <protoSourceRoot>${project.basedir}</protoSourceRoot>
-                            <outputDirectory>${project.basedir}/target/protoc-classes-ac</outputDirectory>
-                            <protocArtifact>com.google.protobuf:protoc:${protobuf.version}:exe:${os.detected.classifier}</protocArtifact>
-                            <pluginId>grpc-java</pluginId>
-                            <pluginArtifact>io.grpc:protoc-gen-grpc-java:${grpc.version}:exe:${os.detected.classifier}</pluginArtifact>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <id>protobuf-compile-custom</id>
-                                <goals>
-                                    <goal>compile-custom</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-
-                    <!-- COPY PROTO GENERATED FILES TO gRPC PACKAGE inside src -->
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-resources-plugin</artifactId>
-                        <version>3.2.0</version>
-                        <executions>
-                            <execution>
-                                <id>copy-generated-protoc-classes</id>
-                                <phase>process-resources</phase>
-                                <goals>
-                                    <goal>resources</goal>
-                                </goals>
-                                <configuration>
-                                    <outputDirectory>${ac.grpc.output.path}</outputDirectory>
-                                    <resources>
                                         <resource>
-                                            <directory>${project.basedir}/target/protoc-classes-ac/edu/setokk/astrocluster/grpc</directory>
+                                            <directory>${project.basedir}/target/protoc-classes-ac-service/edu/setokk/astrocluster/grpc</directory>
                                             <includes>
                                                 <include>**/*.java</include>
                                             </includes>
                                         </resource>
                                     </resources>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-
-                    <!-- DELETE PROTO GENERATED FILES FROM THEIR ORIGIN DIRECTORY -->
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-antrun-plugin</artifactId>
-                        <version>1.8</version>
-                        <executions>
-                            <execution>
-                                <id>delete-protoc-classes-directory</id>
-                                <phase>process-resources</phase>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                                <configuration>
-                                    <target>
-                                        <delete dir="${project.basedir}/target/protoc-classes-ac/edu/setokk/astrocluster/grpc"/>
-                                    </target>
                                 </configuration>
                             </execution>
                         </executions>
