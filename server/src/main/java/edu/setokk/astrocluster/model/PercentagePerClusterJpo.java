@@ -27,7 +27,7 @@ public class PercentagePerClusterJpo {
     private Double percentageInProject;
 
     @ManyToOne
-    @JoinColumn(name = "analysis_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "analysis_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
     private AnalysisJpo analysisJpo;
 
     @Getter
