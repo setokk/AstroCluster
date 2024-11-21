@@ -1,4 +1,4 @@
-package edu.setokk.astrocluster.util;
+package edu.setokk.astrocluster.core.enums;
 
 import java.util.List;
 import java.util.Arrays;

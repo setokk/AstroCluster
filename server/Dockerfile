@@ -1,5 +1,5 @@
 # Build stage
-FROM maven:latest AS build
+FROM maven:3.9.9 AS build
 COPY src /ac-server/src
 COPY pom.xml /ac-server
 

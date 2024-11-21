@@ -2,8 +2,8 @@ package edu.setokk.astrocluster.request;
 
 import edu.setokk.astrocluster.error.BusinessLogicException;
 import edu.setokk.astrocluster.error.IValidatable;
-import edu.setokk.astrocluster.util.SupportedClusteringParadigms;
-import edu.setokk.astrocluster.util.SupportedLanguages;
+import edu.setokk.astrocluster.core.enums.SupportedClusteringParadigms;
+import edu.setokk.astrocluster.core.enums.SupportedLanguages;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

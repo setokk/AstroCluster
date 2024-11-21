@@ -16,6 +16,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(
         name = "cluster_result",
@@ -23,10 +27,6 @@ import lombok.Setter;
                 @UniqueConstraint(name = "cluster_result_file_path_unique", columnNames = "filepath")
         }
 )
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public class ClusterResultJpo {
 
     @Id
@@ -46,7 +46,7 @@ public class ClusterResultJpo {
     private String filepath;
 
     @Column(name = "cluster_label", nullable = false)
-    private String clusterLabel;
+    private Integer clusterLabel;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "analysis_id", nullable = false)

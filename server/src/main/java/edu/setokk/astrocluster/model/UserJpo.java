@@ -15,6 +15,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(
         name = "user_ac",
@@ -27,11 +32,6 @@ import lombok.Setter;
                 @UniqueConstraint(name = "user_ac_username_unique", columnNames = "username")
         }
 )
-@Getter
-@Setter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class UserJpo {
     @Id
     @SequenceGenerator(

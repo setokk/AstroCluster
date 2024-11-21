@@ -1,7 +1,12 @@
 package edu.setokk.astrocluster.service;
 
+import edu.setokk.astrocluster.core.mapper.AnalysisMapper;
+import edu.setokk.astrocluster.error.BusinessLogicException;
+import edu.setokk.astrocluster.model.AnalysisJpo;
 import edu.setokk.astrocluster.model.dto.AnalysisDto;
 import edu.setokk.astrocluster.model.dto.UserDto;
+import edu.setokk.astrocluster.repository.AnalysisRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -10,9 +15,11 @@ import java.util.Optional;
 public class AnalysisService {
 
     private final AuthService authService;
+    private final AnalysisRepository analysisRepository;
 
-    public AnalysisService(AuthService authService) {
+    public AnalysisService(AuthService authService, AnalysisRepository analysisRepository) {
         this.authService = authService;
+        this.analysisRepository = analysisRepository;
     }
 
     public void saveAnalysis(AnalysisDto analysis) {
@@ -20,7 +27,11 @@ public class AnalysisService {
         if (optionalUser.isEmpty()) {
             return;
         }
+    }
 
-
+    public AnalysisDto getAnalysis(long id) {
+        AnalysisJpo analysisJpo = analysisRepository.findById(id)
+                .orElseThrow(() -> new BusinessLogicException(HttpStatus.NOT_FOUND, "Analysis with id=" + id + " does not exist."));
+        return AnalysisMapper.instance().mapToTarget(analysisJpo);
     }
 }

@@ -1,6 +1,6 @@
 package edu.setokk.astrocluster.response;
 
-import edu.setokk.astrocluster.core.cluster.PercentagePerCluster;
+import edu.setokk.astrocluster.model.dto.PercentagePerClusterDto;
 import edu.setokk.astrocluster.model.dto.AnalysisDto;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -17,5 +17,5 @@ public final class GetAnalysisResponse {
     private AnalysisDto analysisData;
 
     @NotNull(message = "percentagesPerCluster is mandatory")
-    @Singular("addPercentagePerCluster") private List<PercentagePerCluster> percentagesPerCluster;
+    @Singular("addPercentagePerCluster") private List<PercentagePerClusterDto> percentagesPerCluster;
 }

@@ -1,7 +1,16 @@
 package edu.setokk.astrocluster.model;
 
-import edu.setokk.astrocluster.util.StringUtils;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,20 +18,20 @@ import lombok.Setter;
 
 import java.util.Set;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(
         name = "analysis",
         indexes = {
-          @Index(name = "analysis_project_uuid_index", columnList = "project_uuid")
+                @Index(name = "analysis_project_uuid_index", columnList = "project_uuid")
         },
         uniqueConstraints = {
                 @UniqueConstraint(name = "analysis_project_uuid_unique", columnNames = "project_uuid")
         }
 )
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public class AnalysisJpo {
 
     @Id
@@ -44,11 +53,7 @@ public class AnalysisJpo {
     @Column(name = "git_url", updatable = false, nullable = false)
     private String gitUrl;
 
+    @Column(name = "cluster_results")
     @OneToMany(mappedBy = "analysis", orphanRemoval = true, fetch = FetchType.LAZY)
-    private Set<ClusterResultJpo> clusteringResults;
-
-    public String getGitProjectName() {
-        String splitGitUrl = StringUtils.splitByAndGetLast(gitUrl, "\\/");
-        return StringUtils.splitByAndGetFirst(splitGitUrl, "\\."); // Remove .git
-    }
+    private Set<ClusterResultJpo> clusterResults;
 }

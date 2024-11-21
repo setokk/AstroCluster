@@ -1,4 +1,4 @@
-package edu.setokk.astrocluster.util;
+package edu.setokk.astrocluster.core.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
