@@ -22,16 +22,18 @@ public class AnalysisService {
         this.analysisRepository = analysisRepository;
     }
 
-    public void saveAnalysis(AnalysisDto analysis) {
+    public void saveAnalysis(AnalysisDto analysisDto) {
         Optional<UserDto> optionalUser = authService.getAuthenticatedUser();
         if (optionalUser.isEmpty()) {
             return;
         }
+        AnalysisJpo analysisToBeSaved = AnalysisMapper.INSTANCE.mapToInitial(analysisDto);
+        analysisRepository.save(analysisToBeSaved);
     }
 
     public AnalysisDto getAnalysis(long id) {
         AnalysisJpo analysisJpo = analysisRepository.findById(id)
                 .orElseThrow(() -> new BusinessLogicException(HttpStatus.NOT_FOUND, "Analysis with id=" + id + " does not exist."));
-        return AnalysisMapper.instance().mapToTarget(analysisJpo);
+        return AnalysisMapper.INSTANCE.mapToTarget(analysisJpo);
     }
 }

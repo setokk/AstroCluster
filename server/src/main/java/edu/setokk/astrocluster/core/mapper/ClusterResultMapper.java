@@ -4,15 +4,8 @@ import edu.setokk.astrocluster.model.ClusterResultJpo;
 import edu.setokk.astrocluster.model.dto.ClusterResultDto;
 import edu.setokk.astrocluster.util.StringUtils;
 
-public final class ClusterResultMapper implements IMapper<ClusterResultJpo, ClusterResultDto> {
-    private static ClusterResultMapper instance;
-    private ClusterResultMapper() {}
-
-    public static ClusterResultMapper instance() {
-        if (instance == null)
-            instance = new ClusterResultMapper();
-        return instance;
-    }
+public enum ClusterResultMapper implements IMapper<ClusterResultJpo, ClusterResultDto> {
+    INSTANCE;
 
     @Override
     public ClusterResultDto mapToTarget(ClusterResultJpo clusterResultJpo) {
@@ -21,5 +14,15 @@ public final class ClusterResultMapper implements IMapper<ClusterResultJpo, Clus
                 .filename(StringUtils.splitByAndGetLast(clusterResultJpo.getFilepath(), "[\\\\/]"))
                 .filepath(clusterResultJpo.getFilepath())
                 .clusterLabel(clusterResultJpo.getClusterLabel()).build();
+    }
+
+    @Override
+    public ClusterResultJpo mapToInitial(ClusterResultDto clusterResultDto) {
+        return new ClusterResultJpo(
+                clusterResultDto.getId(),
+                clusterResultDto.getFilepath(),
+                clusterResultDto.getClusterLabel(),
+                null
+        );
     }
 }
