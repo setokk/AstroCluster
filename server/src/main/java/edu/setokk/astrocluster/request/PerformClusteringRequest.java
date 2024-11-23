@@ -4,6 +4,7 @@ import edu.setokk.astrocluster.error.BusinessLogicException;
 import edu.setokk.astrocluster.error.IValidatable;
 import edu.setokk.astrocluster.core.enums.SupportedClusteringParadigms;
 import edu.setokk.astrocluster.core.enums.SupportedLanguages;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,6 +23,11 @@ public final class PerformClusteringRequest implements IValidatable {
 
     @NotNull(message = "[PerformClusteringRequest]: clusteringParadigm field is mandatory")
     private String clusteringParadigm;
+
+    private boolean isAsync;
+
+    @Email(message = "[PerformClusteringRequest]: email field is invalid")
+    private String email;
 
     private List<String> extensions;
 
@@ -42,6 +48,11 @@ public final class PerformClusteringRequest implements IValidatable {
         /* Clustering Paradigm field post validate */
         if (SupportedClusteringParadigms.get(clusteringParadigm).isEmpty()) {
             e.addErrorMessage(errorPrefix() + " clusteringParadigm='" + clusteringParadigm + "' is not supported.");
+        }
+
+        /* Email field post validate */
+        if (isAsync && email == null) {
+            e.addErrorMessage(errorPrefix() + " email field is mandatory when isAsync=true");
         }
 
         if (e.hasErrorMessages()) throw e;

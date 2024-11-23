@@ -15,4 +15,12 @@ public class UserDto {
     private long id;
     private String username;
     private String email;
+
+    public static UserDto publicUser() {
+        return new UserDto(0, "public_user", "public_user@astrocluster.edu");
+    }
+
+    public boolean isPublicUser() {
+        return username.equals("public_user");
+    }
 }

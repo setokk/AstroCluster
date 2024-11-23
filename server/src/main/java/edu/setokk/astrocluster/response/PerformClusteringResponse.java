@@ -1,6 +1,5 @@
 package edu.setokk.astrocluster.response;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,6 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public final class PerformClusteringResponse {
-    @NotNull(message = "ack is required")
+    private boolean isAsync;
     private short ack;
+    private long analysisId;
 }

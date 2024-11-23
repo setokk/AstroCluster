@@ -1,12 +1,16 @@
 package edu.setokk.astrocluster.service;
 
+import edu.setokk.astrocluster.core.mapper.grpc.AnalysisGrpcMapper;
 import edu.setokk.astrocluster.error.BusinessLogicException;
 import edu.setokk.astrocluster.grpc.ClusterRequest;
 import edu.setokk.astrocluster.grpc.ClusterResponse;
 import edu.setokk.astrocluster.grpc.ClusterServiceGrpc;
+import edu.setokk.astrocluster.model.dto.AnalysisDto;
+import edu.setokk.astrocluster.model.dto.UserDto;
 import edu.setokk.astrocluster.request.PerformClusteringRequest;
 import edu.setokk.astrocluster.util.IOUtils;
 import io.grpc.ManagedChannel;
+import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Async;
@@ -19,6 +23,8 @@ import java.util.UUID;
 public class ClusterService {
 
     private AnalysisService analysisService;
+    private AuthService authService;
+    private EmailService emailService;
     private final ClusterServiceGrpc.ClusterServiceBlockingStub clusterBlockingStub;
 
     @Autowired
@@ -28,8 +34,15 @@ public class ClusterService {
     }
 
     @Async
-    public void performClustering(PerformClusteringRequest requestBody) throws IOException, InterruptedException {
-        String projectDirUUID = IOUtils.PROJECTS_DIR + UUID.randomUUID();
+    public void performClusteringAsync(PerformClusteringRequest requestBody) throws IOException, InterruptedException, MessagingException {
+        AnalysisDto analysisDto = performClustering(requestBody);
+
+    }
+
+    public AnalysisDto performClustering(PerformClusteringRequest requestBody) throws IOException, InterruptedException, MessagingException {
+        // Clone git project
+        UUID uuid = UUID.randomUUID();
+        String projectDirUUID = IOUtils.PROJECTS_DIR + uuid;
         Process gcProcess = Runtime.getRuntime().exec(new String[]{"git", "clone", requestBody.getGitUrl(), projectDirUUID});
         if (gcProcess.waitFor() != 0)
             throw new BusinessLogicException(HttpStatus.INTERNAL_SERVER_ERROR, "Git clone failed for url: \""+requestBody.getGitUrl()+"\"");
@@ -40,6 +53,22 @@ public class ClusterService {
                 .setPath(projectDirUUID)
                 .addAllExtensions(requestBody.getExtensions())
                 .build();
+
+        // Save analysis data in DB
         ClusterResponse clusterResponse = clusterBlockingStub.performClustering(clusterRequest);
+        AnalysisDto analysisDto = analysisService.saveAnalysis(AnalysisGrpcMapper.INSTANCE.mapToTarget(clusterResponse));
+
+        // Send completion email
+        UserDto user = authService.getAuthenticatedUser();
+        String userEmail = user.isPublicUser() ? requestBody.getEmail() : user.getEmail();
+        emailService.sendMail(
+                userEmail,
+                "[AstroCluster]: Analysis Completed (UUID: " + uuid + ")",
+                "<h2>An analysis you requested with UUID: " + uuid + ", has just completed!</h2>" +
+                     "<p>You can find it <a href=\"http://localhost:4200/api/analysis/" + analysisDto.getId() + "\">here</a>.</p>" +
+                     "<p><b>Please note that analyses which are performed with no account are publicly available.</b></p>." +
+                     "<p>If you wish to perform private analyses, please create an account <a href=\"http://localhost:4200/api/user/register/\">here</a>."
+        );
+        return analysisDto;
     }
 }

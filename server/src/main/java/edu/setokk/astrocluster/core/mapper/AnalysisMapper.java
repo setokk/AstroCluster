@@ -2,6 +2,7 @@ package edu.setokk.astrocluster.core.mapper;
 
 import edu.setokk.astrocluster.model.AnalysisJpo;
 import edu.setokk.astrocluster.model.ClusterResultJpo;
+import edu.setokk.astrocluster.model.UserJpo;
 import edu.setokk.astrocluster.model.dto.AnalysisDto;
 import edu.setokk.astrocluster.model.dto.ClusterResultDto;
 import edu.setokk.astrocluster.util.StringUtils;
@@ -27,26 +28,26 @@ public enum AnalysisMapper implements IMapper<AnalysisJpo, AnalysisDto> {
                 .clusterResults(this.mapClusterResultsToTarget(analysisJpo.getClusterResults())).build();
     }
 
-    @Override
-    public AnalysisJpo mapToInitial(AnalysisDto analysisDto) {
-        return new AnalysisJpo(
-                analysisDto.getId(),
-                analysisDto.getProjectUUID(),
-                analysisDto.getGitUrl(),
-                this.mapClusterResultsToInitial(analysisDto.getClusterResults(), analysisDto.getId())
-        );
-    }
-
     private List<ClusterResultDto> mapClusterResultsToTarget(Set<ClusterResultJpo> clusterResultsJpo) {
         return clusterResultsJpo.stream()
                 .map(ClusterResultMapper.INSTANCE::mapToTarget)
                 .collect(Collectors.toList());
     }
 
-    private Set<ClusterResultJpo> mapClusterResultsToInitial(List<ClusterResultDto> clusterResultsDto, Long analysisId) {
-        return clusterResultsDto.stream()
+    @Override
+    public AnalysisJpo mapToInitial(AnalysisDto analysisDto) {
+        return new AnalysisJpo(
+                analysisDto.getId(),
+                analysisDto.getProjectUUID(),
+                analysisDto.getGitUrl(),
+                new UserJpo(analysisDto.getUserId())
+        );
+    }
+
+    public void mapAndAssignClusterResultsToAnalysis(List<ClusterResultDto> clusterResultsDto, AnalysisJpo analysisJpo) {
+        analysisJpo.setClusterResults(clusterResultsDto.stream()
                 .map(ClusterResultMapper.INSTANCE::mapToInitial)
-                .peek(dto -> dto.setAnalysis(new AnalysisJpo(analysisId, null, null, null)))
-                .collect(Collectors.toSet());
+                .peek(dto -> dto.setAnalysis(analysisJpo))
+                .collect(Collectors.toSet()));
     }
 }

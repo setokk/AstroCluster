@@ -1,8 +1,10 @@
 package edu.setokk.astrocluster.controller;
 
+import edu.setokk.astrocluster.model.dto.AnalysisDto;
 import edu.setokk.astrocluster.request.PerformClusteringRequest;
 import edu.setokk.astrocluster.response.PerformClusteringResponse;
 import edu.setokk.astrocluster.service.ClusterService;
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -24,13 +26,17 @@ public class ClusterController {
     }
 
     @PostMapping("/perform-clustering")
-    public ResponseEntity<PerformClusteringResponse> performClustering(@RequestBody @Valid PerformClusteringRequest requestBody) throws IOException, InterruptedException {
+    public ResponseEntity<PerformClusteringResponse> performClustering(@RequestBody @Valid PerformClusteringRequest requestBody)
+            throws IOException, InterruptedException, MessagingException {
         requestBody.validate();
-        clusterService.performClustering(requestBody); // Async task
-        return ResponseEntity.ok(
-                PerformClusteringResponse.builder()
-                        .ack((short) 1)
-                        .build()
-        );
+        var responseBuilder = PerformClusteringResponse.builder();
+        if (requestBody.isAsync()) {
+            clusterService.performClusteringAsync(requestBody);
+            responseBuilder.isAsync(true).ack((short) 1);
+        } else {
+            AnalysisDto analysisDto = clusterService.performClustering(requestBody);
+            responseBuilder.isAsync(false).analysisId(analysisDto.getId());
+        }
+        return ResponseEntity.ok(responseBuilder.build());
     }
 }

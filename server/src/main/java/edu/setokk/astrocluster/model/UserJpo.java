@@ -1,11 +1,14 @@
 package edu.setokk.astrocluster.model;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
@@ -37,6 +40,7 @@ public class UserJpo {
     @SequenceGenerator(
             name = "userAcSeqGen",
             sequenceName = "user_ac_seq",
+            initialValue = 0,
             allocationSize = 1
     )
     @GeneratedValue(
@@ -54,4 +58,11 @@ public class UserJpo {
 
     @Column(name = "password", nullable = false)
     private String password;
+
+    @OneToOne(mappedBy = "user")
+    private AnalysisJpo analysis;
+
+    public UserJpo(long id) {
+        this.id = id;
+    }
 }

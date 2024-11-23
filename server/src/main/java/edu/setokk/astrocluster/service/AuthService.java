@@ -9,11 +9,10 @@ import java.util.Optional;
 
 @Service
 public class AuthService {
-    public Optional<UserDto> getAuthenticatedUser() {
+    public UserDto getAuthenticatedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !(authentication.getPrincipal() instanceof UserDto))
-            return Optional.empty();
-
-        return Optional.ofNullable((UserDto) authentication.getPrincipal());
+            return UserDto.publicUser();
+        return (UserDto) authentication.getPrincipal();
     }
 }

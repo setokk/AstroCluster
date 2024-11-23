@@ -3,11 +3,13 @@ package edu.setokk.astrocluster.service;
 import edu.setokk.astrocluster.core.mapper.AnalysisMapper;
 import edu.setokk.astrocluster.error.BusinessLogicException;
 import edu.setokk.astrocluster.model.AnalysisJpo;
+import edu.setokk.astrocluster.model.UserJpo;
 import edu.setokk.astrocluster.model.dto.AnalysisDto;
 import edu.setokk.astrocluster.model.dto.UserDto;
 import edu.setokk.astrocluster.repository.AnalysisRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -22,18 +24,23 @@ public class AnalysisService {
         this.analysisRepository = analysisRepository;
     }
 
-    public void saveAnalysis(AnalysisDto analysisDto) {
-        Optional<UserDto> optionalUser = authService.getAuthenticatedUser();
-        if (optionalUser.isEmpty()) {
-            return;
-        }
-        AnalysisJpo analysisToBeSaved = AnalysisMapper.INSTANCE.mapToInitial(analysisDto);
-        analysisRepository.save(analysisToBeSaved);
+    @Transactional
+    public AnalysisDto saveAnalysis(AnalysisDto analysisDto) {
+        UserDto user = authService.getAuthenticatedUser();
+        analysisDto.setUserId(user.getId());
+
+        AnalysisJpo analysisJpo = AnalysisMapper.INSTANCE.mapToInitial(analysisDto);
+        analysisRepository.save(analysisJpo);
+        AnalysisMapper.INSTANCE.mapAndAssignClusterResultsToAnalysis(analysisDto.getClusterResults(), analysisJpo);
+        return AnalysisMapper.INSTANCE.mapToTarget(analysisJpo);
     }
 
-    public AnalysisDto getAnalysis(long id) {
-        AnalysisJpo analysisJpo = analysisRepository.findById(id)
-                .orElseThrow(() -> new BusinessLogicException(HttpStatus.NOT_FOUND, "Analysis with id=" + id + " does not exist."));
+    public AnalysisDto getAnalysis(long analysisId) {
+        UserDto user = authService.getAuthenticatedUser();
+
+        AnalysisJpo analysisJpo = analysisRepository
+                .findByIdAndUserId(analysisId, user.getId())
+                .orElseThrow(() -> new BusinessLogicException(HttpStatus.NOT_FOUND, "Analysis with id=" + analysisId + " does not exist."));
         return AnalysisMapper.INSTANCE.mapToTarget(analysisJpo);
     }
 }
