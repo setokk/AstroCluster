@@ -64,6 +64,10 @@ public class AnalysisJpo {
     @JoinColumn(name = "user_id", unique = true, nullable = false)
     private UserJpo user;
 
+    public AnalysisJpo(Long id) {
+        this.id = id;
+    }
+
     public AnalysisJpo(Long id, String projectUUID, String gitUrl, UserJpo user) {
         this.id = id;
         this.projectUUID = projectUUID;

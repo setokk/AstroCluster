@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -26,7 +27,7 @@ public class PercentagePerClusterJpo {
     @Column(name = "percentage_in_project", updatable = false, nullable = false)
     private Double percentageInProject;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "analysis_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
     private AnalysisJpo analysisJpo;
 

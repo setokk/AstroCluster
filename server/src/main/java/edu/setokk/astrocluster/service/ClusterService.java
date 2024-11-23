@@ -1,5 +1,6 @@
 package edu.setokk.astrocluster.service;
 
+import edu.setokk.astrocluster.core.analysis.AnalysisHelper;
 import edu.setokk.astrocluster.core.mapper.grpc.AnalysisGrpcMapper;
 import edu.setokk.astrocluster.error.BusinessLogicException;
 import edu.setokk.astrocluster.grpc.ClusterRequest;
@@ -7,6 +8,7 @@ import edu.setokk.astrocluster.grpc.ClusterResponse;
 import edu.setokk.astrocluster.grpc.ClusterServiceGrpc;
 import edu.setokk.astrocluster.model.dto.AnalysisDto;
 import edu.setokk.astrocluster.model.dto.UserDto;
+import edu.setokk.astrocluster.repository.PercentagePerClusterRepository;
 import edu.setokk.astrocluster.request.PerformClusteringRequest;
 import edu.setokk.astrocluster.util.IOUtils;
 import io.grpc.ManagedChannel;
@@ -22,15 +24,20 @@ import java.util.UUID;
 @Service
 public class ClusterService {
 
-    private AnalysisService analysisService;
-    private AuthService authService;
-    private EmailService emailService;
+    private final AnalysisService analysisService;
+    private final AuthService authService;
+    private final EmailService emailService;
     private final ClusterServiceGrpc.ClusterServiceBlockingStub clusterBlockingStub;
 
     @Autowired
-    public ClusterService(ManagedChannel managedChannel, AnalysisService analysisService) {
+    public ClusterService(ManagedChannel managedChannel,
+                          AnalysisService analysisService,
+                          AuthService authService,
+                          EmailService emailService) {
         this.clusterBlockingStub = ClusterServiceGrpc.newBlockingStub(managedChannel);
         this.analysisService = analysisService;
+        this.authService = authService;
+        this.emailService = emailService;
     }
 
     @Async
