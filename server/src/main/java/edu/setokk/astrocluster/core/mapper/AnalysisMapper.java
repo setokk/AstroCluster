@@ -24,7 +24,9 @@ public enum AnalysisMapper implements IMapper<AnalysisJpo, AnalysisDto> {
         return AnalysisDto.builder()
                 .id(analysisJpo.getId())
                 .gitProjectName(gitProjectName)
+                .projectUUID(analysisJpo.getProjectUUID())
                 .gitUrl(analysisJpo.getGitUrl())
+                .projectLang(analysisJpo.getProjectLang())
                 .clusterResults(this.mapClusterResultsToTarget(analysisJpo.getClusterResults())).build();
     }
 
@@ -40,6 +42,7 @@ public enum AnalysisMapper implements IMapper<AnalysisJpo, AnalysisDto> {
                 analysisDto.getId(),
                 analysisDto.getProjectUUID(),
                 analysisDto.getGitUrl(),
+                analysisDto.getProjectLang(),
                 new UserJpo(analysisDto.getUserId())
         );
     }

@@ -4,6 +4,8 @@ import edu.setokk.astrocluster.model.dto.AnalysisDto;
 import edu.setokk.astrocluster.request.PerformClusteringRequest;
 import edu.setokk.astrocluster.response.PerformClusteringResponse;
 import edu.setokk.astrocluster.service.ClusterService;
+import edu.setokk.astrocluster.service.EmailService;
+import edu.setokk.astrocluster.validation.PerformClusteringValidator;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,16 +21,20 @@ import java.io.IOException;
 @RequestMapping("/api/cluster")
 public class ClusterController {
     private final ClusterService clusterService;
+    private final PerformClusteringValidator performClusteringValidator;
 
     @Autowired
-    public ClusterController(ClusterService clusterService) {
+    public ClusterController(ClusterService clusterService, PerformClusteringValidator performClusteringValidator) {
         this.clusterService = clusterService;
+        this.performClusteringValidator = performClusteringValidator;
     }
 
     @PostMapping("/perform-clustering")
     public ResponseEntity<PerformClusteringResponse> performClustering(@RequestBody @Valid PerformClusteringRequest requestBody)
             throws IOException, InterruptedException, MessagingException {
         requestBody.validate();
+        performClusteringValidator.advancedValidate(requestBody);
+
         var responseBuilder = PerformClusteringResponse.builder();
         if (requestBody.isAsync()) {
             clusterService.performClusteringAsync(requestBody);
@@ -37,6 +43,7 @@ public class ClusterController {
             AnalysisDto analysisDto = clusterService.performClustering(requestBody);
             responseBuilder.isAsync(false).analysisId(analysisDto.getId());
         }
+
         return ResponseEntity.ok(responseBuilder.build());
     }
 }

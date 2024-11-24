@@ -1,26 +1,31 @@
-package edu.setokk.astrocluster.error;
+package edu.setokk.astrocluster.validation;
+
+import edu.setokk.astrocluster.error.BusinessLogicException;
 
 /**
  * This interface <b>should</b> be implemented by all classes that represent the request bodies of all endpoints.
  * <br/><br/>
  * It provides an easy way for request data to be validated 
- * just by implementing {@link #prepareErrors()} and {@link #postValidate()} methods.
+ * just by implementing {@link #preValidate()} and {@link #postValidate()} methods.
+ * <br/><br/>
+ * <b>NOTE:</b> This class should only be used for simple validations.
+ * For service based validations, please see {@link IValidator}
  */
 public interface IValidatable {
     default void validate() throws BusinessLogicException {
-        prepareErrors();
+        preValidate();
         postValidate(); // Request body validation was successful, proceed with post validation actions
     }
 
     /**
-     * Checks for trivial errors (empty lists, field lengths etc.)
+     * Checks for basic errors (empty lists, field lengths etc.)
      * @throws BusinessLogicException if any error in the request body was detected
      */
-    default void prepareErrors() throws BusinessLogicException {
+    default void preValidate() throws BusinessLogicException {
     }
 
     /**
-     * Performs various actions if {@link #prepareErrors()} was successful (no errors were found).
+     * Performs various actions if {@link #preValidate()} was successful (no errors were found).
      * <br/><br/>
      * Examples of such actions are:
      * <ul>

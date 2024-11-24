@@ -71,10 +71,11 @@ public class AnalysisJpo {
         this.id = id;
     }
 
-    public AnalysisJpo(Long id, String projectUUID, String gitUrl, UserJpo user) {
+    public AnalysisJpo(Long id, String projectUUID, String gitUrl, String projectLang, UserJpo user) {
         this.id = id;
         this.projectUUID = projectUUID;
         this.gitUrl = gitUrl;
+        this.projectLang = projectLang;
         this.user = user;
     }
 }

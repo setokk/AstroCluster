@@ -1,7 +1,7 @@
 package edu.setokk.astrocluster.request;
 
 import edu.setokk.astrocluster.error.BusinessLogicException;
-import edu.setokk.astrocluster.error.IValidatable;
+import edu.setokk.astrocluster.validation.IValidatable;
 import edu.setokk.astrocluster.core.enums.SupportedClusteringParadigms;
 import edu.setokk.astrocluster.core.enums.SupportedLanguages;
 import jakarta.validation.constraints.Email;
@@ -31,6 +31,7 @@ public final class PerformClusteringRequest implements IValidatable {
 
     private List<String> extensions;
 
+
     @Override
     public void postValidate() throws BusinessLogicException {
         BusinessLogicException e = new BusinessLogicException(HttpStatus.BAD_REQUEST);
@@ -52,7 +53,7 @@ public final class PerformClusteringRequest implements IValidatable {
 
         /* Email field post validate */
         if (isAsync && email == null) {
-            e.addErrorMessage(errorPrefix() + " email field is mandatory when isAsync=true");
+            e.addErrorMessage(errorPrefix() + " email field is mandatory when user is not signed in");
         }
 
         if (e.hasErrorMessages()) throw e;

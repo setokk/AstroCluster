@@ -65,4 +65,17 @@ public class UserJpo {
     public UserJpo(long id) {
         this.id = id;
     }
+
+    public UserJpo(long id, String username, String email, String password) {
+        this.id = id;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+    }
+
+    public UserJpo(String username, String password, String email) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+    }
 }
