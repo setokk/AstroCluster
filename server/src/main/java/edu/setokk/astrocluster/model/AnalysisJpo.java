@@ -56,6 +56,9 @@ public class AnalysisJpo {
     @Column(name = "git_url", updatable = false, nullable = false)
     private String gitUrl;
 
+    @Column(name = "project_lang", updatable = false, nullable = false)
+    private String projectLang;
+
     @Column(name = "cluster_results")
     @OneToMany(mappedBy = "analysis", orphanRemoval = true, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<ClusterResultJpo> clusterResults;

@@ -12,7 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public final class ClusterResultDto {
-    private long id;
+    private Long id;
     private String filename;
     private String filepath;
     private int clusterLabel;

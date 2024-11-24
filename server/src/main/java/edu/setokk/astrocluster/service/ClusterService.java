@@ -1,16 +1,16 @@
 package edu.setokk.astrocluster.service;
 
-import edu.setokk.astrocluster.core.analysis.AnalysisHelper;
 import edu.setokk.astrocluster.core.mapper.grpc.AnalysisGrpcMapper;
 import edu.setokk.astrocluster.error.BusinessLogicException;
 import edu.setokk.astrocluster.grpc.ClusterRequest;
 import edu.setokk.astrocluster.grpc.ClusterResponse;
 import edu.setokk.astrocluster.grpc.ClusterServiceGrpc;
 import edu.setokk.astrocluster.model.dto.AnalysisDto;
+import edu.setokk.astrocluster.model.dto.AnalysisDto.AnalysisDtoBuilder;
 import edu.setokk.astrocluster.model.dto.UserDto;
-import edu.setokk.astrocluster.repository.PercentagePerClusterRepository;
 import edu.setokk.astrocluster.request.PerformClusteringRequest;
 import edu.setokk.astrocluster.util.IOUtils;
+import edu.setokk.astrocluster.util.StringUtils;
 import io.grpc.ManagedChannel;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,10 +60,17 @@ public class ClusterService {
                 .setPath(projectDirUUID)
                 .addAllExtensions(requestBody.getExtensions())
                 .build();
+        ClusterResponse clusterResponse = clusterBlockingStub.performClustering(clusterRequest);
 
         // Save analysis data in DB
-        ClusterResponse clusterResponse = clusterBlockingStub.performClustering(clusterRequest);
-        AnalysisDto analysisDto = analysisService.saveAnalysis(AnalysisGrpcMapper.INSTANCE.mapToTarget(clusterResponse));
+        AnalysisDtoBuilder analysisBuilder = AnalysisGrpcMapper.INSTANCE.mapToTarget(clusterResponse);
+        analysisBuilder.gitUrl(requestBody.getGitUrl())
+                .projectUUID(uuid.toString())
+                .projectLang(requestBody.getLang())
+                .gitProjectName(StringUtils.splitByAndGetFirst(
+                        StringUtils.splitByAndGetLast(requestBody.getGitUrl(), "\\/"), "\\."
+                ));
+        AnalysisDto analysisDto = analysisService.saveAnalysis(analysisBuilder.build());
 
         // Send completion email
         UserDto user = authService.getAuthenticatedUser();

@@ -8,6 +8,6 @@ import org.springframework.data.repository.query.Param;
 import java.util.Optional;
 
 public interface AnalysisRepository extends JpaRepository<AnalysisJpo, Long> {
-    @Query(value = "SELECT a FROM analysis WHERE id=:analysisId AND user_id=:userId", nativeQuery = true)
-    Optional<AnalysisJpo> findByIdAndUserId(@Param("analysisId") long analysisId, @Param("analysisId") long userId);
+    @Query(value = "SELECT a FROM AnalysisJpo a WHERE a.id=:analysisId AND a.user.id=:userId")
+    Optional<AnalysisJpo> findByIdAndUserId(@Param("analysisId") long analysisId, @Param("userId") long userId);
 }

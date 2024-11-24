@@ -19,6 +19,7 @@ public final class AnalysisDto {
     private String gitProjectName;
     private String gitUrl;
     private String projectUUID;
+    private String projectLang;
     @Singular("addClusterResult") private List<ClusterResultDto> clusterResults;
     private long userId;
 }
