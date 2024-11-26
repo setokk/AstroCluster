@@ -24,7 +24,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> authenticateUser(@RequestBody @Valid LoginRequest loginRequest) {
+    public ResponseEntity<?> loginUser(@RequestBody @Valid LoginRequest loginRequest) {
         loginRequest.validate();
         UserDto user = userService.loginUser(loginRequest);
         return ResponseEntity.ok(JwtUtils.generateJWT(user)); // Generate JWT Token
