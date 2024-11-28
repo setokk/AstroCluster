@@ -1,24 +1,24 @@
 package edu.setokk.astrocluster.core.mapper;
 
-import edu.setokk.astrocluster.model.ClusterResultJpo;
+import edu.setokk.astrocluster.model.ClusterResultEntity;
 import edu.setokk.astrocluster.model.dto.ClusterResultDto;
 import edu.setokk.astrocluster.util.StringUtils;
 
-public enum ClusterResultMapper implements IMapper<ClusterResultJpo, ClusterResultDto> {
+public enum ClusterResultMapper implements IMapper<ClusterResultEntity, ClusterResultDto> {
     INSTANCE;
 
     @Override
-    public ClusterResultDto mapToTarget(ClusterResultJpo clusterResultJpo) {
+    public ClusterResultDto mapToTarget(ClusterResultEntity clusterResultEntity) {
         return ClusterResultDto.builder()
-                .id(clusterResultJpo.getId())
-                .filename(StringUtils.splitByAndGetLast(clusterResultJpo.getFilepath(), "[\\\\/]"))
-                .filepath(clusterResultJpo.getFilepath())
-                .clusterLabel(clusterResultJpo.getClusterLabel()).build();
+                .id(clusterResultEntity.getId())
+                .filename(StringUtils.splitByAndGetLast(clusterResultEntity.getFilepath(), "[\\\\/]"))
+                .filepath(clusterResultEntity.getFilepath())
+                .clusterLabel(clusterResultEntity.getClusterLabel()).build();
     }
 
     @Override
-    public ClusterResultJpo mapToInitial(ClusterResultDto clusterResultDto) {
-        return new ClusterResultJpo(
+    public ClusterResultEntity mapToInitial(ClusterResultDto clusterResultDto) {
+        return new ClusterResultEntity(
                 clusterResultDto.getId(),
                 clusterResultDto.getFilepath(),
                 clusterResultDto.getClusterLabel(),

@@ -1,7 +1,7 @@
 package edu.setokk.astrocluster.service;
 
 import edu.setokk.astrocluster.error.BusinessLogicException;
-import edu.setokk.astrocluster.model.UserJpo;
+import edu.setokk.astrocluster.model.UserEntity;
 import edu.setokk.astrocluster.model.dto.UserDto;
 import edu.setokk.astrocluster.repository.UserRepository;
 import edu.setokk.astrocluster.request.LoginRequest;
@@ -26,7 +26,7 @@ public class UserService {
         String username = loginRequest.getUsername();
         String password = loginRequest.getPassword();
 
-        UserJpo user = userRepository
+        UserEntity user = userRepository
                 .findUserByUsername(username)
                 .orElseThrow(() -> new BusinessLogicException(HttpStatus.NOT_FOUND, "User with username '" + username + "' not found."));
 
@@ -51,7 +51,7 @@ public class UserService {
         if (emailExists)
             throw new BusinessLogicException(HttpStatus.CONFLICT, "Email is taken.");
 
-        UserJpo savedUser = userRepository.save(new UserJpo(username, passwordEncoder.encode(password), email));
+        UserEntity savedUser = userRepository.save(new UserEntity(username, passwordEncoder.encode(password), email));
         return new UserDto(savedUser.getId(), savedUser.getUsername(), savedUser.getEmail());
     }
 }

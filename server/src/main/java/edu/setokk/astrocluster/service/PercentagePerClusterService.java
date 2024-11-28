@@ -1,7 +1,7 @@
 package edu.setokk.astrocluster.service;
 
 import edu.setokk.astrocluster.core.mapper.PercentagePerClusterMapper;
-import edu.setokk.astrocluster.model.PercentagePerClusterJpo;
+import edu.setokk.astrocluster.model.PercentagePerClusterEntity;
 import edu.setokk.astrocluster.model.dto.PercentagePerClusterDto;
 import edu.setokk.astrocluster.repository.PercentagePerClusterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,7 @@ public class PercentagePerClusterService {
     }
 
     public List<PercentagePerClusterDto> findAllByAnalysisId(long analysisId) {
-        Set<PercentagePerClusterJpo> percentagePerClusters = percentagePerClusterRepository.findAllByAnalysisId(analysisId);
+        Set<PercentagePerClusterEntity> percentagePerClusters = percentagePerClusterRepository.findAllByAnalysisId(analysisId);
         return PercentagePerClusterMapper.INSTANCE.mapPercentagePerClusters(percentagePerClusters);
     }
 }

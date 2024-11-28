@@ -35,7 +35,7 @@ import java.util.Set;
                 @UniqueConstraint(name = "analysis_project_uuid_unique", columnNames = "project_uuid")
         }
 )
-public class AnalysisJpo {
+public class AnalysisEntity {
 
     @Id
     @SequenceGenerator(
@@ -61,17 +61,17 @@ public class AnalysisJpo {
 
     @Column(name = "cluster_results")
     @OneToMany(mappedBy = "analysis", orphanRemoval = true, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<ClusterResultJpo> clusterResults;
+    private Set<ClusterResultEntity> clusterResults;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", unique = true, nullable = false)
-    private UserJpo user;
+    private UserEntity user;
 
-    public AnalysisJpo(Long id) {
+    public AnalysisEntity(Long id) {
         this.id = id;
     }
 
-    public AnalysisJpo(Long id, String projectUUID, String gitUrl, String projectLang, UserJpo user) {
+    public AnalysisEntity(Long id, String projectUUID, String gitUrl, String projectLang, UserEntity user) {
         this.id = id;
         this.projectUUID = projectUUID;
         this.gitUrl = gitUrl;

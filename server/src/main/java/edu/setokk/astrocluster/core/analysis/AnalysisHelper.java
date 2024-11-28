@@ -1,7 +1,7 @@
 package edu.setokk.astrocluster.core.analysis;
 
-import edu.setokk.astrocluster.model.AnalysisJpo;
-import edu.setokk.astrocluster.model.PercentagePerClusterJpo;
+import edu.setokk.astrocluster.model.AnalysisEntity;
+import edu.setokk.astrocluster.model.PercentagePerClusterEntity;
 import edu.setokk.astrocluster.model.dto.ClusterResultDto;
 
 import java.util.HashMap;
@@ -11,19 +11,19 @@ import java.util.Map;
 import java.util.Set;
 
 public final class AnalysisHelper {
-    public static Set<PercentagePerClusterJpo> calculatePercentagesPerCluster(List<ClusterResultDto> clusterResults, long analysisId) {
+    public static Set<PercentagePerClusterEntity> calculatePercentagesPerCluster(List<ClusterResultDto> clusterResults, long analysisId) {
         Map<Integer, Integer> clabelCount = new HashMap<>();
         for (var cr : clusterResults) {
             clabelCount.put(cr.getClusterLabel(), clabelCount.getOrDefault(cr.getClusterLabel(), 0) + 1);
         }
 
-        AnalysisJpo analysisJpo = new AnalysisJpo(analysisId);
-        Set<PercentagePerClusterJpo> percentagesPerCluster = new HashSet<>();
+        AnalysisEntity analysisEntity = new AnalysisEntity(analysisId);
+        Set<PercentagePerClusterEntity> percentagesPerCluster = new HashSet<>();
         for (var entry : clabelCount.entrySet()) {
-            var percentagePerClusterId = new PercentagePerClusterJpo.PercentagePerClusterId(analysisId, entry.getKey());
+            var percentagePerClusterId = new PercentagePerClusterEntity.PercentagePerClusterId(analysisId, entry.getKey());
             double percentage = (double) entry.getValue() / clusterResults.size();
 
-            percentagesPerCluster.add(new PercentagePerClusterJpo(percentagePerClusterId, percentage * 100, analysisJpo));
+            percentagesPerCluster.add(new PercentagePerClusterEntity(percentagePerClusterId, percentage * 100, analysisEntity));
         }
         return percentagesPerCluster;
     }

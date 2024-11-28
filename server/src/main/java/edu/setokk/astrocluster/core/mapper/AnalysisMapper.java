@@ -1,8 +1,8 @@
 package edu.setokk.astrocluster.core.mapper;
 
-import edu.setokk.astrocluster.model.AnalysisJpo;
-import edu.setokk.astrocluster.model.ClusterResultJpo;
-import edu.setokk.astrocluster.model.UserJpo;
+import edu.setokk.astrocluster.model.AnalysisEntity;
+import edu.setokk.astrocluster.model.ClusterResultEntity;
+import edu.setokk.astrocluster.model.UserEntity;
 import edu.setokk.astrocluster.model.dto.AnalysisDto;
 import edu.setokk.astrocluster.model.dto.ClusterResultDto;
 import edu.setokk.astrocluster.util.StringUtils;
@@ -11,45 +11,45 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public enum AnalysisMapper implements IMapper<AnalysisJpo, AnalysisDto> {
+public enum AnalysisMapper implements IMapper<AnalysisEntity, AnalysisDto> {
     INSTANCE;
 
     @Override
-    public AnalysisDto mapToTarget(AnalysisJpo analysisJpo) {
+    public AnalysisDto mapToTarget(AnalysisEntity analysisEntity) {
         // Get last part of the URL and remove .git
         String gitProjectName = StringUtils.splitByAndGetFirst(
-                StringUtils.splitByAndGetLast(analysisJpo.getGitUrl(), "\\/"), "\\."
+                StringUtils.splitByAndGetLast(analysisEntity.getGitUrl(), "\\/"), "\\."
         );
         return AnalysisDto.builder()
-                .id(analysisJpo.getId())
+                .id(analysisEntity.getId())
                 .gitProjectName(gitProjectName)
-                .projectUUID(analysisJpo.getProjectUUID())
-                .gitUrl(analysisJpo.getGitUrl())
-                .projectLang(analysisJpo.getProjectLang())
-                .clusterResults(this.mapClusterResultsToTarget(analysisJpo.getClusterResults())).build();
+                .projectUUID(analysisEntity.getProjectUUID())
+                .gitUrl(analysisEntity.getGitUrl())
+                .projectLang(analysisEntity.getProjectLang())
+                .clusterResults(this.mapClusterResultsToTarget(analysisEntity.getClusterResults())).build();
     }
 
-    private List<ClusterResultDto> mapClusterResultsToTarget(Set<ClusterResultJpo> clusterResultsJpo) {
-        return clusterResultsJpo.stream()
+    private List<ClusterResultDto> mapClusterResultsToTarget(Set<ClusterResultEntity> clusterResultsEntity) {
+        return clusterResultsEntity.stream()
                 .map(ClusterResultMapper.INSTANCE::mapToTarget)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public AnalysisJpo mapToInitial(AnalysisDto analysisDto) {
-        return new AnalysisJpo(
+    public AnalysisEntity mapToInitial(AnalysisDto analysisDto) {
+        return new AnalysisEntity(
                 analysisDto.getId(),
                 analysisDto.getProjectUUID(),
                 analysisDto.getGitUrl(),
                 analysisDto.getProjectLang(),
-                new UserJpo(analysisDto.getUserId())
+                new UserEntity(analysisDto.getUserId())
         );
     }
 
-    public void mapAndAssignClusterResultsToAnalysis(List<ClusterResultDto> clusterResultsDto, AnalysisJpo analysisJpo) {
-        analysisJpo.setClusterResults(clusterResultsDto.stream()
+    public void mapAndAssignClusterResultsToAnalysis(List<ClusterResultDto> clusterResultsDto, AnalysisEntity analysisEntity) {
+        analysisEntity.setClusterResults(clusterResultsDto.stream()
                 .map(ClusterResultMapper.INSTANCE::mapToInitial)
-                .peek(dto -> dto.setAnalysis(analysisJpo))
+                .peek(dto -> dto.setAnalysis(analysisEntity))
                 .collect(Collectors.toSet()));
     }
 }

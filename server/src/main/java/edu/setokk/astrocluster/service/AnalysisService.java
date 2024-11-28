@@ -3,7 +3,7 @@ package edu.setokk.astrocluster.service;
 import edu.setokk.astrocluster.core.analysis.AnalysisHelper;
 import edu.setokk.astrocluster.core.mapper.AnalysisMapper;
 import edu.setokk.astrocluster.error.BusinessLogicException;
-import edu.setokk.astrocluster.model.AnalysisJpo;
+import edu.setokk.astrocluster.model.AnalysisEntity;
 import edu.setokk.astrocluster.model.dto.AnalysisDto;
 import edu.setokk.astrocluster.model.dto.UserDto;
 import edu.setokk.astrocluster.repository.AnalysisRepository;
@@ -33,22 +33,22 @@ public class AnalysisService {
         analysisDto.setUserId(user.getId());
 
         // Save analysis object
-        AnalysisJpo analysisJpo = AnalysisMapper.INSTANCE.mapToInitial(analysisDto);
-        analysisRepository.save(analysisJpo);
-        AnalysisMapper.INSTANCE.mapAndAssignClusterResultsToAnalysis(analysisDto.getClusterResults(), analysisJpo);
+        AnalysisEntity analysisEntity = AnalysisMapper.INSTANCE.mapToInitial(analysisDto);
+        analysisRepository.save(analysisEntity);
+        AnalysisMapper.INSTANCE.mapAndAssignClusterResultsToAnalysis(analysisDto.getClusterResults(), analysisEntity);
 
         // Save percentage per cluster list
-        percentagePerClusterRepository.saveAll(AnalysisHelper.calculatePercentagesPerCluster(analysisDto.getClusterResults(), analysisJpo.getId()));
+        percentagePerClusterRepository.saveAll(AnalysisHelper.calculatePercentagesPerCluster(analysisDto.getClusterResults(), analysisEntity.getId()));
 
-        return AnalysisMapper.INSTANCE.mapToTarget(analysisJpo);
+        return AnalysisMapper.INSTANCE.mapToTarget(analysisEntity);
     }
 
     public AnalysisDto getAnalysis(long analysisId) {
         UserDto user = authService.getAuthenticatedUser();
 
-        AnalysisJpo analysisJpo = analysisRepository
+        AnalysisEntity analysisEntity = analysisRepository
                 .findByIdAndUserId(analysisId, user.getId())
                 .orElseThrow(() -> new BusinessLogicException(HttpStatus.NOT_FOUND, "Analysis with id=" + analysisId + " does not exist."));
-        return AnalysisMapper.INSTANCE.mapToTarget(analysisJpo);
+        return AnalysisMapper.INSTANCE.mapToTarget(analysisEntity);
     }
 }

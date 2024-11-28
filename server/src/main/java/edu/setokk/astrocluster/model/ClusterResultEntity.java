@@ -27,7 +27,7 @@ import lombok.Setter;
                 @UniqueConstraint(name = "cluster_result_file_path_unique", columnNames = "filepath")
         }
 )
-public class ClusterResultJpo {
+public class ClusterResultEntity {
 
     @Id
     @SequenceGenerator(
@@ -50,5 +50,5 @@ public class ClusterResultJpo {
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "analysis_id", nullable = false)
-    private AnalysisJpo analysis;
+    private AnalysisEntity analysis;
 }
