@@ -9,17 +9,17 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class RegisterRequest implements IValidatable {
-    @NotNull(message = "[RegisterRequest]: username cannot be null")
-    @NotEmpty(message = "[RegisterRequest]: username cannot be empty")
+public final class RegisterRequest implements IValidatable {
+    @NotNull(message = "[RegisterRequest]: username field is mandatory")
+    @NotEmpty(message = "[RegisterRequest]: username field cannot be empty")
     private String username;
 
-    @NotNull(message = "[RegisterRequest]: password cannot be null")
-    @NotEmpty(message = "[RegisterRequest]: password cannot be empty")
+    @NotNull(message = "[RegisterRequest]: password field is mandatory")
+    @NotEmpty(message = "[RegisterRequest]: password field cannot be empty")
     private String password;
 
-    @NotNull(message = "[RegisterRequest]: email cannot be null")
-    @NotEmpty(message = "[RegisterRequest]: email cannot be empty")
-    @Email(message = "[RegisterRequest]: email is invalid")
+    @NotNull(message = "[RegisterRequest]: email field is mandatory")
+    @NotEmpty(message = "[RegisterRequest]: email field cannot be empty")
+    @Email(message = "[RegisterRequest]: email field is invalid")
     private String email;
 }

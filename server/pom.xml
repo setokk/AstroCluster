@@ -126,6 +126,14 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!-- PDF GENERATION -->
+        <dependency>
+            <groupId>com.itextpdf</groupId>
+            <artifactId>itext-core</artifactId>
+            <version>9.0.0</version>
+            <type>pom</type>
+        </dependency>
+
         <!-- TESTING DEPENDENCIES -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
