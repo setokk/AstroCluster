@@ -21,10 +21,6 @@ List of available options:
 END
 )
 
-# Imports
-source ./docker-compose.config.sh
-source ./colors.config.sh
-
 # Helper functions
 update_dynamic_env_variables() {
     # Append all dynamic environment variables to docker-compose .env file before building
@@ -66,6 +62,10 @@ while [[ "$#" -gt 0 ]]; do
     fi
     shift
 done
+
+# Imports
+source ./docker-compose.config.sh
+source ./colors.config.sh
 
 # gRPC generation
 AC_MAVEN_PROFILES="" # Flag for holding various dynamic maven profiles
