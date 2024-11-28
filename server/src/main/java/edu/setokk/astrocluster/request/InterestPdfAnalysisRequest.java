@@ -19,6 +19,8 @@ public class InterestPdfAnalysisRequest implements IValidatable {
     private final String similarFilesCriteria;
     @NotNull(message = "[InterestPdfAnalysisRequest]: isDescriptive field is mandatory")
     private final Boolean isDescriptive;
+    @NotNull(message = "[InterestPdfAnalysisRequest]: numSimilarClasses field is mandatory")
+    private final Short numSimilarClasses;
 
     @Override
     public void postValidate() throws BusinessLogicException {

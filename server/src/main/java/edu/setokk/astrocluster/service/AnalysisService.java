@@ -1,10 +1,6 @@
 package edu.setokk.astrocluster.service;
 
 import edu.setokk.astrocluster.core.analysis.AnalysisHelper;
-import edu.setokk.astrocluster.core.enums.SimilarFilesCriteria;
-import edu.setokk.astrocluster.core.interest.SimilarFilesClusterStrategy;
-import edu.setokk.astrocluster.core.interest.SimilarFilesNormalStrategy;
-import edu.setokk.astrocluster.core.interest.SimilarFilesStrategy;
 import edu.setokk.astrocluster.core.mapper.AnalysisMapper;
 import edu.setokk.astrocluster.error.BusinessLogicException;
 import edu.setokk.astrocluster.model.AnalysisEntity;
@@ -13,9 +9,12 @@ import edu.setokk.astrocluster.model.dto.UserDto;
 import edu.setokk.astrocluster.repository.AnalysisRepository;
 import edu.setokk.astrocluster.repository.PercentagePerClusterRepository;
 import edu.setokk.astrocluster.request.InterestPdfAnalysisRequest;
+import edu.setokk.astrocluster.util.Csv;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.io.IOException;
 
 @Service
 public class AnalysisService {
@@ -63,19 +62,9 @@ public class AnalysisService {
         return AnalysisMapper.INSTANCE.mapToTarget(analysisEntity);
     }
 
-    public byte[] generateInterestPdfForAnalysis(InterestPdfAnalysisRequest requestBody) {
-        // Get analysis
+    public byte[] generateInterestPdfForAnalysis(InterestPdfAnalysisRequest requestBody) throws IOException {
         AnalysisDto analysisDto = getAnalysis(requestBody.getAnalysisId());
-
-        // Calculate interest
-        SimilarFilesCriteria similarFilesCriteria = SimilarFilesCriteria.get(requestBody.getSimilarFilesCriteria()).get();
-        SimilarFilesStrategy similarFilesStrategy;
-        if (SimilarFilesCriteria.NORMAL.equals(similarFilesCriteria)) {
-            similarFilesStrategy = new SimilarFilesNormalStrategy();
-        } else {
-            similarFilesStrategy = new SimilarFilesClusterStrategy();
-        }
-        interestService.calculateInterest(analysisDto, similarFilesStrategy);
-        pdfService.generatePdf();
+        Csv interestResultsCsv = interestService.calculateInterestCsv(analysisDto, requestBody);
+        pdfService.generatePdfFromCsv(interestResultsCsv);
     }
 }

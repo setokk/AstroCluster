@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -44,7 +45,7 @@ public class AnalysisController {
     }
 
     @PostMapping("/interest/pdf")
-    public ResponseEntity<?> generateInterestPdfForAnalysis(@RequestBody @Valid InterestPdfAnalysisRequest requestBody) {
+    public ResponseEntity<?> generateInterestPdfForAnalysis(@RequestBody @Valid InterestPdfAnalysisRequest requestBody) throws IOException {
         requestBody.validate();
         analysisService.generateInterestPdfForAnalysis(requestBody);
         return null;
