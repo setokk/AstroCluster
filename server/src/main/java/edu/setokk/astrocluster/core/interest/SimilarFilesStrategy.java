@@ -6,7 +6,15 @@ import edu.setokk.astrocluster.util.Csv;
 import java.util.List;
 
 public interface SimilarFilesStrategy {
-    List<ClusterResultDto> findNeighbouringFiles(SimilarFilesStrategy.Parameters parameters);
+    List<Similarity> findNeighbouringFiles(SimilarFilesStrategy.Parameters parameters);
 
-    record Parameters(ClusterResultDto currProjectFile, List<ClusterResultDto> projectFiles, short numSimilarClasses, Csv metricsCsv) {}
+    record Parameters(
+            int currIndex,
+            ClusterResultDto currProjectFile,
+            List<ClusterResultDto> projectFiles,
+            short numSimilarClasses,
+            Csv metricsCsv
+    ) {}
+
+    record Similarity(int projectFileId, double similarityPercentage) {}
 }

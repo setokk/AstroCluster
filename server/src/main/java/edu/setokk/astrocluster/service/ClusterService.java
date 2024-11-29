@@ -9,6 +9,7 @@ import edu.setokk.astrocluster.model.dto.AnalysisDto;
 import edu.setokk.astrocluster.model.dto.AnalysisDto.AnalysisDtoBuilder;
 import edu.setokk.astrocluster.model.dto.UserDto;
 import edu.setokk.astrocluster.request.PerformClusteringRequest;
+import edu.setokk.astrocluster.util.CmdUtils;
 import edu.setokk.astrocluster.util.IOUtils;
 import edu.setokk.astrocluster.util.StringUtils;
 import io.grpc.ManagedChannel;
@@ -18,7 +19,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.UUID;
 
 @Service
@@ -41,23 +41,21 @@ public class ClusterService {
     }
 
     @Async
-    public void performClusteringAsync(PerformClusteringRequest requestBody) throws IOException, InterruptedException, MessagingException {
-        AnalysisDto analysisDto = performClustering(requestBody);
-
+    public void performClusteringAsync(PerformClusteringRequest requestBody) throws MessagingException {
+        performClustering(requestBody);
     }
 
-    public AnalysisDto performClustering(PerformClusteringRequest requestBody) throws IOException, InterruptedException, MessagingException {
+    public AnalysisDto performClustering(PerformClusteringRequest requestBody) throws MessagingException {
         // Clone git project
         UUID uuid = UUID.randomUUID();
-        String projectDirUUID = IOUtils.PROJECTS_DIR + uuid;
-        Process gcProcess = Runtime.getRuntime().exec(new String[]{"git", "clone", requestBody.getGitUrl(), projectDirUUID});
-        if (gcProcess.waitFor() != 0)
-            throw new BusinessLogicException(HttpStatus.INTERNAL_SERVER_ERROR, "Git clone failed for url: \""+requestBody.getGitUrl()+"\"");
+        int exitCode = CmdUtils.executeCmd("git", "clone", requestBody.getGitUrl(), IOUtils.PROJECTS_DIR + uuid);
+        if (exitCode != CmdUtils.EXIT_CODE_SUCCESS)
+            throw new BusinessLogicException(HttpStatus.INTERNAL_SERVER_ERROR, "Git clone failed for url: \"" + requestBody.getGitUrl() + "\"");
 
         // Call clustering model from Python gRPC server
         ClusterRequest clusterRequest = ClusterRequest.newBuilder()
                 .setLang(requestBody.getLang())
-                .setPath(projectDirUUID)
+                .setPath(uuid.toString())
                 .addAllExtensions(requestBody.getExtensions())
                 .build();
         ClusterResponse clusterResponse = clusterBlockingStub.performClustering(clusterRequest);
