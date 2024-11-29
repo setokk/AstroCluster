@@ -1,2 +1,4 @@
+*.proto linguist-language=proto
+*.proto linguist-detectable
 proto/** linguist-documentation=false
 proto/** linguist-vendored=false
