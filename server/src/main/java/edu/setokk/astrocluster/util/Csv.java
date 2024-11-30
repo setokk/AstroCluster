@@ -1,6 +1,7 @@
 package edu.setokk.astrocluster.util;
 
 import lombok.Getter;
+import lombok.Setter;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -17,7 +18,7 @@ import java.util.Set;
 public final class Csv {
     private String title;
     private Path filepath;
-    private Column[] columns;
+    @Setter private Column[] columns;
     private final Map<String, List<String>> csvContent;
     private final String splitRegex;
     private final Map<String, String> metadata;
@@ -67,12 +68,12 @@ public final class Csv {
     }
 
     public void addColumnValue(Column column, String value) {
-       if (!column.isActive) return;
-       List<String> values = getColumnValues(column.columnName);
-       values.add(value);
+        if (!column.isActive) return;
+        List<String> values = getColumnValues(column.columnName);
+        values.add(value);
     }
 
-    private void addColumnValue(String columnName, String value) {
+    public void addColumnValue(String columnName, String value) {
         List<String> values = getColumnValues(columnName);
         values.add(value);
     }
