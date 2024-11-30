@@ -1,5 +1,6 @@
 package edu.setokk.astrocluster.controller;
 
+import edu.setokk.astrocluster.core.pdf.PdfMessage;
 import edu.setokk.astrocluster.model.dto.AnalysisDto;
 import edu.setokk.astrocluster.model.dto.PercentagePerClusterDto;
 import edu.setokk.astrocluster.request.InterestPdfAnalysisRequest;
@@ -8,6 +9,7 @@ import edu.setokk.astrocluster.service.AnalysisService;
 import edu.setokk.astrocluster.service.PercentagePerClusterService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -45,9 +47,12 @@ public class AnalysisController {
     }
 
     @PostMapping("/interest/pdf")
-    public ResponseEntity<?> generateInterestPdfForAnalysis(@RequestBody @Valid InterestPdfAnalysisRequest requestBody) throws IOException {
+    public ResponseEntity<byte[]> generateInterestPdfForAnalysis(@RequestBody @Valid InterestPdfAnalysisRequest requestBody) throws IOException {
         requestBody.validate();
-        analysisService.generateInterestPdfForAnalysis(requestBody);
-        return null;
+        PdfMessage pdfMessage = analysisService.generateInterestPdfForAnalysis(requestBody);
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_PDF)
+                .header("Content-Disposition", "attachment; filename=\"" + pdfMessage.filename() + "\"")
+                .body(pdfMessage.pdfBytes());
     }
 }

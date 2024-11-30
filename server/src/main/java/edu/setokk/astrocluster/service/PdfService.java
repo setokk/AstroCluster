@@ -10,16 +10,17 @@ import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.properties.TextAlignment;
 import com.itextpdf.layout.properties.UnitValue;
+import edu.setokk.astrocluster.core.pdf.PdfMessage;
 import edu.setokk.astrocluster.util.Csv;
+import edu.setokk.astrocluster.util.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
-import java.io.OutputStream;
 
 @Service
 public class PdfService {
-    public OutputStream generatePdfFromCsv(Csv csv) {
-        OutputStream os = new ByteArrayOutputStream();
+    public PdfMessage generatePdfFromCsv(Csv csv) {
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
 
         PdfWriter pdfWriter = new PdfWriter(os);
         PdfDocument pdfDocument = new PdfDocument(pdfWriter);
@@ -55,8 +56,10 @@ public class PdfService {
             }
         }
         document.add(table);
-
         document.close();
-        return os;
+
+        String filename = StringUtils.splitByAndGetLast(csv.getFilepath().toString(), "[\\\\/]")
+                .replace(".csv", ".pdf");
+        return new PdfMessage(os.toByteArray(), filename);
     }
 }

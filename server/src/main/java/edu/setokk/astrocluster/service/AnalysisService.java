@@ -2,6 +2,7 @@ package edu.setokk.astrocluster.service;
 
 import edu.setokk.astrocluster.core.analysis.AnalysisHelper;
 import edu.setokk.astrocluster.core.mapper.AnalysisMapper;
+import edu.setokk.astrocluster.core.pdf.PdfMessage;
 import edu.setokk.astrocluster.error.BusinessLogicException;
 import edu.setokk.astrocluster.model.AnalysisEntity;
 import edu.setokk.astrocluster.model.dto.AnalysisDto;
@@ -14,8 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 
 @Service
 public class AnalysisService {
@@ -63,7 +64,7 @@ public class AnalysisService {
         return AnalysisMapper.INSTANCE.mapToTarget(analysisEntity);
     }
 
-    public OutputStream generateInterestPdfForAnalysis(InterestPdfAnalysisRequest requestBody) throws IOException {
+    public PdfMessage generateInterestPdfForAnalysis(InterestPdfAnalysisRequest requestBody) throws IOException {
         AnalysisDto analysisDto = getAnalysis(requestBody.getAnalysisId());
         Csv interestResultsCsv = interestService.calculateInterestCsv(analysisDto, requestBody);
         return pdfService.generatePdfFromCsv(interestResultsCsv);
