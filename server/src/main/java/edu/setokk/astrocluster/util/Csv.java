@@ -96,6 +96,15 @@ public final class Csv {
         }
     }
 
+    public int getColumnCount() {
+        return csvContent.size();
+    }
+
+    public int getRowCount() {
+        if (columns.length == 0) return 0;
+        return getColumnValues(columns[0].columnName).size();
+    }
+
     public void addMetadata(String key, String value) {
         metadata.put(key, value);
     }

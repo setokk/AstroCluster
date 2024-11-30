@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.io.OutputStream;
 
 @Service
 public class AnalysisService {
@@ -62,9 +63,9 @@ public class AnalysisService {
         return AnalysisMapper.INSTANCE.mapToTarget(analysisEntity);
     }
 
-    public byte[] generateInterestPdfForAnalysis(InterestPdfAnalysisRequest requestBody) throws IOException {
+    public OutputStream generateInterestPdfForAnalysis(InterestPdfAnalysisRequest requestBody) throws IOException {
         AnalysisDto analysisDto = getAnalysis(requestBody.getAnalysisId());
         Csv interestResultsCsv = interestService.calculateInterestCsv(analysisDto, requestBody);
-        pdfService.generatePdfFromCsv(interestResultsCsv);
+        return pdfService.generatePdfFromCsv(interestResultsCsv);
     }
 }
