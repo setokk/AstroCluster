@@ -17,13 +17,15 @@ import java.util.Set;
 public final class Csv {
     private String title;
     private Path filepath;
-    private Header[] headers;
+    private Column[] columns;
     private final Map<String, List<String>> csvContent;
     private final String splitRegex;
+    private final Map<String, String> metadata;
 
     public Csv(String splitRegex) {
         this.csvContent = HashMap.newHashMap(0);
         this.splitRegex = splitRegex;
+        this.metadata = HashMap.newHashMap(0);
     }
 
     public Csv(String title, Path filepath, String splitRegex) {
@@ -34,28 +36,28 @@ public final class Csv {
 
     public void load() throws IOException {
         List<String> fileLines = Files.readAllLines(filepath);
-        this.headers = Arrays.stream(fileLines.getFirst().split(splitRegex))
-                .map(columnName -> new Header(columnName, true))
-                .toArray(Header[]::new);
+        this.columns = Arrays.stream(fileLines.getFirst().split(splitRegex))
+                .map(columnName -> new Column(columnName, true))
+                .toArray(Column[]::new);
 
         for (String line : fileLines) {
             String[] values = line.split(splitRegex);
             for (int i = 0; i < values.length; i++) {
-                addColumnValue(headers[i], values[i]);
+                addColumnValue(columns[i], values[i]);
             }
         }
     }
 
     public void load(Set<String> includedColumns) throws IOException {
         List<String> fileLines = Files.readAllLines(filepath);
-        this.headers = Arrays.stream(fileLines.getFirst().split(splitRegex))
-                .map(columnName -> new Header(columnName, includedColumns.contains(columnName)))
-                .toArray(Header[]::new);
+        this.columns = Arrays.stream(fileLines.getFirst().split(splitRegex))
+                .map(columnName -> new Column(columnName, includedColumns.contains(columnName)))
+                .toArray(Column[]::new);
 
         for (String line : fileLines) {
             String[] values = line.split(splitRegex);
             for (int i = 0; i < values.length; i++) {
-                addColumnValue(headers[i], values[i]);
+                addColumnValue(columns[i], values[i]);
             }
         }
     }
@@ -64,15 +66,38 @@ public final class Csv {
         return csvContent.computeIfAbsent(column, k -> new ArrayList<>());
     }
 
-    public void addColumnValue(Header header, String value) {
-       if (!header.isActive) return;
-       List<String> values = getColumnValues(header.columnName);
+    public void addColumnValue(Column column, String value) {
+       if (!column.isActive) return;
+       List<String> values = getColumnValues(column.columnName);
        values.add(value);
     }
 
-    public Optional<Header[]> getHeaders() {
-        return Optional.ofNullable(headers);
+    private void addColumnValue(String columnName, String value) {
+        List<String> values = getColumnValues(columnName);
+        values.add(value);
     }
 
-    public record Header(String columnName, boolean isActive) {}
+    public void removeColumns(String... column) {
+        for (var c : column) {
+            csvContent.remove(c);
+        }
+    }
+
+    public Optional<Column[]> getColumns() {
+        return Optional.ofNullable(columns);
+    }
+
+    public void addNewLines(int numNewLines) {
+        for (int i = 0; i < numNewLines; i++) {
+            for (var entry : csvContent.entrySet()) {
+                getColumnValues(entry.getKey()).add("");
+            }
+        }
+    }
+
+    public void addMetadata(String key, String value) {
+        metadata.put(key, value);
+    }
+
+    public record Column(String columnName, boolean isActive) {}
 }

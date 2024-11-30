@@ -19,6 +19,9 @@ public class InterestPdfAnalysisRequest implements IValidatable {
     private final String similarFilesCriteria;
     @NotNull(message = "[InterestPdfAnalysisRequest]: isDescriptive field is mandatory")
     private final Boolean isDescriptive;
+    private Double avgPerGenerationLOC;
+    private Double perHourLOC;
+    private Double perHourSalary;
 
     @Override
     public void postValidate() throws BusinessLogicException {
@@ -28,6 +31,15 @@ public class InterestPdfAnalysisRequest implements IValidatable {
         if (SimilarFilesCriteria.get(similarFilesCriteria).isEmpty()) {
             e.addErrorMessage(errorPrefix() + " similarFilesCriteria=" + similarFilesCriteria + " is not a valid value");
         }
+
+        /* AvgPerGenerationLOC field post validate */
+        avgPerGenerationLOC = (avgPerGenerationLOC == null) ? 40 : avgPerGenerationLOC;
+
+        /* PerHourLOC field post validate */
+        perHourLOC = (perHourLOC == null) ? 25 : perHourLOC;
+
+        /* PerHourSalary field post validate */
+        perHourSalary = (perHourSalary == null) ? 45 : perHourSalary;
 
         throw e;
     }
