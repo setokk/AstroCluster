@@ -34,9 +34,8 @@ public class PdfService {
                 .setBackgroundColor(Color.createColorWithColorSpace(new float[]{131, 120, 156}))
                 .setMarginBottom(20));
 
-        Table table = new Table(UnitValue.createPercentArray(csv.getColumns().get().length)).useAllAvailableWidth();
-
         // Add table headers
+        Table table = new Table(UnitValue.createPercentArray(csv.getColumns().get().length)).useAllAvailableWidth();
         for (Csv.Column column : csv.getColumns().get()) {
             table.addHeaderCell(new Cell()
                     .add(new Paragraph(column.columnName()))

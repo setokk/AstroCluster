@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
@@ -15,6 +16,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.Set;
 
 @Getter
 @Setter
@@ -57,8 +60,8 @@ public class UserEntity {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @OneToOne(mappedBy = "user")
-    private AnalysisEntity analysis;
+    @OneToMany(mappedBy = "user")
+    private Set<AnalysisEntity> analyses;
 
     public UserEntity(long id) {
         this.id = id;

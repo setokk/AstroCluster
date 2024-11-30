@@ -41,6 +41,6 @@ public class InterestPdfAnalysisRequest implements IValidatable {
         /* PerHourSalary field post validate */
         perHourSalary = (perHourSalary == null) ? 45 : perHourSalary;
 
-        throw e;
+        if (e.hasErrorMessages()) throw e;
     }
 }
