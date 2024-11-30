@@ -1,9 +1,14 @@
 package edu.setokk.astrocluster.util;
 
+import com.itextpdf.kernel.colors.ColorConstants;
+import com.itextpdf.layout.element.Cell;
+import com.itextpdf.layout.element.Paragraph;
+import com.itextpdf.layout.properties.TextAlignment;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -60,6 +65,37 @@ public final class Csv {
             for (int i = 0; i < values.length; i++) {
                 addColumnValue(columns[i], values[i]);
             }
+        }
+    }
+
+    public void save(String oSplitRegex) {
+        // Headers
+        String splitRegexOut = "";
+        StringBuilder out = new StringBuilder();
+        if (columns == null || columns.length == 0) {
+            return;
+        }
+
+        for (Csv.Column column : columns) {
+            out.append(splitRegexOut).append(column.columnName);
+            splitRegexOut = (oSplitRegex == null) ? this.splitRegex : oSplitRegex;
+        }
+        out.append("\n");
+
+        // Rest
+        for (int i = 0; i < getRowCount(); i++) {
+            splitRegexOut = "";
+            for (Csv.Column column : columns) {
+                out.append(splitRegexOut).append(getColumnValues(column.columnName).get(i));
+                splitRegexOut = (oSplitRegex == null) ? this.splitRegex : oSplitRegex;
+            }
+            out.append("\n");
+        }
+
+        try {
+            Files.write(filepath, out.toString().getBytes(StandardCharsets.UTF_8));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

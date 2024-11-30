@@ -113,6 +113,9 @@ public class InterestService {
             );
         }
 
+        if (Files.notExists(interestResultsCsv.getFilepath()))
+            interestResultsCsv.save(null);
+
         return interestResultsCsv;
     }
 }
