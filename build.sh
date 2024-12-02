@@ -27,6 +27,7 @@ update_dynamic_env_variables() {
     {
         echo "MAVEN_PROFILES=${AC_MAVEN_PROFILES}"
         echo "GENERATE_GRPC=${AC_GENERATE_GRPC}"
+        echo "DOWNLOAD_MODEL=${DOWNLOAD_MODEL}"
     } >> "${DOCKER_COMPOSE_ENV_FILE}"
 }
 
@@ -80,6 +81,17 @@ if [ $SKIP_GRPC = false ]; then
     cp ./proto/cluster.proto ./cluster/cluster.proto && echo -e "[${BLUE}BUILD INFO${NC}]: Copied cluster.proto in cluster"
 fi
 
+# Figure out whether to download model (only if it does not exist locally)
+# First, figure if ac-clustering-service exists
+DOWNLOAD_MODEL=true
+CLUSTER_SERVICE_EXISTS=$(sudo docker ps -q -f name="${CLUSTER_SERVICE_CONTAINER_ID}")
+if [ -n "${CLUSTER_SERVICE_EXISTS}" ]; then
+    MODEL_EXISTS=$(sudo docker exec "${CLUSTER_SERVICE_CONTAINER_ID}" sh -c "test -d ${ASTROCLUSTER_MODEL_PATH} && echo 'exists' || echo 'does not exist'")
+    if [ "${MODEL_EXISTS}" == "does not exist" ]; then
+        DOWNLOAD_MODEL=false
+    fi
+fi
+
 # Services to build and deploy
 declare -a SERVICES_TO_BUILD
 if [ $SKIP_AC = false ]; then
@@ -104,8 +116,8 @@ build_services
 # Copy generated gRPC files from containers to the actual project directory
 if [ $SKIP_GRPC = false ]; then
     # Delete temporary .proto files
-    sudo rm -rf ./server/default/cluster.proto
-    sudo rm -rf ./server/custom/cluster.proto
+    sudo rm -rf ./server/default
+    sudo rm -rf ./server/custom
     sudo rm -rf ./cluster/cluster.proto
 
     # Copy generated files from containers to actual project directory

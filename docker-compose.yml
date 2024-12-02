@@ -19,6 +19,7 @@ services:
       dockerfile: Dockerfile
       args:
         GENERATE_GRPC: "${GENERATE_GRPC}"
+    command: ["${DOWNLOAD_MODEL}", "${ASTROCLUSTER_MODEL_PATH}"]
     cap_add:
       - SYS_PTRACE
     security_opt:
@@ -27,6 +28,7 @@ services:
       - "50051:50051"
     volumes:
       - shared_cloned_projects:/ac-clustering-service/projects
+      - astrocluster_model_dir:/ac-clustering-service/finetune/fine_tuned_unixcoder
 
   server:
     container_name: "${SERVER_CONTAINER_ID}"
@@ -57,3 +59,5 @@ volumes:
     name: "pg_data_ac_cluster"
   shared_cloned_projects:
     name: "shared_cloned_projects"
+  astrocluster_model_dir:
+    name: "astrocluster_model_dir"
