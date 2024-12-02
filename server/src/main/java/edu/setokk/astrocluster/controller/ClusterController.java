@@ -4,7 +4,6 @@ import edu.setokk.astrocluster.model.dto.AnalysisDto;
 import edu.setokk.astrocluster.request.PerformClusteringRequest;
 import edu.setokk.astrocluster.response.PerformClusteringResponse;
 import edu.setokk.astrocluster.service.ClusterService;
-import edu.setokk.astrocluster.service.EmailService;
 import edu.setokk.astrocluster.validation.PerformClusteringValidator;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
@@ -14,8 +13,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/cluster")
@@ -30,8 +27,7 @@ public class ClusterController {
     }
 
     @PostMapping("/perform-clustering")
-    public ResponseEntity<PerformClusteringResponse> performClustering(@RequestBody @Valid PerformClusteringRequest requestBody)
-            throws IOException, InterruptedException, MessagingException {
+    public ResponseEntity<PerformClusteringResponse> performClustering(@RequestBody @Valid PerformClusteringRequest requestBody) throws MessagingException {
         requestBody.validate();
         performClusteringValidator.advancedValidate(requestBody);
 

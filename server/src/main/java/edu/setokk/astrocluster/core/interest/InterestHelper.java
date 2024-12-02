@@ -107,7 +107,7 @@ public final class InterestHelper {
     public static Map<String, Double> calculateOptimalClassMetrics(int currIndex, List<SimilarFilesStrategy.Similarity> neighbouringFilesSorted, Csv metricsCsv) {
         Map<String, Double> optimalClassMetrics = HashMap.newHashMap(metricsCsv.getCsvContent().size() - 1);
         List<SimilarFilesStrategy.Similarity> neighbouringFilesSortedTemp = new ArrayList<>(neighbouringFilesSorted);
-        neighbouringFilesSortedTemp.add(new SimilarFilesStrategy.Similarity(100, currIndex));
+        neighbouringFilesSortedTemp.add(new SimilarFilesStrategy.Similarity(currIndex, 100));
         for (SimilarFilesStrategy.Similarity similarity : neighbouringFilesSortedTemp) {
             for (var entry : metricsCsv.getCsvContent().entrySet()) {
                 String header = entry.getKey();
