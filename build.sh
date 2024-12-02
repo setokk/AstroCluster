@@ -113,4 +113,8 @@ if [ $SKIP_GRPC = false ]; then
     echo -e "[${BLUE}BUILD INFO${NC}]: Server gRPC update finished. Copied docker gRPC files to project directory."
     sudo docker cp "${CLUSTER_SERVICE_CONTAINER_ID}:${CS_GRPC_DOCKER_PATH}" "${CS_GRPC_PROJECT_PATH}" && sudo rm -rf "${CS_GRPC_PROJECT_PATH}/service/__pycache__"
     echo -e "[${BLUE}BUILD INFO${NC}: Cluster service gRPC update finished. Copied docker gRPC files to project directory."
+
+    # Change ownership of files since they were created via root user inside containers
+    sudo chown -R setokk:setokk "${BE_GRPC_PROJECT_PATH}"
+    sudo chown -R setokk:setokk "${CS_GRPC_PROJECT_PATH}"
 fi

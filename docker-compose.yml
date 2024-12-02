@@ -19,6 +19,10 @@ services:
       dockerfile: Dockerfile
       args:
         GENERATE_GRPC: "${GENERATE_GRPC}"
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - seccomp:unconfined
     ports:
       - "50051:50051"
     volumes:
@@ -35,7 +39,7 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - shared_cloned_projects:/ac-server/projects
+      - shared_cloned_projects:/projects
     environment:
       spring.datasource.url: "jdbc:postgresql://db:5432/astrocluster"
       BE_GRPC_DOCKER_PATH: "${BE_GRPC_DOCKER_PATH}"
