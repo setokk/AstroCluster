@@ -137,7 +137,7 @@ public final class Csv {
     }
 
     public int getRowCount() {
-        if (columns.length == 0) return 0;
+        if (getColumnCount() == 0) return 0;
         return getColumnValues(columns[0].columnName).size();
     }
 

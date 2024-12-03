@@ -7,13 +7,26 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public final class InterestHelper {
-    public static void updateInterestCsvForCurrentProjectFile(Csv interestResultsCsv, int currIndex, ClusterResultDto currProjectFile,
-                                                              boolean isDescriptive, List<SimilarFilesStrategy.Similarity> neighbouringFilesSorted,
-                                                              Map<String, Double> optimalClassMetrics, Map<String, Double> diffFromOptimalClass,
-                                                              double interestInAvgLOC, double interestInHours, double interestInDollars, Csv metricsCsv) {
-        interestResultsCsv.setColumns(createCsvColumns(isDescriptive, neighbouringFilesSorted));
+    public static void updateInterestCsvForCurrentProjectFile(Parameters parameters) {
+        Csv interestResultsCsv = parameters.interestResultsCsv();
+        ClusterResultDto currProjectFile = parameters.currProjectFile();
+        boolean isDescriptive = parameters.isDescriptive();
+        List<SimilarFilesStrategy.Similarity> neighbouringFilesSorted = parameters.neighbouringFilesSorted();
+        Csv metricsCsv = parameters.metricsCsv();
+        Map<String, Double> optimalClassMetrics = parameters.optimalClassMetrics();
+        Map<String, Double> diffFromOptimalClass = parameters.diffFromOptimalClass();
+        double interestInAvgLOC = parameters.interestInAvgLOC();
+        double interestInHours = parameters.interestInHours();
+        double interestInDollars = parameters.interestInDollars();
+
+
+        if (interestResultsCsv.getColumns().isEmpty()) {
+            interestResultsCsv.setColumns(createCsvColumns(isDescriptive, neighbouringFilesSorted));
+        }
+
         if (isDescriptive) {
             // Add first row
             interestResultsCsv.addColumnValue("Metric", "");
@@ -123,4 +136,17 @@ public final class InterestHelper {
 
         return optimalClassMetrics;
     }
+
+    public record Parameters(
+            Csv interestResultsCsv,
+            ClusterResultDto currProjectFile,
+            boolean isDescriptive,
+            List<SimilarFilesStrategy.Similarity> neighbouringFilesSorted,
+            Map<String, Double> optimalClassMetrics,
+            Map<String, Double> diffFromOptimalClass,
+            double interestInAvgLOC,
+            double interestInHours,
+            double interestInDollars,
+            Csv metricsCsv
+    ) {}
 }

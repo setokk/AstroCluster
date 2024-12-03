@@ -79,7 +79,7 @@ public class ClusterService {
                 "<h2>An analysis you requested with UUID: " + uuid + ", has just completed!</h2>" +
                      "<p>You can find it <a href=\"http://localhost:4200/api/analysis/" + analysisDto.getId() + "\">here</a>.</p>" +
                      "<p><b>Please note that analyses which are performed with no account are publicly available.</b></p>." +
-                     "<p>If you wish to perform private analyses, please create an account <a href=\"http://localhost:4200/api/users/register/\">here</a>."
+                     "<p>If you wish to perform private analyses, please create an account <a href=\"http://localhost:4200/register\">here</a>."
         );
         return analysisDto;
     }

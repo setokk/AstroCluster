@@ -88,8 +88,8 @@ public class InterestService {
         for (ClusterResultDto currProjectFile : projectFiles) {
             // Get top "numSimilarClasses" similar classes
             int currIndex = projectFilesToMetricsCsvIndexBridge.get(currProjectFile.getFilepath());
-            var parameters = new SimilarFilesStrategy.Parameters(currProjectFile, projectFiles, numSimilarClasses, metricsCsv, projectFilesToMetricsCsvIndexBridge);
-            List<SimilarFilesStrategy.Similarity> neighbouringFilesSorted = similarFilesStrategy.findNeighbouringFiles(parameters);
+            var similarFilesStrategyParameters = new SimilarFilesStrategy.Parameters(currProjectFile, projectFiles, numSimilarClasses, metricsCsv, projectFilesToMetricsCsvIndexBridge);
+            List<SimilarFilesStrategy.Similarity> neighbouringFilesSorted = similarFilesStrategy.findNeighbouringFiles(similarFilesStrategyParameters);
 
             metricsCsv.removeColumns("SIZE1", "SIZE2"); // Not needed anymore
 
@@ -105,12 +105,14 @@ public class InterestService {
             double interestInAvgLOC = averageDiff * requestBody.getAvgPerGenerationLOC();
             double interestInHours = interestInAvgLOC / requestBody.getPerHourLOC();
             double interestInDollars = interestInHours * requestBody.getPerHourSalary();
-            InterestHelper.updateInterestCsvForCurrentProjectFile(
-                    interestResultsCsv, currIndex, currProjectFile,
+
+            var interestHelperParameters = new InterestHelper.Parameters(
+                    interestResultsCsv, currProjectFile,
                     requestBody.getIsDescriptive(), neighbouringFilesSorted,
                     optimalClassMetrics, diffFromOptimalClass,
                     interestInAvgLOC, interestInHours, interestInDollars, metricsCsv
             );
+            InterestHelper.updateInterestCsvForCurrentProjectFile(interestHelperParameters);
         }
 
         if (Files.notExists(interestResultsCsv.getFilepath()))
