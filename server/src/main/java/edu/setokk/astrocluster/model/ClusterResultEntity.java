@@ -21,12 +21,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(
-        name = "cluster_result",
-        uniqueConstraints = {
-                @UniqueConstraint(name = "cluster_result_file_path_unique", columnNames = "filepath")
-        }
-)
+@Table(name = "cluster_result")
 public class ClusterResultEntity {
 
     @Id

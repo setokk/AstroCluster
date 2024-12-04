@@ -76,7 +76,7 @@ public class AnalysisService {
         AnalysisMapper.INSTANCE.mapAndAssignClusterResultsToAnalysis(analysisDto.getClusterResults(), analysisEntity);
 
         // Save percentage per cluster list
-        percentagePerClusterRepository.saveAll(AnalysisHelper.calculatePercentagesPerCluster(analysisDto.getClusterResults(), analysisEntity.getId()));
+        percentagePerClusterRepository.saveAll(AnalysisHelper.calculatePercentagesPerCluster(analysisDto.getClusterResults(), analysisEntity));
 
         return AnalysisMapper.INSTANCE.mapToTarget(analysisEntity);
     }

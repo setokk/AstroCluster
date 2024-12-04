@@ -80,6 +80,7 @@ public class AnalysisEntity {
         this.projectUUID = projectUUID;
         this.gitUrl = gitUrl;
         this.projectLang = projectLang;
+        this.createdDate = createdDate;
         this.user = user;
     }
 }

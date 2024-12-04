@@ -19,6 +19,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.UUID;
 
 @Service
@@ -65,6 +67,7 @@ public class ClusterService {
         analysisBuilder.gitUrl(requestBody.getGitUrl())
                 .projectUUID(uuid.toString())
                 .projectLang(requestBody.getLang())
+                .createdDate(ZonedDateTime.now(ZoneId.of("UTC+2")))
                 .gitProjectName(StringUtils.splitByAndGetFirst(
                         StringUtils.splitByAndGetLast(requestBody.getGitUrl(), "\\/"), "\\."
                 ));

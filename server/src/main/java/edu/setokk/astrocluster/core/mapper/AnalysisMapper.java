@@ -45,7 +45,7 @@ public enum AnalysisMapper implements IMapper<AnalysisEntity, AnalysisDto> {
                 analysisDto.getProjectUUID(),
                 analysisDto.getGitUrl(),
                 analysisDto.getProjectLang(),
-                ZonedDateTime.now(ZoneId.of("UTC+2")),
+                analysisDto.getCreatedDate(),
                 new UserEntity(analysisDto.getUserId())
         );
     }
@@ -53,7 +53,7 @@ public enum AnalysisMapper implements IMapper<AnalysisEntity, AnalysisDto> {
     public void mapAndAssignClusterResultsToAnalysis(List<ClusterResultDto> clusterResultsDto, AnalysisEntity analysisEntity) {
         analysisEntity.setClusterResults(clusterResultsDto.stream()
                 .map(ClusterResultMapper.INSTANCE::mapToInitial)
-                .peek(dto -> dto.setAnalysis(analysisEntity))
+                .peek(crEntity -> crEntity.setAnalysis(analysisEntity))
                 .collect(Collectors.toSet()));
     }
 }
