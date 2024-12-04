@@ -25,9 +25,9 @@ class ClusterServiceServicer(cluster_pb2_grpc.ClusterServiceServicer):
         traverser_strategy, keyword_remover = SUPPORTED_LANGUAGES.get(request.lang)
 
         # Get file content data
-        projects_path = f"/ac-clustering-service/projects"
-        files, file_paths = project_traverser.get_project_files(traverser_strategy, f"{projects_path}/{request.path}", request.extensions)
-        file_paths[:] = [fp.replace("/ac-clustering-service/", "") for fp in file_paths]
+        project_path = f"/ac-clustering-service/projects/{request.path}"
+        files, file_paths = project_traverser.get_project_files(traverser_strategy, f"{project_path}", request.extensions)
+        file_paths[:] = [fp.replace(f"{project_path}", "") for fp in file_paths]
 
         # Retrieve embeddings
         inputs_ids = self.tokenizer(files, return_tensors='pt', padding=True, truncation=True, max_length=512)

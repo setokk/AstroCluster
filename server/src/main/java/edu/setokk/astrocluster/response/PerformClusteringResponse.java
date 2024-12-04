@@ -13,6 +13,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public final class PerformClusteringResponse {
     private boolean isAsync;
-    private short ack;
-    private long analysisId;
+    private Short ack;
+    private Long analysisId;
 }

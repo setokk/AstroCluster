@@ -7,6 +7,8 @@ import edu.setokk.astrocluster.model.dto.AnalysisDto;
 import edu.setokk.astrocluster.model.dto.ClusterResultDto;
 import edu.setokk.astrocluster.util.StringUtils;
 
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -26,6 +28,7 @@ public enum AnalysisMapper implements IMapper<AnalysisEntity, AnalysisDto> {
                 .projectUUID(analysisEntity.getProjectUUID())
                 .gitUrl(analysisEntity.getGitUrl())
                 .projectLang(analysisEntity.getProjectLang())
+                .createdDate(analysisEntity.getCreatedDate())
                 .clusterResults(this.mapClusterResultsToTarget(analysisEntity.getClusterResults())).build();
     }
 
@@ -42,6 +45,7 @@ public enum AnalysisMapper implements IMapper<AnalysisEntity, AnalysisDto> {
                 analysisDto.getProjectUUID(),
                 analysisDto.getGitUrl(),
                 analysisDto.getProjectLang(),
+                ZonedDateTime.now(ZoneId.of("UTC+2")),
                 new UserEntity(analysisDto.getUserId())
         );
     }

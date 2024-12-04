@@ -23,15 +23,15 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@RequestBody @Valid LoginRequest loginRequest) {
+    @PostMapping("/log-in")
+    public ResponseEntity<String> loginUser(@RequestBody @Valid LoginRequest loginRequest) {
         loginRequest.validate();
         UserDto user = userService.loginUser(loginRequest);
         return ResponseEntity.ok(JwtUtils.generateJWT(user)); // Generate JWT Token
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody @Valid RegisterRequest registerRequest) {
+    public ResponseEntity<String> registerUser(@RequestBody @Valid RegisterRequest registerRequest) {
         registerRequest.validate();
         UserDto user = userService.registerUser(registerRequest);
         return ResponseEntity.ok(JwtUtils.generateJWT(user)); // Generate JWT Token

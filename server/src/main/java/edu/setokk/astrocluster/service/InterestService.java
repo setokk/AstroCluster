@@ -78,7 +78,7 @@ public class InterestService {
         metricsCsv.load(includedColumns);
 
         // Get actual indexes (map cluster results to the position they are in metrics csv)
-        List<String> metricsCsvFilepaths = metricsCsv.getColumnValues("Name");
+        List<String> metricsCsvFilepaths = metricsCsv.getColumnValues("Name").stream().map(s -> s.replace("projects/" + analysisDto.getProjectUUID(), "")).toList();
         Map<String, Integer> projectFilesToMetricsCsvIndexBridge = HashMap.newHashMap(metricsCsvFilepaths.size());
         for (int i = 0; i < metricsCsvFilepaths.size(); i++) {
             projectFilesToMetricsCsvIndexBridge.put(metricsCsvFilepaths.get(i), i);
@@ -88,10 +88,12 @@ public class InterestService {
         for (ClusterResultDto currProjectFile : projectFiles) {
             // Get top "numSimilarClasses" similar classes
             int currIndex = projectFilesToMetricsCsvIndexBridge.get(currProjectFile.getFilepath());
+
             var similarFilesStrategyParameters = new SimilarFilesStrategy.Parameters(currProjectFile, projectFiles, numSimilarClasses, metricsCsv, projectFilesToMetricsCsvIndexBridge);
             List<SimilarFilesStrategy.Similarity> neighbouringFilesSorted = similarFilesStrategy.findNeighbouringFiles(similarFilesStrategyParameters);
-
-            metricsCsv.removeColumns("SIZE1", "SIZE2"); // Not needed anymore
+            if (neighbouringFilesSorted.size() < numSimilarClasses) {
+                continue;
+            }
 
             Map<String, Double> optimalClassMetrics = InterestHelper.calculateOptimalClassMetrics(currIndex, neighbouringFilesSorted, metricsCsv);
             Map<String, Double> diffFromOptimalClass = InterestHelper.calculateDiffFromOptimalClass(currIndex, optimalClassMetrics, metricsCsv);
@@ -107,7 +109,8 @@ public class InterestService {
             double interestInDollars = interestInHours * requestBody.getPerHourSalary();
 
             var interestHelperParameters = new InterestHelper.Parameters(
-                    interestResultsCsv, currProjectFile,
+                    interestResultsCsv, analysisDto.getProjectUUID(),
+                    currProjectFile, currIndex,
                     requestBody.getIsDescriptive(), neighbouringFilesSorted,
                     optimalClassMetrics, diffFromOptimalClass,
                     interestInAvgLOC, interestInHours, interestInDollars, metricsCsv

@@ -11,12 +11,15 @@ import edu.setokk.astrocluster.repository.AnalysisRepository;
 import edu.setokk.astrocluster.repository.PercentagePerClusterRepository;
 import edu.setokk.astrocluster.request.InterestPdfAnalysisRequest;
 import edu.setokk.astrocluster.util.Csv;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AnalysisService {
@@ -39,6 +42,29 @@ public class AnalysisService {
         this.percentagePerClusterRepository = percentagePerClusterRepository;
     }
 
+    public AnalysisDto getAnalysis(long analysisId) {
+        UserDto user = authService.getAuthenticatedUser();
+
+        AnalysisEntity analysisEntity = analysisRepository
+                .findByIdAndUserId(analysisId, user.getId())
+                .orElseThrow(() -> new BusinessLogicException(HttpStatus.NOT_FOUND, "Analysis with id=" + analysisId + " does not exist."));
+        return AnalysisMapper.INSTANCE.mapToTarget(analysisEntity);
+    }
+
+    public List<AnalysisDto> getLatestAnalyses() {
+        UserDto user = authService.getAuthenticatedUser();
+        return analysisRepository.findLatestAnalysesOfUser(user.getId())
+                .stream()
+                .map(AnalysisMapper.INSTANCE::mapToTarget)
+                .toList();
+    }
+
+    public PdfMessage generateInterestPdfForAnalysis(InterestPdfAnalysisRequest requestBody) throws IOException {
+        AnalysisDto analysisDto = getAnalysis(requestBody.getAnalysisId());
+        Csv interestResultsCsv = interestService.calculateInterestCsv(analysisDto, requestBody);
+        return pdfService.generatePdfFromCsv(interestResultsCsv);
+    }
+
     @Transactional
     public AnalysisDto saveAnalysis(AnalysisDto analysisDto) {
         UserDto user = authService.getAuthenticatedUser();
@@ -53,20 +79,5 @@ public class AnalysisService {
         percentagePerClusterRepository.saveAll(AnalysisHelper.calculatePercentagesPerCluster(analysisDto.getClusterResults(), analysisEntity.getId()));
 
         return AnalysisMapper.INSTANCE.mapToTarget(analysisEntity);
-    }
-
-    public AnalysisDto getAnalysis(long analysisId) {
-        UserDto user = authService.getAuthenticatedUser();
-
-        AnalysisEntity analysisEntity = analysisRepository
-                .findByIdAndUserId(analysisId, user.getId())
-                .orElseThrow(() -> new BusinessLogicException(HttpStatus.NOT_FOUND, "Analysis with id=" + analysisId + " does not exist."));
-        return AnalysisMapper.INSTANCE.mapToTarget(analysisEntity);
-    }
-
-    public PdfMessage generateInterestPdfForAnalysis(InterestPdfAnalysisRequest requestBody) throws IOException {
-        AnalysisDto analysisDto = getAnalysis(requestBody.getAnalysisId());
-        Csv interestResultsCsv = interestService.calculateInterestCsv(analysisDto, requestBody);
-        return pdfService.generatePdfFromCsv(interestResultsCsv);
     }
 }

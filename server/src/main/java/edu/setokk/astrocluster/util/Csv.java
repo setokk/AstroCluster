@@ -46,10 +46,11 @@ public final class Csv {
                 .map(columnName -> new Column(columnName, true))
                 .toArray(Column[]::new);
 
-        for (String line : fileLines) {
+        for (int i = 1; i < fileLines.size(); i++) {
+            String line = fileLines.get(i);
             String[] values = line.split(splitRegex);
-            for (int i = 0; i < values.length; i++) {
-                addColumnValue(columns[i], values[i]);
+            for (int j = 0; j < values.length; j++) {
+                addColumnValue(columns[j], values[j]);
             }
         }
     }
@@ -60,10 +61,11 @@ public final class Csv {
                 .map(columnName -> new Column(columnName, includedColumns.contains(columnName)))
                 .toArray(Column[]::new);
 
-        for (String line : fileLines) {
+        for (int i = 1; i < fileLines.size(); i++) {
+            String line = fileLines.get(i);
             String[] values = line.split(splitRegex);
-            for (int i = 0; i < values.length; i++) {
-                addColumnValue(columns[i], values[i]);
+            for (int j = 0; j < values.length; j++) {
+                addColumnValue(columns[j], values[j]);
             }
         }
     }

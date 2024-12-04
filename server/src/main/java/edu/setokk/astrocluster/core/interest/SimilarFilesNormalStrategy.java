@@ -8,6 +8,7 @@ public final class SimilarFilesNormalStrategy implements SimilarFilesStrategy {
     @Override
     public List<Similarity> findNeighbouringFiles(Parameters parameters) {
         int currIndex = parameters.projectFilesToMetricsCsvIndexBridge().get(parameters.currProjectFile().getFilepath());
+
         List<String> size1Values = parameters.metricsCsv().getColumnValues("SIZE1");
         List<String> size2Values = parameters.metricsCsv().getColumnValues("SIZE2");
         double currSize1 = Double.parseDouble(size1Values.get(currIndex));

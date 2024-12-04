@@ -19,6 +19,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.ZonedDateTime;
 import java.util.Set;
 
 @Getter
@@ -63,6 +64,9 @@ public class AnalysisEntity {
     @OneToMany(mappedBy = "analysis", orphanRemoval = true, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<ClusterResultEntity> clusterResults;
 
+    @Column(name = "created_date", updatable = false, nullable = false)
+    private ZonedDateTime createdDate;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
@@ -71,7 +75,7 @@ public class AnalysisEntity {
         this.id = id;
     }
 
-    public AnalysisEntity(Long id, String projectUUID, String gitUrl, String projectLang, UserEntity user) {
+    public AnalysisEntity(Long id, String projectUUID, String gitUrl, String projectLang, ZonedDateTime createdDate, UserEntity user) {
         this.id = id;
         this.projectUUID = projectUUID;
         this.gitUrl = gitUrl;

@@ -12,16 +12,17 @@ import java.util.Optional;
 public final class InterestHelper {
     public static void updateInterestCsvForCurrentProjectFile(Parameters parameters) {
         Csv interestResultsCsv = parameters.interestResultsCsv();
+        String projectUUID = parameters.projectUUID();
         ClusterResultDto currProjectFile = parameters.currProjectFile();
+        int currIndex = parameters.currIndex();
         boolean isDescriptive = parameters.isDescriptive();
         List<SimilarFilesStrategy.Similarity> neighbouringFilesSorted = parameters.neighbouringFilesSorted();
         Csv metricsCsv = parameters.metricsCsv();
         Map<String, Double> optimalClassMetrics = parameters.optimalClassMetrics();
         Map<String, Double> diffFromOptimalClass = parameters.diffFromOptimalClass();
-        double interestInAvgLOC = parameters.interestInAvgLOC();
-        double interestInHours = parameters.interestInHours();
-        double interestInDollars = parameters.interestInDollars();
-
+        String interestInAvgLOCFormatted = String.format("%.5f", parameters.interestInAvgLOC());
+        String interestInHoursFormatted = String.format("%.5f", parameters.interestInHours());
+        String interestInDollarsFormatted = String.format("%.5f", parameters.interestInDollars());
 
         if (interestResultsCsv.getColumns().isEmpty()) {
             interestResultsCsv.setColumns(createCsvColumns(isDescriptive, neighbouringFilesSorted));
@@ -33,40 +34,37 @@ public final class InterestHelper {
             interestResultsCsv.addColumnValue("Pivot File", currProjectFile.getFilepath());
             for (int i = 0; i < neighbouringFilesSorted.size(); i++) {
                 int otherIndex = neighbouringFilesSorted.get(i).index();
-                interestResultsCsv.addColumnValue("Similar File " + (i + 1),  metricsCsv.getColumnValues("Name").get(otherIndex));
+                interestResultsCsv.addColumnValue("Similar File " + (i + 1),  metricsCsv.getColumnValues("Name").get(otherIndex).replace("projects/" + projectUUID, ""));
             }
             interestResultsCsv.addColumnValue("Optimal Class", "");
             interestResultsCsv.addColumnValue("Diff", "");
-            interestResultsCsv.addColumnValue("Interest in Average LOC", "");
-            interestResultsCsv.addColumnValue("Interest in Hours", "");
-            interestResultsCsv.addColumnValue("Interest in Dollars", "");
+            interestResultsCsv.addColumnValue("Interest in Average LOC", interestInAvgLOCFormatted);
+            interestResultsCsv.addColumnValue("Interest in Hours", interestInHoursFormatted);
+            interestResultsCsv.addColumnValue("Interest in Dollars", interestInDollarsFormatted);
 
             // Rest of rows
-            String interestInAvgLOCFormatted = String.format("%.5f", interestInAvgLOC);
-            String interestInHoursFormatted = String.format("%.5f", interestInHours);
-            String interestInDollarsFormatted = String.format("%.5f", interestInDollars);
             for (var entry : metricsCsv.getCsvContent().entrySet()) {
+                if (entry.getKey().equals("Name") || entry.getKey().equals("SIZE1") || entry.getKey().equals("SIZE2")) {
+                    continue;
+                }
                 interestResultsCsv.addColumnValue("Metric", entry.getKey());
-                interestResultsCsv.addColumnValue("Pivot File", currProjectFile.getFilepath());
+                interestResultsCsv.addColumnValue("Pivot File", entry.getValue().get(currIndex));
                 for (int i = 0; i < neighbouringFilesSorted.size(); i++) {
                     int otherIndex = neighbouringFilesSorted.get(i).index();
                     interestResultsCsv.addColumnValue("Similar File " + (i + 1), entry.getValue().get(otherIndex));
                 }
                 interestResultsCsv.addColumnValue("Optimal Class", String.format("%.5f", optimalClassMetrics.get(entry.getKey())));
                 interestResultsCsv.addColumnValue("Diff", String.format("%.5f%%", diffFromOptimalClass.get(entry.getKey())));
-                interestResultsCsv.addColumnValue("Interest in Average LOC", interestInAvgLOCFormatted);
-                interestResultsCsv.addColumnValue("Interest in Hours", interestInHoursFormatted);
-                interestResultsCsv.addColumnValue("Interest in Dollars", interestInDollarsFormatted);
-                interestInAvgLOCFormatted = "";
-                interestInHoursFormatted = "";
-                interestInDollarsFormatted = "";
+                interestResultsCsv.addColumnValue("Interest in Average LOC", "");
+                interestResultsCsv.addColumnValue("Interest in Hours", "");
+                interestResultsCsv.addColumnValue("Interest in Dollars", "");
             }
             interestResultsCsv.addNewLines(1);
         } else {
             interestResultsCsv.addColumnValue("Name", currProjectFile.getFilepath());
-            interestResultsCsv.addColumnValue("Interest in Average LOC", String.format("%.5f", interestInAvgLOC));
-            interestResultsCsv.addColumnValue("Interest in Hours", String.format("%.5f", interestInHours));
-            interestResultsCsv.addColumnValue("Interest in Dollars", String.format("%.5f", interestInDollars));
+            interestResultsCsv.addColumnValue("Interest in Average LOC", interestInAvgLOCFormatted);
+            interestResultsCsv.addColumnValue("Interest in Hours", interestInHoursFormatted);
+            interestResultsCsv.addColumnValue("Interest in Dollars", interestInDollarsFormatted);
         }
     }
 
@@ -139,7 +137,9 @@ public final class InterestHelper {
 
     public record Parameters(
             Csv interestResultsCsv,
+            String projectUUID,
             ClusterResultDto currProjectFile,
+            int currIndex,
             boolean isDescriptive,
             List<SimilarFilesStrategy.Similarity> neighbouringFilesSorted,
             Map<String, Double> optimalClassMetrics,

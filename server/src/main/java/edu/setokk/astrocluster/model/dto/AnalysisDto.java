@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.Singular;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 
 @Getter
@@ -20,6 +21,7 @@ public final class AnalysisDto {
     private String gitUrl;
     private String projectUUID;
     private String projectLang;
+    private ZonedDateTime createdDate;
     @Singular("addClusterResult") private List<ClusterResultDto> clusterResults;
     private long userId;
 }

@@ -5,6 +5,7 @@ import edu.setokk.astrocluster.model.dto.AnalysisDto;
 import edu.setokk.astrocluster.model.dto.PercentagePerClusterDto;
 import edu.setokk.astrocluster.request.InterestPdfAnalysisRequest;
 import edu.setokk.astrocluster.response.GetAnalysisResponse;
+import edu.setokk.astrocluster.response.GetLatestAnalysesResponse;
 import edu.setokk.astrocluster.service.AnalysisService;
 import edu.setokk.astrocluster.service.PercentagePerClusterService;
 import jakarta.validation.Valid;
@@ -37,11 +38,20 @@ public class AnalysisController {
     public ResponseEntity<GetAnalysisResponse> getAnalysis(@PathVariable(name = "id") long analysisId) {
         AnalysisDto analysisDto = analysisService.getAnalysis(analysisId);
         List<PercentagePerClusterDto> percentagesPerClusterDto = percentagePerClusterService.findAllByAnalysisId(analysisId);
-
         return ResponseEntity.ok(
                 GetAnalysisResponse.builder()
                         .analysisData(analysisDto)
                         .percentagesPerCluster(percentagesPerClusterDto)
+                        .build()
+        );
+    }
+
+    @GetMapping("/latest-analyses")
+    public ResponseEntity<GetLatestAnalysesResponse> getLatestAnalyses() {
+        List<AnalysisDto> latestAnalyses = analysisService.getLatestAnalyses();
+        return ResponseEntity.ok(
+                GetLatestAnalysesResponse.builder()
+                        .latestAnalyses(latestAnalyses)
                         .build()
         );
     }

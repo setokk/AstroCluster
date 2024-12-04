@@ -8,6 +8,7 @@ import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
+import com.itextpdf.layout.properties.HorizontalAlignment;
 import com.itextpdf.layout.properties.TextAlignment;
 import edu.setokk.astrocluster.core.pdf.PdfMessage;
 import edu.setokk.astrocluster.util.Csv;
@@ -22,7 +23,7 @@ import java.util.Map;
 public class PdfService {
     public PdfMessage generatePdfFromCsv(Csv csv) {
         Map<String, Integer> maxCellWidths = PdfUtils.getOptimalMaxCellWidthsForCsv(csv);
-        PageSize pageSize = new PageSize(800.0F, maxCellWidths.values().stream().reduce(Integer::sum).get());
+        PageSize pageSize = new PageSize(1800.0F, maxCellWidths.values().stream().reduce(Integer::sum).get());
 
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         PdfWriter pdfWriter = new PdfWriter(os);
@@ -37,7 +38,7 @@ public class PdfService {
                 .setMarginBottom(3));
 
         // Add table headers
-        Table table = new Table(csv.getColumnCount());
+        Table table = new Table(csv.getColumnCount()).setHorizontalAlignment(HorizontalAlignment.CENTER);
         for (Csv.Column column : csv.getColumns().get()) {
             table.addHeaderCell(new Cell()
                     .add(new Paragraph(column.columnName())
