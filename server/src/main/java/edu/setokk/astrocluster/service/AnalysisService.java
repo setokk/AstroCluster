@@ -55,7 +55,7 @@ public class AnalysisService {
         UserDto user = authService.getAuthenticatedUser();
         return analysisRepository.findLatestAnalysesOfUser(user.getId())
                 .stream()
-                .map(AnalysisMapper.INSTANCE::mapToTarget)
+                .map(AnalysisMapper.INSTANCE::mapToTargetWithoutClusterResults)
                 .toList();
     }
 

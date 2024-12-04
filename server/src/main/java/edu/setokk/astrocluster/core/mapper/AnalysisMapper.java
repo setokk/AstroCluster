@@ -32,6 +32,21 @@ public enum AnalysisMapper implements IMapper<AnalysisEntity, AnalysisDto> {
                 .clusterResults(this.mapClusterResultsToTarget(analysisEntity.getClusterResults())).build();
     }
 
+    public AnalysisDto mapToTargetWithoutClusterResults(AnalysisEntity analysisEntity) {
+        // Get last part of the URL and remove .git
+        String gitProjectName = StringUtils.splitByAndGetFirst(
+                StringUtils.splitByAndGetLast(analysisEntity.getGitUrl(), "\\/"), "\\."
+        );
+        return AnalysisDto.builder()
+                .id(analysisEntity.getId())
+                .gitProjectName(gitProjectName)
+                .projectUUID(analysisEntity.getProjectUUID())
+                .gitUrl(analysisEntity.getGitUrl())
+                .projectLang(analysisEntity.getProjectLang())
+                .createdDate(analysisEntity.getCreatedDate())
+                .build();
+    }
+
     private List<ClusterResultDto> mapClusterResultsToTarget(Set<ClusterResultEntity> clusterResultsEntity) {
         return clusterResultsEntity.stream()
                 .map(ClusterResultMapper.INSTANCE::mapToTarget)
