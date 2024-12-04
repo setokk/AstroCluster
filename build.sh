@@ -22,6 +22,13 @@ END
 )
 
 # Helper functions
+undeploy_all_services() {
+	echo -e "[${BLUE}BUILD INFO${NC}]: Undeploying ${DB_CONTAINER_ID} ($(sudo docker stop ${DB_CONTAINER_ID} && sudo docker rm ${DB_CONTAINER_ID}))"
+	echo -e "[${BLUE}BUILD INFO${NC}]: Undeploying ${SERVER_CONTAINER_ID} ($(sudo docker stop ${SERVER_CONTAINER_ID} && sudo docker rm ${SERVER_CONTAINER_ID}))"
+	echo -e "[${BLUE}BUILD INFO${NC}]: Undeploying ${CLUSTER_SERVICE_CONTAINER_ID} ($(sudo docker stop ${CLUSTER_SERVICE_CONTAINER_ID} && sudo docker rm ${CLUSTER_SERVICE_CONTAINER_ID}))"
+	echo -e "[${BLUE}BUILD INFO${NC}]: Undeploying ${CLIENT_CONTAINER_ID} ($(sudo docker stop ${CLIENT_CONTAINER_ID} && sudo docker rm ${CLIENT_CONTAINER_ID}))"
+}
+
 update_dynamic_env_variables() {
     # Append all dynamic environment variables to docker-compose .env file before building
     {
@@ -99,9 +106,10 @@ if [ $SKIP_AC = false ]; then
 fi
 if [ $SKIP_DB = false ]; then
     SERVICES_TO_BUILD+=("db")
-    # Undeploy DB and remove docker volume with DB data
-    echo -e "${BLUE}$(sudo docker stop ac-db && sudo docker rm ac-db)${NC}"
-    echo -e "${BLUE}$(sudo docker volume rm pg_data_ac_cluster)${NC}"
+    # Remove docker volumes with DB data
+    undeploy_all_services
+    echo -e "[${BLUE}BUILD INFO${NC}]: Removed volume $(sudo docker volume rm pg_data_ac_cluster)"
+    echo -e "[${BLUE}BUILD INFO${NC}]: Removed volume $(sudo docker volume rm shared_cloned_projects)"
 fi
 if [ $SKIP_SERVER = false ]; then
     SERVICES_TO_BUILD+=("server")
