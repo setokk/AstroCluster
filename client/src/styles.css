@@ -173,3 +173,48 @@ form input:focus {
 .title-container {
     text-align: center;
 }
+
+.ac-checkbox-container {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.ac-checkbox {
+    appearance: none;
+    display: none;
+}
+
+.ac-checkmark {
+    position: relative;
+    width: 24px;
+    height: 24px;
+    background-color: var(--transparent-black);
+    border: 2px solid var(--silver-white);
+    border-radius: 4px;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+    margin-right: 8px;
+}
+
+.ac-checkmark::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 6px;
+    height: 12px;
+    border: solid var(--silver-white);
+    border-width: 0 2px 2px 0;
+    transform: translate(-50%, -50%) rotate(45deg);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.ac-checkbox:checked + .ac-checkmark::before {
+    opacity: 1;
+}
+
+.ac-checkbox-container:hover .ac-checkmark {
+    border-color: var(--silver-white);
+    background-color: var(--cyan-blue);
+}

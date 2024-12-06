@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { DropdownListComponent } from '../dropdown-list/dropdown-list.component';
-import { SupportedLanguagesEnum } from '../enums/supported-languages-enum';
-import { ClusteringParadigmsEnum } from '../enums/clustering-paradigms-enum';
+import { SupportedLanguagesEnum } from '../core/enums/supported-languages-enum';
+import { ClusteringParadigmsEnum } from '../core/enums/clustering-paradigms-enum';
 import { ActivatedRoute } from '@angular/router';
 import { ClusterService } from '../services/cluster-service';
+import {PerformClusteringRequest} from "../core/request/PerformClusteringRequest";
+import {PerformClusteringResponse} from "../core/response/PerformClusteringResponse";
 
 
 @Component({
@@ -15,10 +17,12 @@ import { ClusterService } from '../services/cluster-service';
   styleUrl: './analysis.component.css'
 })
 export class AnalysisComponent {
-  formModel: any = {
+  performClusteringRequest: PerformClusteringRequest = {
     gitUrl: '',
     lang: '',
-    clusteringParadigm: ''
+    clusteringParadigm: '',
+    isAsync: false,
+    email: undefined
   };
 
   supportedLanguages = SupportedLanguagesEnum.entries();
@@ -27,11 +31,21 @@ export class AnalysisComponent {
   constructor(private route: ActivatedRoute, private clusterService: ClusterService) {}
 
   onDropdownChange(field: string, value: string) {
-    this.formModel[field] = value; // Dynamically update form model
+    (this.performClusteringRequest as any)[field] = value; // Dynamically update form model
   }
 
   onSubmit(form: NgForm): void {
-    this.formModel.gitUrl = form.form.value.gitUrl;
-    this.clusterService.performClustering(this.formModel);
+    this.performClusteringRequest.gitUrl = form.form.value.gitUrl;
+    this.performClusteringRequest.email = (form.form.value.email == '') ? undefined : form.form.value.email;
+    this.performClusteringRequest.isAsync = form.form.value.isAsync;
+
+    this.clusterService.performClustering(this.performClusteringRequest).subscribe({
+      next: (response: PerformClusteringResponse) => {
+
+      },
+      error: (error) => {
+        window.alert(`Status: ${error.status}\nErrors: ${error.error.errors.join(',\n')}`);
+      }
+    });
   }
 }

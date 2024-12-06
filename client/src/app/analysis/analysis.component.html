@@ -6,6 +6,13 @@
     <form (ngSubmit)="onSubmit(f)" #f="ngForm">
       <label for="gitUrl">Git URL: </label>
       <input type="text" name="gitUrl" id="gitUrl" ngModel required />
+      <label for="email">Email (optional): </label>
+      <input type="text" name="email" id="email" ngModel />
+      <label for="isAsync" class="ac-checkbox-container">
+          <input type="checkbox" name="isAsync" class="ac-checkbox" id="isAsync" ngModel />
+          <span class="ac-checkmark"></span>
+          Asynchronous analysis flag:
+      </label>
       <div class="inline-div">
         <app-dropdown-list
           [label]="'Main language of project:'"

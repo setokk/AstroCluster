@@ -5,12 +5,14 @@ import { AnalysisComponent } from './analysis/analysis.component';
 import { HistoryComponent } from './history/history.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
+import {AnalysisResultComponent} from "./analysis-result/analysis-result.component";
 
 export const routes: Routes = [
     { path: '', component: HomeComponent },
     { path: 'what-is-astrocluster', component: AboutComponent },
     { path: 'analysis', component: AnalysisComponent },
+    { path: 'analysis/:id', component: AnalysisResultComponent },
     { path: 'history', component: HistoryComponent },
     { path: 'log-in', component: LoginComponent },
-    { path: 'register', component: RegisterComponent }
+    { path: 'register', component: RegisterComponent },
 ];
