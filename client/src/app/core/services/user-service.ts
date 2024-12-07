@@ -1,4 +1,4 @@
-import { HttpClient } from "@angular/common/http";
+import {HttpClient} from "@angular/common/http";
 import { Api } from "./api";
 import { Injectable } from "@angular/core";
 import {Observable, tap} from "rxjs";
@@ -11,13 +11,17 @@ export class UserService {
     constructor(private http: HttpClient) {}
 
     registerUser(registerUserRequest: RegisterUserRequest): Observable<string> {
-        return this.http.post<string>(Api.USERS_REGISTER_ENDPOINT, registerUserRequest).pipe(
+        return this.http.post<string>(Api.USERS_REGISTER_ENDPOINT, registerUserRequest, {
+            responseType: 'text' as 'json'
+        }).pipe(
             tap(token => localStorage.setItem(Constants.JWT_TOKEN_STORAGE_KEY, token))
         );
     }
 
     loginUser(loginUserRequest: LoginUserRequest): Observable<string> {
-        return this.http.post<string>(Api.USERS_LOGIN_ENDPOINT, loginUserRequest).pipe(
+        return this.http.post<string>(Api.USERS_LOGIN_ENDPOINT, loginUserRequest, {
+            responseType: 'text' as 'json'
+        }).pipe(
             tap(token => localStorage.setItem(Constants.JWT_TOKEN_STORAGE_KEY, token))
         );
     }

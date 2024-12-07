@@ -188,6 +188,8 @@ form input:focus {
 .right-aligned-content {
     margin-left: auto;
     padding-right: 20px;
+    display: flex;
+    flex-direction: column;
 }
 
 .ac-checkbox-container {

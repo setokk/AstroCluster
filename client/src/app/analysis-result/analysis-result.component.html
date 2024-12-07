@@ -1,7 +1,7 @@
 <div class="title-container">
     @if (chartDataPPC.length > 0) {
         <h2>Result for analysis {{ getAnalysisResponse!.analysisData.projectUUID }}</h2>
-        <h3>Currently showing: <a>{{ activeChartTitle }}</a></h3>
+        <h3>Currently showing: <a style="user-select: none;">{{ activeChartTitle }}</a></h3>
     } @else {
         <h2></h2>
         <h3></h3>
@@ -10,10 +10,11 @@
 
 @if (chartDataPPC.length > 0) {
     <div class="flex-row-container">
+        <!-- Left aligned content. Charts placement -->
         <div class="left-aligned-content">
             @if (activeChartTitle === 'Percentage per Cluster') {
                 <ngx-charts-bar-horizontal
-                        [view]="[700, 400]"
+                        [view]="[900, 400]"
                         [results]="chartDataPPC"
                         [scheme]="colorSchemePPC"
                         [gradient]="false"
@@ -27,8 +28,23 @@
                 </ngx-charts-bar-horizontal>
             }
         </div>
+
+        <!-- Right aligned content. Specific options based on chart -->
         <div class="right-aligned-content">
-            <h2>wdeadwad</h2>
+            @if (activeChartTitle === 'Percentage per Cluster') {
+                <label for="topClustersRange">Top K Clusters:</label>
+                <input type="range"
+                       min="1" max="{{ chartDataPPC.length }}" step="1"
+                       [(ngModel)]="topClustersValue"
+                       name="topClustersRange" id="topClustersRange"/>
+                <label for="lastClustersRange">Last N Clusters:</label>
+                <input type="range"
+                       min="0" max="{{ chartDataPPC.length }}" step="1"
+                       [(ngModel)]="lastClusterValue"
+                       name="lastClustersRange" id="lastClustersRange"/>
+                <button>Reset</button>
+            }
+            <h3>Interest PDF generation:</h3>
         </div>
     </div>
 }

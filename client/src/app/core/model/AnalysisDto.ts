@@ -7,5 +7,5 @@ export interface AnalysisDto {
     projectUUID: string;
     projectLang: string;
     createdDate: string;
-    clusterResults: ClusterResultDto[];
+    clusterResults?: ClusterResultDto[];
 }

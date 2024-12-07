@@ -10,12 +10,14 @@
       <input type="password" name="password" id="password" ngModel required />
       <button id="login-btn" type="submit">Login</button>
     </form>
-    <span>Don't have an account? Register 
-      <a id="register-anchor" 
-        routerLink="/register" 
-        routerLinkActive="active" 
-        ariaCurrentWhenActive="page" 
-        (click)="onClickRegisterAnchor()">here</a>.
-    </span>
   </div>
+    <div class="title-container">
+      <span>Don't have an account? Register
+        <a id="register-anchor"
+           routerLink="/register"
+           routerLinkActive="active"
+           ariaCurrentWhenActive="page"
+           (click)="onClickRegisterAnchor()">here</a>.
+      </span>
+    </div>
 </div>

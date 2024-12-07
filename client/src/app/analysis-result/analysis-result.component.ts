@@ -3,12 +3,14 @@ import {GetAnalysisResponse} from "../core/response/GetAnalysisResponse";
 import {AnalysisService} from "../core/services/analysis-service";
 import {ActivatedRoute} from "@angular/router";
 import {Color, NgxChartsModule, ScaleType} from "@swimlane/ngx-charts";
+import {FormsModule} from "@angular/forms";
 
 @Component({
   selector: 'app-analysis-result',
   standalone: true,
   imports: [
-    NgxChartsModule
+    NgxChartsModule,
+    FormsModule
   ],
   templateUrl: './analysis-result.component.html',
   styleUrl: './analysis-result.component.css'
@@ -26,6 +28,8 @@ export class AnalysisResultComponent {
     group: ScaleType.Linear,
     domain: ['#3d97f2', '#e38136', '#dacb4e', '#AAAAAA']
   };
+  topClustersValue?: number;
+  lastClusterValue?: number;
 
   constructor(private analysisService: AnalysisService, private route: ActivatedRoute) {}
 
@@ -49,5 +53,9 @@ export class AnalysisResultComponent {
       name: `Cluster ${ppc.clusterLabel}`,
       value: ppc.percentageInProject,
     }));
+
+    // Initial values
+    this.topClustersValue = this.chartDataPPC.length;
+    this.lastClusterValue = 0;
   }
 }
