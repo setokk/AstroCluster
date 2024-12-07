@@ -73,13 +73,3 @@ nav li:nth-child(5) {
     position: relative;
     animation: slide-top-to-bottom 1.5s normal;
 }
-
-nav li:nth-child(5) a {
-    color: var(--gold);
-    transition: color 150ms
-}
-
-nav li:nth-child(5) a:hover {
-    color: var(--cyan-blue);
-    transition: color 150ms
-}

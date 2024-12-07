@@ -3,8 +3,8 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { DropdownListComponent } from '../dropdown-list/dropdown-list.component';
 import { SupportedLanguagesEnum } from '../core/enums/supported-languages-enum';
 import { ClusteringParadigmsEnum } from '../core/enums/clustering-paradigms-enum';
-import { ActivatedRoute } from '@angular/router';
-import { ClusterService } from '../services/cluster-service';
+import {ActivatedRoute, Router} from '@angular/router';
+import { ClusterService } from '../core/services/cluster-service';
 import {PerformClusteringRequest} from "../core/request/PerformClusteringRequest";
 import {PerformClusteringResponse} from "../core/response/PerformClusteringResponse";
 
@@ -28,7 +28,7 @@ export class AnalysisComponent {
   supportedLanguages = SupportedLanguagesEnum.entries();
   clusteringParadigms = ClusteringParadigmsEnum.entries();
 
-  constructor(private route: ActivatedRoute, private clusterService: ClusterService) {}
+  constructor(private clusterService: ClusterService, private router: Router) {}
 
   onDropdownChange(field: string, value: string) {
     (this.performClusteringRequest as any)[field] = value; // Dynamically update form model
@@ -41,7 +41,12 @@ export class AnalysisComponent {
 
     this.clusterService.performClustering(this.performClusteringRequest).subscribe({
       next: (response: PerformClusteringResponse) => {
-
+        if (this.performClusteringRequest.isAsync) {
+          window.alert('Asynchronous request was successful! You are about to receive an email upon the completion of the analysis.')
+          this.router.navigate(['/analysis']);
+        } else {
+          this.router.navigate([`/analysis/${response.analysisId}`]);
+        }
       },
       error: (error) => {
         window.alert(`Status: ${error.status}\nErrors: ${error.error.errors.join(',\n')}`);

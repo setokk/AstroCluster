@@ -7,6 +7,7 @@
     --cyan-blue: #3d97f2;
     --transparent-black: rgba(0, 0, 0, 0.4);
     --black-gray: #111111;
+    --sunset-orange: #e38136;
 }
 
 ::selection {
@@ -192,7 +193,7 @@ form input:focus {
     background-color: var(--transparent-black);
     border: 2px solid var(--silver-white);
     border-radius: 4px;
-    transition: background-color 0.2s ease, border-color 0.2s ease;
+    transition: background-color 150ms ease, border-color 150ms ease;
     margin-right: 8px;
 }
 
@@ -207,7 +208,7 @@ form input:focus {
     border-width: 0 2px 2px 0;
     transform: translate(-50%, -50%) rotate(45deg);
     opacity: 0;
-    transition: opacity 0.2s ease;
+    transition: opacity 150ms ease;
 }
 
 .ac-checkbox:checked + .ac-checkmark::before {
