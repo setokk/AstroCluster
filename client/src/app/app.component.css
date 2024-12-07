@@ -38,6 +38,12 @@ nav li {
 
 nav a {
     user-select: none;
+    color: var(--menu-font-color);
+}
+
+nav a:hover {
+    color: var(--cyan-blue);
+    transition: color 150ms;
 }
 
 #logo {

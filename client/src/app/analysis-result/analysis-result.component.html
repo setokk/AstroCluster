@@ -1,1 +1,34 @@
-<p>analysis-result works!</p>
+<div class="title-container">
+    @if (chartDataPPC.length > 0) {
+        <h2>Result for analysis {{ getAnalysisResponse!.analysisData.projectUUID }}</h2>
+        <h3>Currently showing: <a>{{ activeChartTitle }}</a></h3>
+    } @else {
+        <h2></h2>
+        <h3></h3>
+    }
+</div>
+
+@if (chartDataPPC.length > 0) {
+    <div class="flex-row-container">
+        <div class="left-aligned-content">
+            @if (activeChartTitle === 'Percentage per Cluster') {
+                <ngx-charts-bar-horizontal
+                        [view]="[700, 400]"
+                        [results]="chartDataPPC"
+                        [scheme]="colorSchemePPC"
+                        [gradient]="false"
+                        [xAxis]="true"
+                        [yAxis]="true"
+                        [legend]="true"
+                        [showXAxisLabel]="true"
+                        [xAxisLabel]="'Percentage (%)'"
+                        [showYAxisLabel]="true"
+                        [yAxisLabel]="'Cluster Labels'">
+                </ngx-charts-bar-horizontal>
+            }
+        </div>
+        <div class="right-aligned-content">
+            <h2>wdeadwad</h2>
+        </div>
+    </div>
+}

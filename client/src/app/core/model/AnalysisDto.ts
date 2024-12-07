@@ -1,3 +1,5 @@
+import {ClusterResultDto} from "./ClusterResultDto";
+
 export interface AnalysisDto {
     id: bigint;
     gitProjectName: string;
@@ -5,4 +7,5 @@ export interface AnalysisDto {
     projectUUID: string;
     projectLang: string;
     createdDate: string;
+    clusterResults: ClusterResultDto[];
 }
