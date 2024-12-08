@@ -72,15 +72,15 @@
             @if (activeChartTitle === 'Percentages per Cluster') {
                 <label for="topClustersRange">Top K={{ topClustersValue }} Clusters:</label>
                 <input type="range"
-                       min="1" [max]="chartDataPPC.length" step="1" value="{{ topClustersValue }}"
+                       min="1" max="{{ this.getAnalysisResponse!.percentagesPerCluster!.length }}"
                        [(ngModel)]="topClustersValue"
-                       (change)="onChangeTopClustersValuePPC()"
+                       (change)="onChangeTopClustersValuePPC($event)"
                        name="topClustersRange" id="topClustersRange"/>
                 <label for="lastClustersRange">Last N={{ lastClusterValue }} Clusters:</label>
                 <input type="range"
-                       min="1" max="{{ chartDataPPC.length }}" step="1" value="{{ lastClusterValue }}"
+                       min="1" max="{{ this.getAnalysisResponse!.percentagesPerCluster!.length }}"
                        [(ngModel)]="lastClusterValue"
-                       (change)="onChangeLastClustersValuePPC()"
+                       (change)="onChangeLastClustersValuePPC($event)"
                        name="lastClustersRange" id="lastClustersRange"/>
                 <button (click)="onClickReset()">Reset</button>
             }

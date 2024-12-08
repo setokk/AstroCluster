@@ -174,11 +174,13 @@ form input:focus {
 
 .title-container {
     text-align: center;
+    animation: fade-in 1s normal;
 }
 
 .flex-row-container {
     display: flex;
     flex-direction: row;
+    animation: fade-in 1s normal;
 }
 
 .left-aligned-content {

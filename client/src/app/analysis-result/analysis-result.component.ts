@@ -59,8 +59,9 @@ export class AnalysisResultComponent {
   }
 
   prepareChartDataPPC(): void {
+    const numOfFiles: number = this.getAnalysisResponse!.analysisData.clusterResults!.length;
     this.chartDataPPC = this.getAnalysisResponse!.percentagesPerCluster.map(ppc => ({
-      name: `Cluster ${ppc.clusterLabel}`,
+      name: `Cluster ${ppc.clusterLabel} (${Math.floor(numOfFiles * ppc.percentageInProject / 100)} files)`,
       value: ppc.percentageInProject,
     })).sort((a, b) => b.value - a.value);
   }
@@ -92,31 +93,35 @@ export class AnalysisResultComponent {
     });
   }
 
-  onClickCurrentlyShowing() {
+  onClickCurrentlyShowing(): void {
     this.activeChartTitle = (this.activeChartTitle === 'Percentages per Cluster') ? 'Cluster File Results' : 'Percentages per Cluster';
   }
 
-  onChangeTopClustersValuePPC() {
+  onChangeTopClustersValuePPC(event: Event): void {
+    const newTopClustersValue: number = (event.target as HTMLInputElement).valueAsNumber;
+    const numOfFiles: number = this.getAnalysisResponse!.analysisData.clusterResults!.length;
     const intermediateChartData: any = this.getAnalysisResponse!.percentagesPerCluster.map(ppc => ({
-      name: `Cluster ${ppc.clusterLabel}`,
+      name: `Cluster ${ppc.clusterLabel} (${Math.floor(numOfFiles * ppc.percentageInProject / 100)} files)`,
       value: ppc.percentageInProject,
     }));
     this.chartDataPPC = intermediateChartData
         .sort((a: any, b: any) => b.value - a.value) // DESCENDING
-        .slice(0, this.topClustersValue);
+        .slice(0, newTopClustersValue);
   }
 
-  onChangeLastClustersValuePPC() {
+  onChangeLastClustersValuePPC(event: Event): void {
+    const newLastClusterValue: number = (event.target as HTMLInputElement).valueAsNumber;
+    const numOfFiles: number = this.getAnalysisResponse!.analysisData.clusterResults!.length;
     const intermediateChartData: any = this.getAnalysisResponse!.percentagesPerCluster.map(ppc => ({
-      name: `Cluster ${ppc.clusterLabel}`,
+      name: `Cluster ${ppc.clusterLabel} (${Math.floor(numOfFiles * ppc.percentageInProject / 100)} files)`,
       value: ppc.percentageInProject,
     }));
     this.chartDataPPC = intermediateChartData
         .sort((a: any, b: any) => a.value - b.value) // ASCENDING
-        .slice(0, this.lastClusterValue);
+        .slice(0, newLastClusterValue);
   }
 
-  onClickReset() {
+  onClickReset(): void {
     this.topClustersValue = this.getAnalysisResponse!.percentagesPerCluster.length;
     this.lastClusterValue = 1;
     this.prepareChartDataPPC();
