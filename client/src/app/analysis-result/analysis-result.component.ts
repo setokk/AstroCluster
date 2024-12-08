@@ -38,7 +38,7 @@ export class AnalysisResultComponent {
   // Graph for all files->cluster labels
   nodesFCL: Node[] = [];
   graphWidth: number = 800;
-  graphHeight: number= 600;
+  graphHeight: number= 400;
 
   constructor(private analysisService: AnalysisService, private route: ActivatedRoute) {}
 
@@ -48,7 +48,7 @@ export class AnalysisResultComponent {
       this.analysisService.getAnalysis(analysisId).subscribe({
         next: (response) => {
           this.getAnalysisResponse = response;
-          this.prepareChartDataPPC();
+          this.onClickReset();
           this.prepareGraphFCL();
         },
         error: (error) => {
@@ -62,34 +62,71 @@ export class AnalysisResultComponent {
     this.chartDataPPC = this.getAnalysisResponse!.percentagesPerCluster.map(ppc => ({
       name: `Cluster ${ppc.clusterLabel}`,
       value: ppc.percentageInProject,
-    }));
-
-    // Initial values
-    this.topClustersValue = this.chartDataPPC.length;
-    this.lastClusterValue = 0;
+    })).sort((a, b) => b.value - a.value);
   }
 
   prepareGraphFCL(): void {
     const clusterResults: ClusterResultDto[] = this.getAnalysisResponse!.analysisData.clusterResults!;
 
+    const horizontalSpacing = 50;
+    const verticalSpacing = 50;
+    const maxNodesPerRow = Math.floor(this.graphWidth / horizontalSpacing);
     this.nodesFCL = clusterResults.map((cr, index) => {
-        const x = Math.min(50 * index, this.graphWidth - 50);
-        const y = 100 + 50 * index;
-        const node: Node = {
-          id: cr.id.toString(),
-          label: `${cr.filename}`,
-          data: {
-            filepath: cr.filepath,
-            clusterLabel: cr.clusterLabel,
-            customColor: this.getClusterColor(cr.clusterLabel)
-          },
-          position: {x: x, y: y}
-        };
-        return node;
+      const row = Math.floor(index / maxNodesPerRow);
+      const col = index % maxNodesPerRow;
+      const x = col * horizontalSpacing;
+      const y = 100 + row * verticalSpacing
+
+      const node: Node = {
+        id: cr.id.toString(),
+        label: `${cr.filename}`,
+        data: {
+          filepath: cr.filepath,
+          clusterLabel: cr.clusterLabel,
+          customColor: this.getClusterColor(cr.clusterLabel),
+          customX: x,
+          customY: y
+        }
+      };
+      return node;
     });
+  }
+
+  onClickCurrentlyShowing() {
+    this.activeChartTitle = (this.activeChartTitle === 'Percentages per Cluster') ? 'Cluster File Results' : 'Percentages per Cluster';
+  }
+
+  onChangeTopClustersValuePPC() {
+    const intermediateChartData: any = this.getAnalysisResponse!.percentagesPerCluster.map(ppc => ({
+      name: `Cluster ${ppc.clusterLabel}`,
+      value: ppc.percentageInProject,
+    }));
+    this.chartDataPPC = intermediateChartData
+        .sort((a: any, b: any) => b.value - a.value) // DESCENDING
+        .slice(0, this.topClustersValue);
+  }
+
+  onChangeLastClustersValuePPC() {
+    const intermediateChartData: any = this.getAnalysisResponse!.percentagesPerCluster.map(ppc => ({
+      name: `Cluster ${ppc.clusterLabel}`,
+      value: ppc.percentageInProject,
+    }));
+    this.chartDataPPC = intermediateChartData
+        .sort((a: any, b: any) => a.value - b.value) // ASCENDING
+        .slice(0, this.lastClusterValue);
+  }
+
+  onClickReset() {
+    this.topClustersValue = this.getAnalysisResponse!.percentagesPerCluster.length;
+    this.lastClusterValue = 1;
+    this.prepareChartDataPPC();
   }
 
   getClusterColor(clusterLabel: number): string {
     return this.clusterColors[clusterLabel % this.clusterColors.length];
+  }
+
+  translate(x: number, y: number): string {
+    return `translate(${x}, ${y})`;
   }
 }

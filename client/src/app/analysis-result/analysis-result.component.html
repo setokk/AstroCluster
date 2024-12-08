@@ -1,7 +1,7 @@
 <div class="title-container">
     @if (chartDataPPC.length > 0) {
         <h2>Result for analysis {{ getAnalysisResponse!.analysisData.projectUUID }}</h2>
-        <h3>Currently showing: <a style="user-select: none;">{{ activeChartTitle }}</a></h3>
+        <h3>Currently showing: <a style="user-select: none; cursor: pointer;" (click)="onClickCurrentlyShowing()">{{ activeChartTitle }}</a></h3>
     } @else {
         <h2></h2>
         <h3></h3>
@@ -12,7 +12,7 @@
     <div class="flex-row-container">
         <!-- Left aligned content. Charts placement -->
         <div class="left-aligned-content">
-            @if (activeChartTitle === 'Percentage per Cluster') {
+            @if (activeChartTitle === 'Percentages per Cluster') {
                 <ngx-charts-bar-horizontal
                         [view]="[900, 400]"
                         [results]="chartDataPPC"
@@ -27,46 +27,39 @@
                         [yAxisLabel]="'Cluster Labels'">
                 </ngx-charts-bar-horizontal>
             } @else if (activeChartTitle === 'Cluster File Results') {
+                <h3>Total number of analyzed files:
+                    <a style="user-select: none;">
+                        {{ this.getAnalysisResponse!.analysisData.clusterResults!.length }}
+                    </a>
+                </h3>
                 <ngx-graph
                         class="chart-container"
                         [view]="[graphWidth, graphHeight]"
                         [nodes]="nodesFCL"
                         [links]="[]"
-                        [layoutSettings]="{orientation: 'TB', marginX: 25, marginY: 25}">
+                        [autoCenter]="true">
                     <!-- Node Template -->
                     <ng-template #nodeTemplate let-node>
-                        <svg:g>
+                        <svg:g [attr.transform]="translate(node.data.customX, node.data.customY)">
                             <svg:circle
-                                    r="15"
+                                    r="10"
                                     [attr.fill]="node.data.customColor"
                                     stroke="white"
                                     stroke-width="1">
                             </svg:circle>
                             <svg:text
                                     text-anchor="middle"
-                                    y="5"
+                                    y="4"
+                                    font-size="10"
+                                    fill="black">
+                                {{ node.data.clusterLabel }}
+                            </svg:text>
+                            <svg:text
+                                    text-anchor="middle"
+                                    y="22"
                                     font-size="10"
                                     fill="white">
                                 {{ node.label }}
-                            </svg:text>
-                        </svg:g>
-                    </ng-template>
-
-                    <!-- Cluster Template -->
-                    <ng-template #clusterTemplate let-cluster>
-                        <svg:g>
-                            <svg:rect
-                                    x="-20" y="-20"
-                                    width="40" height="40"
-                                    [attr.fill]="cluster.data.customColor"
-                                    stroke="white"
-                                    stroke-width="2">
-                            </svg:rect>
-                            <svg:text
-                                    text-anchor="middle"
-                                    font-size="12"
-                                    fill="white">
-                                {{ cluster.label }}
                             </svg:text>
                         </svg:g>
                     </ng-template>
@@ -76,18 +69,20 @@
 
         <!-- Right aligned content. Specific options based on chart -->
         <div class="right-aligned-content">
-            @if (activeChartTitle === 'Percentage per Cluster') {
-                <label for="topClustersRange">Top K Clusters:</label>
+            @if (activeChartTitle === 'Percentages per Cluster') {
+                <label for="topClustersRange">Top K={{ topClustersValue }} Clusters:</label>
                 <input type="range"
-                       min="1" max="{{ chartDataPPC.length }}" step="1"
+                       min="1" [max]="chartDataPPC.length" step="1" value="{{ topClustersValue }}"
                        [(ngModel)]="topClustersValue"
+                       (change)="onChangeTopClustersValuePPC()"
                        name="topClustersRange" id="topClustersRange"/>
-                <label for="lastClustersRange">Last N Clusters:</label>
+                <label for="lastClustersRange">Last N={{ lastClusterValue }} Clusters:</label>
                 <input type="range"
-                       min="0" max="{{ chartDataPPC.length }}" step="1"
+                       min="1" max="{{ chartDataPPC.length }}" step="1" value="{{ lastClusterValue }}"
                        [(ngModel)]="lastClusterValue"
+                       (change)="onChangeLastClustersValuePPC()"
                        name="lastClustersRange" id="lastClustersRange"/>
-                <button>Reset</button>
+                <button (click)="onClickReset()">Reset</button>
             }
             <h3>Interest PDF generation:</h3>
         </div>
