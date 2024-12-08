@@ -10,10 +10,14 @@
       <li><a routerLink="/what-is-astrocluster" routerLinkActive="active" ariaCurrentWhenActive="page">What is AstroCluster</a></li>
       <li><a routerLink="/analysis" routerLinkActive="active" ariaCurrentWhenActive="page">Analysis</a></li>
       <li><a routerLink="/history" routerLinkActive="active" ariaCurrentWhenActive="page">History</a></li>
-      <li><a routerLink="/log-in" routerLinkActive="active" ariaCurrentWhenActive="page">Login</a></li>
+      @if (localStorage.getItem(Constants.JWT_TOKEN_STORAGE_KEY) === null) {
+          <li><a routerLink="/log-in" routerLinkActive="active" ariaCurrentWhenActive="page">Login</a></li>
+      } @else {
+          <li><a (click)="onClickLogout()" style="cursor: pointer;">Logout</a></li>
+      }
     </ul>
   </nav>
 </header>
-<router-outlet></router-outlet>
 <div class="overlay"></div>
+<router-outlet></router-outlet>
 <app-background-video></app-background-video>

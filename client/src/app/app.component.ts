@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import {Router, RouterLink, RouterLinkActive, RouterOutlet} from '@angular/router';
 import { BackgroundVideoComponent } from './background-video/background-video.component';
 import { FormsModule } from '@angular/forms';
+import {Constants} from "./core/services/constants";
 
 @Component({
   selector: 'app-root',
@@ -18,5 +19,13 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './app.component.css'
 })
 export class AppComponent {
+  protected readonly localStorage = localStorage;
+  protected readonly Constants = Constants;
 
+  constructor(private router: Router) {}
+
+  onClickLogout() {
+    localStorage.removeItem(Constants.JWT_TOKEN_STORAGE_KEY);
+    this.router.navigate(['/']);
+  }
 }

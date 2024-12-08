@@ -6,6 +6,7 @@
     --menu-font-color: #333333;
     --cyan-blue: #3d97f2;
     --transparent-black: rgba(0, 0, 0, 0.4);
+    --transparent-black-light: rgba(50, 50, 50, 0.4);
     --black-gray: #111111;
     --sunset-orange: #e38136;
 }
@@ -182,6 +183,7 @@ form input:focus {
 
 .left-aligned-content {
     left: 0;
+    background: var(--transparent-black-light);
     padding-left: 20px;
 }
 
@@ -239,4 +241,9 @@ form input:focus {
 
 .ngx-charts text {
     fill: var(--silver-white);
+}
+
+ngx-graph {
+    display: block;
+    height: 100%
 }
