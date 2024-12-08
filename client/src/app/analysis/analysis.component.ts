@@ -37,7 +37,7 @@ export class AnalysisComponent {
   onSubmit(form: NgForm): void {
     this.performClusteringRequest.gitUrl = form.form.value.gitUrl;
     this.performClusteringRequest.email = (form.form.value.email == '') ? undefined : form.form.value.email;
-    this.performClusteringRequest.isAsync = form.form.value.isAsync;
+    this.performClusteringRequest.isAsync = (form.form.value.isAsync === '') ? false : form.form.value.isAsync;
 
     this.clusterService.performClustering(this.performClusteringRequest).subscribe({
       next: (response: PerformClusteringResponse) => {

@@ -9,6 +9,7 @@ import {ClusterResultDto} from "../core/model/ClusterResultDto";
 import {DropdownListComponent} from "../dropdown-list/dropdown-list.component";
 import {SimilarFilesCriteriaEnum} from "../core/enums/similar-files-criteria-enum";
 import {InterestPdfAnalysisRequest} from "../core/request/InterestPdfAnalysisRequest";
+import {DateUtils} from "../core/util/date-utils";
 
 @Component({
   selector: 'app-analysis-result',
@@ -147,7 +148,7 @@ export class AnalysisResultComponent {
 
   onAnalysisPdfSubmit(form: NgForm) {
     this.interestPdfAnalysisRequest.analysisId = this.getAnalysisResponse?.analysisData.id;
-    this.interestPdfAnalysisRequest.isDescriptive = form.form.value.isDescriptive;
+    this.interestPdfAnalysisRequest.isDescriptive = (form.form.value.isDescriptive === '') ? false : form.form.value.isDescriptive;
     this.interestPdfAnalysisRequest.avgPerGenerationLOC = form.form.value.avgPerGenerationLOC;
     this.interestPdfAnalysisRequest.perHourLOC = form.form.value.perHourLOC;
     this.interestPdfAnalysisRequest.perHourSalary = form.form.value.perHourSalary;
@@ -184,4 +185,6 @@ export class AnalysisResultComponent {
   translate(x: number, y: number): string {
     return `translate(${x}, ${y})`;
   }
+
+  protected readonly DateUtils = DateUtils;
 }
