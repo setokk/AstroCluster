@@ -3,9 +3,12 @@ import {GetAnalysisResponse} from "../core/response/GetAnalysisResponse";
 import {AnalysisService} from "../core/services/analysis-service";
 import {ActivatedRoute} from "@angular/router";
 import {Color, NgxChartsModule, ScaleType} from "@swimlane/ngx-charts";
-import {FormsModule} from "@angular/forms";
+import {FormsModule, NgForm} from "@angular/forms";
 import {NgxGraphModule, Node} from "@swimlane/ngx-graph";
 import {ClusterResultDto} from "../core/model/ClusterResultDto";
+import {DropdownListComponent} from "../dropdown-list/dropdown-list.component";
+import {SimilarFilesCriteriaEnum} from "../core/enums/similar-files-criteria-enum";
+import {InterestPdfAnalysisRequest} from "../core/request/InterestPdfAnalysisRequest";
 
 @Component({
   selector: 'app-analysis-result',
@@ -13,13 +16,22 @@ import {ClusterResultDto} from "../core/model/ClusterResultDto";
   imports: [
     NgxChartsModule,
     FormsModule,
-    NgxGraphModule
+    NgxGraphModule,
+    DropdownListComponent
   ],
   templateUrl: './analysis-result.component.html',
   styleUrl: './analysis-result.component.css'
 })
 export class AnalysisResultComponent {
   getAnalysisResponse?: GetAnalysisResponse;
+  interestPdfAnalysisRequest: InterestPdfAnalysisRequest = {
+    analysisId: undefined,
+    similarFilesCriteria: undefined,
+    isDescriptive: false,
+    avgPerGenerationLOC: undefined,
+    perHourLOC: undefined,
+    perHourSalary: undefined
+  };
 
   activeChartTitle: string = 'Cluster File Results';
   clusterColors: string[] = ['#3d97f2', '#e38136', '#dacb4e', '#7fe6b9', '#bff23d', '#7d4bff', '#ea4932', '#dcb3af'];
@@ -39,6 +51,8 @@ export class AnalysisResultComponent {
   nodesFCL: Node[] = [];
   graphWidth: number = 800;
   graphHeight: number= 400;
+
+  similarFilesCriteria = SimilarFilesCriteriaEnum.entries();
 
   constructor(private analysisService: AnalysisService, private route: ActivatedRoute) {}
 
@@ -125,6 +139,42 @@ export class AnalysisResultComponent {
     this.topClustersValue = this.getAnalysisResponse!.percentagesPerCluster.length;
     this.lastClusterValue = 1;
     this.prepareChartDataPPC();
+  }
+
+  onDropdownChange(field: string, value: string) {
+    (this.interestPdfAnalysisRequest as any)[field] = value; // Dynamically update form model
+  }
+
+  onAnalysisPdfSubmit(form: NgForm) {
+    this.interestPdfAnalysisRequest.analysisId = this.getAnalysisResponse?.analysisData.id;
+    this.interestPdfAnalysisRequest.isDescriptive = form.form.value.isDescriptive;
+    this.interestPdfAnalysisRequest.avgPerGenerationLOC = form.form.value.avgPerGenerationLOC;
+    this.interestPdfAnalysisRequest.perHourLOC = form.form.value.perHourLOC;
+    this.interestPdfAnalysisRequest.perHourSalary = form.form.value.perHourSalary;
+
+    this.analysisService.downloadInterestAnalysisPdf(this.interestPdfAnalysisRequest).subscribe({
+      next: (response) => {
+        const contentDisposition = response.headers.get('Content-Disposition') || '';
+        const pdfName = this.getFileNameFromContentDisposition(contentDisposition) || 'interest.pdf';
+
+        const blob = response.body as Blob;
+        const downloadUrl = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = downloadUrl;
+        link.download = pdfName;
+        link.click();
+        window.URL.revokeObjectURL(downloadUrl);
+      },
+      error: (error) => {
+        window.alert(`Status: ${error.status}\nErrors: ${error.error.errors.join(',\n')}`);
+      }
+    }
+    );
+  }
+
+  private getFileNameFromContentDisposition(contentDisposition: string): string | null {
+    const matches = /filename="(.+?)"/.exec(contentDisposition);
+    return matches ? matches[1] : null;
   }
 
   getClusterColor(clusterLabel: number): string {

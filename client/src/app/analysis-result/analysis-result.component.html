@@ -9,12 +9,12 @@
 </div>
 
 @if (chartDataPPC.length > 0) {
-    <div class="flex-row-container">
+    <div class="flex-row-container" style="margin-top: -10px;">
         <!-- Left aligned content. Charts placement -->
         <div class="left-aligned-content">
             @if (activeChartTitle === 'Percentages per Cluster') {
                 <ngx-charts-bar-horizontal
-                        [view]="[900, 400]"
+                        [view]="[graphWidth, graphHeight]"
                         [results]="chartDataPPC"
                         [scheme]="colorSchemePPC"
                         [gradient]="false"
@@ -68,23 +68,66 @@
         </div>
 
         <!-- Right aligned content. Specific options based on chart -->
-        <div class="right-aligned-content">
+        <div class="right-aligned-content" id="analysis-result-pane">
             @if (activeChartTitle === 'Percentages per Cluster') {
-                <label for="topClustersRange">Top K={{ topClustersValue }} Clusters:</label>
-                <input type="range"
-                       min="1" max="{{ this.getAnalysisResponse!.percentagesPerCluster!.length }}"
-                       [(ngModel)]="topClustersValue"
-                       (change)="onChangeTopClustersValuePPC($event)"
-                       name="topClustersRange" id="topClustersRange"/>
-                <label for="lastClustersRange">Last N={{ lastClusterValue }} Clusters:</label>
-                <input type="range"
-                       min="1" max="{{ this.getAnalysisResponse!.percentagesPerCluster!.length }}"
-                       [(ngModel)]="lastClusterValue"
-                       (change)="onChangeLastClustersValuePPC($event)"
-                       name="lastClustersRange" id="lastClustersRange"/>
-                <button (click)="onClickReset()">Reset</button>
+                <div class="flex-row-container">
+                    <div class="left-aligned-content-flex" style="padding-right: 50px;">
+                        <p>Project name: {{ this.getAnalysisResponse!.analysisData.gitProjectName }}</p>
+                        <p>Git url:
+                            <a href="{{ this.getAnalysisResponse!.analysisData.gitUrl }}" target="_blank">
+                                {{ this.getAnalysisResponse!.analysisData.gitProjectName }}.git
+                            </a>
+                        </p>
+                        <p>Project Language: {{ this.getAnalysisResponse!.analysisData.projectLang }}</p>
+                    </div>
+                    <div class="right-aligned-content">
+                        <label for="topClustersRange">Top K={{ topClustersValue }} Clusters:</label>
+                        <input type="range"
+                               min="1" max="{{ this.getAnalysisResponse!.percentagesPerCluster!.length }}"
+                               [(ngModel)]="topClustersValue"
+                               (change)="onChangeTopClustersValuePPC($event)"
+                               name="topClustersRange" id="topClustersRange"/>
+                        <label for="lastClustersRange">Last N={{ lastClusterValue }} Clusters:</label>
+                        <input type="range"
+                               min="1" max="{{ this.getAnalysisResponse!.percentagesPerCluster!.length }}"
+                               [(ngModel)]="lastClusterValue"
+                               (change)="onChangeLastClustersValuePPC($event)"
+                               name="lastClustersRange" id="lastClustersRange"/>
+                        <button (click)="onClickReset()">Reset</button>
+                    </div>
+                </div>
             }
-            <h3>Interest PDF generation:</h3>
+            <h3>Technical Debt Analysis:</h3>
+            <form (ngSubmit)="onAnalysisPdfSubmit(f)" #f="ngForm">
+                <div class="flex-row-container">
+                    <app-dropdown-list
+                            [label]="'Similar Files Criteria:'"
+                            [name]="'similarFilesCriteria'"
+                            [options]="similarFilesCriteria"
+                            (valueChange)="onDropdownChange('similarFilesCriteria', $event)">
+                    </app-dropdown-list>
+                    <label for="isDescriptive" class="ac-checkbox-container" style="margin-left: 20px; margin-top: 45px;">
+                        <input type="checkbox" name="isDescriptive" class="ac-checkbox" id="isDescriptive" ngModel />
+                        <span class="ac-checkmark"></span>
+                        Descriptive
+                    </label>
+                </div>
+                <div class="flex-row-container">
+                    <div class="right-aligned-content">
+                        <label for="avgPerGenerationLOC">Avg LOC (per generation)</label>
+                        <input type="number" name="avgPerGenerationLOC" id="avgPerGenerationLOC" ngModel />
+                    </div>
+                    <div class="right-aligned-content">
+                        <label for="perHourLOC">LOC (per hour)</label>
+                        <input type="number" name="perHourLOC" id="perHourLOC" ngModel />
+                    </div>
+                    <div class="right-aligned-content">
+                        <label for="perHourSalary">Salary (per hour)</label>
+                        <input type="number" name="perHourSalary" id="perHourSalary" ngModel />
+                    </div>
+                </div>
+                <button id="interest-pdf-btn" type="submit">Download Analysis PDF</button>
+            </form>
         </div>
     </div>
 }

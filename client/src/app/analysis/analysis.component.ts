@@ -18,9 +18,9 @@ import {PerformClusteringResponse} from "../core/response/PerformClusteringRespo
 })
 export class AnalysisComponent {
   performClusteringRequest: PerformClusteringRequest = {
-    gitUrl: '',
-    lang: '',
-    clusteringParadigm: '',
+    gitUrl: undefined,
+    lang: undefined,
+    clusteringParadigm: undefined,
     isAsync: false,
     email: undefined
   };

@@ -1,10 +1,11 @@
-import { HttpClient } from "@angular/common/http";
+import {HttpClient, HttpResponse} from "@angular/common/http";
 import { Api } from "./api";
 import { Injectable } from "@angular/core";
 import {Observable} from "rxjs";
 import {GetAnalysisResponse} from "../response/GetAnalysisResponse";
 import {AuthService} from "./auth-service";
 import {GetLatestAnalysesResponse} from "../response/GetLatestAnalysesResponse";
+import {InterestPdfAnalysisRequest} from "../request/InterestPdfAnalysisRequest";
 
 @Injectable({providedIn: 'root'})
 export class AnalysisService {
@@ -19,6 +20,14 @@ export class AnalysisService {
     getLatestAnalyses(): Observable<GetLatestAnalysesResponse> {
         return this.http.get<GetLatestAnalysesResponse>(Api.ANALYSIS_LATEST_ANALYSES_ENDPOINT, {
             headers: this.authService.getHttpHeaders()
+        });
+    }
+
+    downloadInterestAnalysisPdf(interestPdfAnalysisRequest: InterestPdfAnalysisRequest): Observable<HttpResponse<Blob>> {
+        return this.http.post<HttpResponse<Blob>>(Api.ANALYSIS_INTEREST_PDF, interestPdfAnalysisRequest, {
+            headers: this.authService.getHttpHeaders(),
+            observe: 'response' as 'body',
+            responseType: 'blob' as 'json'
         });
     }
 }
