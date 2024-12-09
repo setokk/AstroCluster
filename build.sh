@@ -135,6 +135,7 @@ if [ $SKIP_GRPC = false ]; then
     echo -e "[${BLUE}BUILD INFO${NC}: Cluster service gRPC update finished. Copied docker gRPC files to project directory."
 
     # Change ownership of files since they were created via root user inside containers
-    sudo chown -R setokk:setokk "${BE_GRPC_PROJECT_PATH}"
-    sudo chown -R setokk:setokk "${CS_GRPC_PROJECT_PATH}"
+    username=$(whoami)
+    sudo chown -R "${username}:${username}" "${BE_GRPC_PROJECT_PATH}"
+    sudo chown -R "${username}:${username}" "${CS_GRPC_PROJECT_PATH}"
 fi
