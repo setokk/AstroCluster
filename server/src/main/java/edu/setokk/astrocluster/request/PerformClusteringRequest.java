@@ -51,11 +51,6 @@ public final class PerformClusteringRequest implements IValidatable {
             e.addErrorMessage(errorPrefix() + " clusteringParadigm='" + clusteringParadigm + "' is not supported.");
         }
 
-        /* Email field post validate */
-        if (isAsync && email == null) {
-            e.addErrorMessage(errorPrefix() + " email field is mandatory when user is not signed in");
-        }
-
         if (e.hasErrorMessages()) throw e;
     }
 }
