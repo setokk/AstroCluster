@@ -1,1 +1,13 @@
-<p>history works!</p>
+<div class="title-container">
+    <h1>{{ authService.isPublicUser() ? 'Public' : 'Personal' }} Analyses History</h1>
+</div>
+<div class="list-container">
+    <h3>List of analyses:</h3>
+    <ul>
+        @for (analysis of latestAnalysesResponse?.latestAnalyses; track analysis.id) {
+            <li (click)="onClickAnalysisListItem(analysis.id)">
+                [{{ DateUtils.formatDateString(analysis.createdDate) }}]: <span style="color: var(--sunset-orange);">{{ analysis.gitProjectName }}.git</span>
+            </li>
+        }
+    </ul>
+</div>

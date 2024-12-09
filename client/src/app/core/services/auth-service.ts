@@ -16,4 +16,8 @@ export class AuthService {
             });
         }
     }
+
+    isPublicUser(): boolean {
+        return localStorage.getItem(Constants.JWT_TOKEN_STORAGE_KEY) === null;
+    }
 }
