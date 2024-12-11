@@ -1,6 +1,6 @@
 package edu.setokk.astrocluster.service;
 
-import edu.setokk.astrocluster.core.pdf.PdfMessage;
+import edu.setokk.astrocluster.core.file.PdfMessage;
 import edu.setokk.astrocluster.util.Csv;
 import org.junit.jupiter.api.Test;
 
@@ -52,7 +52,7 @@ class PdfServiceTest {
         PdfMessage pdfMessage = pdfService.generatePdfFromCsv(csv);
         Path pdfPath = Paths.get(System.getProperty("user.dir") + File.separator + pdfMessage.filename());
 
-        Files.write(pdfPath, pdfMessage.pdfBytes());
+        Files.write(pdfPath, pdfMessage.bytes());
         System.out.println("Saved file at: " + pdfPath.toAbsolutePath());
     }
 }

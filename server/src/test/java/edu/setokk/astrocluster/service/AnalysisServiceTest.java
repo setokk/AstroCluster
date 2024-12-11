@@ -13,7 +13,7 @@ class AnalysisServiceTest {
     private PdfService pdfService;
 
     @Test
-    void generateInterestPdfForAnalysis() {
+    void generateInterestResultsForAnalysis() {
 
     }
 }

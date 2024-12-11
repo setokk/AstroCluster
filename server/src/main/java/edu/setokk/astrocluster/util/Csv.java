@@ -1,9 +1,5 @@
 package edu.setokk.astrocluster.util;
 
-import com.itextpdf.kernel.colors.ColorConstants;
-import com.itextpdf.layout.element.Cell;
-import com.itextpdf.layout.element.Paragraph;
-import com.itextpdf.layout.properties.TextAlignment;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -26,12 +22,10 @@ public final class Csv {
     @Setter private Column[] columns;
     private final Map<String, List<String>> csvContent;
     private final String splitRegex;
-    private final Map<String, String> metadata;
 
     public Csv(String splitRegex) {
         this.csvContent = HashMap.newHashMap(0);
         this.splitRegex = splitRegex;
-        this.metadata = HashMap.newHashMap(0);
     }
 
     public Csv(String title, Path filepath, String splitRegex) {
@@ -67,37 +61,6 @@ public final class Csv {
             for (int j = 0; j < values.length; j++) {
                 addColumnValue(columns[j], values[j]);
             }
-        }
-    }
-
-    public void save(String oSplitRegex) {
-        // Headers
-        String splitRegexOut = "";
-        StringBuilder out = new StringBuilder();
-        if (columns == null || columns.length == 0) {
-            return;
-        }
-
-        for (Csv.Column column : columns) {
-            out.append(splitRegexOut).append(column.columnName);
-            splitRegexOut = (oSplitRegex == null) ? this.splitRegex : oSplitRegex;
-        }
-        out.append("\n");
-
-        // Rest
-        for (int i = 0; i < getRowCount(); i++) {
-            splitRegexOut = "";
-            for (Csv.Column column : columns) {
-                out.append(splitRegexOut).append(getColumnValues(column.columnName).get(i));
-                splitRegexOut = (oSplitRegex == null) ? this.splitRegex : oSplitRegex;
-            }
-            out.append("\n");
-        }
-
-        try {
-            Files.write(filepath, out.toString().getBytes(StandardCharsets.UTF_8));
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
@@ -143,8 +106,32 @@ public final class Csv {
         return getColumnValues(columns[0].columnName).size();
     }
 
-    public void addMetadata(String key, String value) {
-        metadata.put(key, value);
+    @Override
+    public String toString() {
+        // Headers
+        StringBuilder out = new StringBuilder();
+        if (columns == null || columns.length == 0) {
+            return "";
+        }
+
+        String splitRegexOut = "";
+        for (Csv.Column column : columns) {
+            out.append(splitRegexOut).append(column.columnName);
+            splitRegexOut = this.splitRegex;
+        }
+        out.append("\n");
+
+        // Rest
+        for (int i = 0; i < getRowCount(); i++) {
+            splitRegexOut = "";
+            for (Csv.Column column : columns) {
+                out.append(splitRegexOut).append(getColumnValues(column.columnName).get(i));
+                splitRegexOut = this.splitRegex;
+            }
+            out.append("\n");
+        }
+
+        return out.toString();
     }
 
     public record Column(String columnName, boolean isActive) {}

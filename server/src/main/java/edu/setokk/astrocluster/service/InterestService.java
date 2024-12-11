@@ -58,12 +58,6 @@ public class InterestService {
             }
         };
 
-        // Interest results csv (if already calculated, return)
-        final Csv interestResultsCsv = new Csv(csvTitle, Paths.get(csvFilepath), ",");
-        if (Files.exists(interestResultsCsv.getFilepath())) {
-            interestResultsCsv.load();
-            return interestResultsCsv;
-        }
         // Calculate metrics by calling metrics calculator
         Path metricsCsvPath = Paths.get(String.format(IOUtils.METRICS_CSV_FILE, analysisDto.getProjectUUID()));
         final Csv metricsCsv = new Csv(null, metricsCsvPath, ";");
@@ -85,6 +79,7 @@ public class InterestService {
         }
 
         // Calculate interest
+        final Csv interestResultsCsv = new Csv(csvTitle, Paths.get(csvFilepath), ",");
         for (ClusterResultDto currProjectFile : projectFiles) {
             // Get top "numSimilarClasses" similar classes
             int currIndex = projectFilesToMetricsCsvIndexBridge.get(currProjectFile.getFilepath());
@@ -117,9 +112,6 @@ public class InterestService {
             );
             InterestHelper.updateInterestCsvForCurrentProjectFile(interestHelperParameters);
         }
-
-        if (Files.notExists(interestResultsCsv.getFilepath()))
-            interestResultsCsv.save(null);
 
         return interestResultsCsv;
     }

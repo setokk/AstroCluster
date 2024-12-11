@@ -3,3 +3,29 @@
     padding: 15px;
     border-radius: 20px;
 }
+
+#interest-pdf-btn {
+    margin-left: 15px;
+    background: var(--transparent-black);
+    color: var(--silver-white);
+    transition: color 150ms, background 150ms;
+}
+
+#interest-pdf-btn:hover {
+    background: var(--minimal-red);
+    color: var(--silver-white);
+    transition: color 150ms, background 150ms;
+}
+
+#interest-csv-btn {
+    margin-left: 15px;
+    background: var(--transparent-black);
+    color: var(--silver-white);
+    transition: color 150ms, background 150ms;
+}
+
+#interest-csv-btn:hover {
+    background: var(--minimal-green);
+    color: var(--silver-white);
+    transition: color 150ms, background 150ms;
+}

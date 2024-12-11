@@ -30,4 +30,12 @@ export class AnalysisService {
             responseType: 'blob' as 'json'
         });
     }
+
+    downloadInterestAnalysisCsv(interestPdfAnalysisRequest: InterestPdfAnalysisRequest): Observable<HttpResponse<Blob>> {
+        return this.http.post<HttpResponse<Blob>>(Api.ANALYSIS_INTEREST_CSV, interestPdfAnalysisRequest, {
+            headers: this.authService.getHttpHeaders(),
+            observe: 'response' as 'body',
+            responseType: 'blob' as 'json'
+        });
+    }
 }

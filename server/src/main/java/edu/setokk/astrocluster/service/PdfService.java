@@ -10,7 +10,7 @@ import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.properties.HorizontalAlignment;
 import com.itextpdf.layout.properties.TextAlignment;
-import edu.setokk.astrocluster.core.pdf.PdfMessage;
+import edu.setokk.astrocluster.core.file.PdfMessage;
 import edu.setokk.astrocluster.util.Csv;
 import edu.setokk.astrocluster.util.PdfUtils;
 import edu.setokk.astrocluster.util.StringUtils;

@@ -9,6 +9,8 @@
     --transparent-black-light: rgba(50, 50, 50, 0.4);
     --black-gray: #111111;
     --sunset-orange: #e38136;
+    --minimal-green: #4aa367;
+    --minimal-red: #a34a4a;
 }
 
 ::selection {

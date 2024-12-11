@@ -10,6 +10,8 @@ import {DropdownListComponent} from "../dropdown-list/dropdown-list.component";
 import {SimilarFilesCriteriaEnum} from "../core/enums/similar-files-criteria-enum";
 import {InterestPdfAnalysisRequest} from "../core/request/InterestPdfAnalysisRequest";
 import {DateUtils} from "../core/util/date-utils";
+import {Observable} from "rxjs";
+import {HttpResponse} from "@angular/common/http";
 
 @Component({
   selector: 'app-analysis-result',
@@ -53,6 +55,7 @@ export class AnalysisResultComponent {
   graphWidth: number = 800;
   graphHeight: number= 400;
 
+  pressedButton?: string;
   similarFilesCriteria = SimilarFilesCriteriaEnum.entries();
 
   constructor(private analysisService: AnalysisService, private route: ActivatedRoute) {}
@@ -146,23 +149,35 @@ export class AnalysisResultComponent {
     (this.interestPdfAnalysisRequest as any)[field] = value; // Dynamically update form model
   }
 
-  onAnalysisPdfSubmit(form: NgForm) {
+  onAnalysisFileDownloadSubmit(form: NgForm) {
     this.interestPdfAnalysisRequest.analysisId = this.getAnalysisResponse?.analysisData.id;
     this.interestPdfAnalysisRequest.isDescriptive = (form.form.value.isDescriptive === '') ? false : form.form.value.isDescriptive;
     this.interestPdfAnalysisRequest.avgPerGenerationLOC = form.form.value.avgPerGenerationLOC;
     this.interestPdfAnalysisRequest.perHourLOC = form.form.value.perHourLOC;
     this.interestPdfAnalysisRequest.perHourSalary = form.form.value.perHourSalary;
 
-    this.analysisService.downloadInterestAnalysisPdf(this.interestPdfAnalysisRequest).subscribe({
+    let observableBLOB: Observable<HttpResponse<Blob>> = new Observable();
+    switch (this.pressedButton) {
+      case 'PDF': {
+        observableBLOB = this.analysisService.downloadInterestAnalysisPdf(this.interestPdfAnalysisRequest);
+        break;
+      }
+      case 'CSV': {
+        observableBLOB = this.analysisService.downloadInterestAnalysisCsv(this.interestPdfAnalysisRequest);
+        break;
+      }
+    }
+
+    observableBLOB.subscribe({
       next: (response) => {
         const contentDisposition = response.headers.get('Content-Disposition') || '';
-        const pdfName = this.getFileNameFromContentDisposition(contentDisposition) || 'interest.pdf';
+        const filename = this.getFileNameFromContentDisposition(contentDisposition) || 'interest';
 
         const blob = response.body as Blob;
         const downloadUrl = window.URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = downloadUrl;
-        link.download = pdfName;
+        link.download = filename;
         link.click();
         window.URL.revokeObjectURL(downloadUrl);
       },
@@ -174,8 +189,8 @@ export class AnalysisResultComponent {
   }
 
   private getFileNameFromContentDisposition(contentDisposition: string): string | null {
-    const matches = /filename="(.+?)"/.exec(contentDisposition);
-    return matches ? matches[1] : null;
+    const match = contentDisposition.match(/(?:^|;)\s*filename="([^"]+)"/);
+    return match ? match[1] : null;
   }
 
   getClusterColor(clusterLabel: number): string {
@@ -187,4 +202,8 @@ export class AnalysisResultComponent {
   }
 
   protected readonly DateUtils = DateUtils;
+
+  setPressedButton(pressedButton: string) {
+    this.pressedButton = pressedButton;
+  }
 }

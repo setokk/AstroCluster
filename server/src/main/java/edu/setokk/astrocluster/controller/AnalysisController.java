@@ -1,6 +1,8 @@
 package edu.setokk.astrocluster.controller;
 
-import edu.setokk.astrocluster.core.pdf.PdfMessage;
+import edu.setokk.astrocluster.core.file.CsvMessage;
+import edu.setokk.astrocluster.core.file.FileMessage;
+import edu.setokk.astrocluster.core.file.PdfMessage;
 import edu.setokk.astrocluster.model.dto.AnalysisDto;
 import edu.setokk.astrocluster.model.dto.PercentagePerClusterDto;
 import edu.setokk.astrocluster.request.InterestPdfAnalysisRequest;
@@ -8,6 +10,7 @@ import edu.setokk.astrocluster.response.GetAnalysisResponse;
 import edu.setokk.astrocluster.response.GetLatestAnalysesResponse;
 import edu.setokk.astrocluster.service.AnalysisService;
 import edu.setokk.astrocluster.service.PercentagePerClusterService;
+import edu.setokk.astrocluster.util.MediaTypesAC;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -59,10 +62,21 @@ public class AnalysisController {
     @PostMapping("/interest/pdf")
     public ResponseEntity<byte[]> generateInterestPdfForAnalysis(@RequestBody @Valid InterestPdfAnalysisRequest requestBody) throws IOException {
         requestBody.validate();
-        PdfMessage pdfMessage = analysisService.generateInterestPdfForAnalysis(requestBody);
+        FileMessage fileMessage = analysisService.generateInterestResultsFileForAnalysis(requestBody, new PdfMessage(null, null));
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_PDF)
-                .header("Content-Disposition", "attachment; filename=\"" + pdfMessage.filename() + "\"")
-                .body(pdfMessage.pdfBytes());
+                .header("Content-Disposition", "attachment; filename=\"" + fileMessage.filename() + "\"")
+                .body(fileMessage.bytes());
     }
+
+    @PostMapping("/interest/csv")
+    public ResponseEntity<byte[]> generateInterestCsvForAnalysis(@RequestBody @Valid InterestPdfAnalysisRequest requestBody) throws IOException {
+        requestBody.validate();
+        FileMessage fileMessage = analysisService.generateInterestResultsFileForAnalysis(requestBody, new CsvMessage(null, null));
+        return ResponseEntity.ok()
+                .contentType(MediaTypesAC.TEXT_CSV)
+                .header("Content-Disposition", "attachment; filename=\"" + fileMessage.filename() + "\"")
+                .body(fileMessage.bytes());
+    }
+
 }
