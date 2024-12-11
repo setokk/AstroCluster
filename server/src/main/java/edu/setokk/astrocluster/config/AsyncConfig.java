@@ -15,7 +15,7 @@ public class AsyncConfig {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(5);
         executor.setMaxPoolSize(10);
-        executor.setQueueCapacity(25);
+        executor.setQueueCapacity(1000);
         executor.setThreadNamePrefix("AsyncAstroCluster-");
         executor.initialize();
         return executor;

@@ -63,7 +63,7 @@ public class InterestService {
         final Csv metricsCsv = new Csv(null, metricsCsvPath, ";");
         if (Files.notExists(metricsCsvPath)) {
             String projectPath = IOUtils.PROJECTS_DIR + analysisDto.getProjectUUID();
-            int exitCode = CmdUtils.executeCmd("java", "-Xms64m", "-jar", IOUtils.METRICS_CALCULATOR_JAR, projectPath, metricsCsvPath.toAbsolutePath().toString());
+            int exitCode = CmdUtils.executeCmd("java", "-Xms512m", "-jar", IOUtils.METRICS_CALCULATOR_JAR, projectPath, metricsCsvPath.toAbsolutePath().toString());
             if (exitCode != CmdUtils.EXIT_CODE_SUCCESS) {
                 throw new BusinessLogicException(HttpStatus.INTERNAL_SERVER_ERROR, "Metrics calculation module is unavailable. Please try again later.");
             }
