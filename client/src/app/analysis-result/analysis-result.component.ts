@@ -217,5 +217,12 @@ export class AnalysisResultComponent {
 
   toggleGraphFullscreen(): void {
     this.isFullscreen = !this.isFullscreen;
+    if (this.isFullscreen) {
+      this.graphWidth = window.innerWidth;
+      this.graphHeight = window.innerHeight;
+    } else {
+      this.graphWidth = 800;
+      this.graphHeight = 600;
+    }
   }
 }

@@ -51,7 +51,7 @@
 	transform-box: view-box;
 	transform-origin: 12px 12px;
 	fill: none;
-	stroke: hsl(225, 10%, 8%);
+	stroke: var(--silver-white);
 	stroke-width: 4;
 	transition: .15s;
 }
@@ -84,4 +84,14 @@
 
 .toggle-fullscreen-btn.on .icon-fullscreen-enter {
 	display: none;
+}
+
+.fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  background-color: var(--transparent-black);
 }
