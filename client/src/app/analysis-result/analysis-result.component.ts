@@ -7,6 +7,7 @@ import {FormsModule, NgForm} from "@angular/forms";
 import {NgxGraphModule, Node} from "@swimlane/ngx-graph";
 import {ClusterResultDto} from "../core/model/ClusterResultDto";
 import {DropdownListComponent} from "../dropdown-list/dropdown-list.component";
+import {D3GraphAnalysisComponent} from "../d3-graph-analysis/d3-graph-analysis.component";
 import {SimilarFilesCriteriaEnum} from "../core/enums/similar-files-criteria-enum";
 import {InterestPdfAnalysisRequest} from "../core/request/InterestPdfAnalysisRequest";
 import {DateUtils} from "../core/util/date-utils";
@@ -20,7 +21,8 @@ import {HttpResponse} from "@angular/common/http";
     NgxChartsModule,
     FormsModule,
     NgxGraphModule,
-    DropdownListComponent
+    DropdownListComponent,
+    D3GraphAnalysisComponent
   ],
   templateUrl: './analysis-result.component.html',
   styleUrl: './analysis-result.component.css'
@@ -54,8 +56,11 @@ export class AnalysisResultComponent {
   nodesFCL: Node[] = [];
   graphWidth: number = 800;
   graphHeight: number= 400;
+  graphX: any = { minX: -200, maxX: 482 };
+  graphY: any = { minY: 0, maxY: 370 };
 
   pressedButton?: string;
+  isFullscreen: boolean = false;
   similarFilesCriteria = SimilarFilesCriteriaEnum.entries();
 
   constructor(private analysisService: AnalysisService, private route: ActivatedRoute) {}
@@ -87,14 +92,17 @@ export class AnalysisResultComponent {
   prepareGraphFCL(): void {
     const clusterResults: ClusterResultDto[] = this.getAnalysisResponse!.analysisData.clusterResults!;
 
-    const horizontalSpacing = 50;
-    const verticalSpacing = 50;
-    const maxNodesPerRow = Math.floor(this.graphWidth / horizontalSpacing);
+    const horizontalSpacing = 30;
+    const verticalSpacing = 30;
+    const totalX = Math.abs(this.graphX.minX) + Math.abs(this.graphX.maxX);
+    const totalY = Math.abs(this.graphX.minY) + Math.abs(this.graphX.maxY);
+    const maxNodesPerRow = Math.floor(totalX / horizontalSpacing);
+
     this.nodesFCL = clusterResults.map((cr, index) => {
       const row = Math.floor(index / maxNodesPerRow);
       const col = index % maxNodesPerRow;
-      const x = col * horizontalSpacing;
-      const y = 100 + row * verticalSpacing
+      const x = this.graphX.minX + col * horizontalSpacing;
+      const y = this.graphY.minY + row * verticalSpacing
 
       const node: Node = {
         id: cr.id.toString(),
@@ -203,7 +211,11 @@ export class AnalysisResultComponent {
 
   protected readonly DateUtils = DateUtils;
 
-  setPressedButton(pressedButton: string) {
+  setPressedButton(pressedButton: string): void {
     this.pressedButton = pressedButton;
+  }
+
+  toggleGraphFullscreen(): void {
+    this.isFullscreen = !this.isFullscreen;
   }
 }

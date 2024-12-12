@@ -1110,3 +1110,141 @@ public class Ticket {
     }
 }
 }
+```[@]```
+27: {
+package de.cars.deutchland.core.util;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.exc.MismatchedInputException;
+import com.fasterxml.jackson.databind.type.CollectionType;
+import com.fasterxml.jackson.databind.type.MapType;
+import org.springframework.stereotype.Component;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+
+@Component
+public class JsonUtil {
+
+    private final ObjectMapper objectMapper;
+
+    public JsonUtil() {
+        this.objectMapper = new ObjectMapper();
+        this.objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+    }
+
+    /**
+     * Converts an object to its JSON string representation.
+     *
+     * @param obj the object to convert
+     * @return the JSON string representation of the object
+     * @throws JsonProcessingException if the object cannot be converted to JSON
+     */
+    public String toJson(Object obj) throws JsonProcessingException {
+        return objectMapper.writeValueAsString(obj);
+    }
+
+    /**
+     * Converts a JSON string to an object of the specified class.
+     *
+     * @param json the JSON string to convert
+     * @param clazz the class of the object
+     * @param <T> the type of the object
+     * @return the object represented by the JSON string
+     * @throws IOException if the JSON string cannot be converted to an object
+     */
+    public <T> T fromJson(String json, Class<T> clazz) throws IOException {
+        return objectMapper.readValue(json, clazz);
+    }
+
+    /**
+     * Converts a JSON string to a list of objects of the specified class.
+     *
+     * @param json the JSON string to convert
+     * @param clazz the class of the objects in the list
+     * @param <T> the type of the objects in the list
+     * @return the list of objects represented by the JSON string
+     * @throws IOException if the JSON string cannot be converted to a list of objects
+     */
+    public <T> List<T> fromJsonToList(String json, Class<T> clazz) throws IOException {
+        CollectionType listType = objectMapper.getTypeFactory().constructCollectionType(List.class, clazz);
+        return objectMapper.readValue(json, listType);
+    }
+
+    /**
+     * Converts a JSON string to a map of objects with the specified key and value classes.
+     *
+     * @param json the JSON string to convert
+     * @param keyClass the class of the keys in the map
+     * @param valueClass the class of the values in the map
+     * @param <K> the type of the keys in the map
+     * @param <V> the type of the values in the map
+     * @return the map of objects represented by the JSON string
+     * @throws IOException if the JSON string cannot be converted to a map of objects
+     */
+    public <K, V> Map<K, V> fromJsonToMap(String json, Class<K> keyClass, Class<V> valueClass) throws IOException {
+        MapType mapType = objectMapper.getTypeFactory().constructMapType(Map.class, keyClass, valueClass);
+        return objectMapper.readValue(json, mapType);
+    }
+
+    /**
+     * Checks if a string is valid JSON.
+     *
+     * @param json the string to check
+     * @return true if the string is valid JSON, false otherwise
+     */
+    public boolean isValidJson(String json) {
+        try {
+            objectMapper.readTree(json);
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
+    /**
+     * Pretty prints a JSON string.
+     *
+     * @param json the JSON string to pretty print
+     * @return the pretty printed JSON string
+     * @throws IOException if the JSON string cannot be pretty printed
+     */
+    public String prettyPrintJson(String json) throws IOException {
+        JsonNode jsonNode = objectMapper.readTree(json);
+        return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonNode);
+    }
+
+    /**
+     * Merges two JSON strings into one.
+     *
+     * @param mainJson the main JSON string
+     * @param updateJson the JSON string to merge into the main JSON string
+     * @return the merged JSON string
+     * @throws IOException if the JSON strings cannot be merged
+     */
+    public String mergeJson(String mainJson, String updateJson) throws IOException {
+        JsonNode mainNode = objectMapper.readTree(mainJson);
+        JsonNode updateNode = objectMapper.readTree(updateJson);
+
+        return objectMapper.writeValueAsString(merge(mainNode, updateNode));
+    }
+
+    private JsonNode merge(JsonNode mainNode, JsonNode updateNode) {
+        updateNode.fieldNames().forEachRemaining(fieldName -> {
+            JsonNode jsonNode = mainNode.get(fieldName);
+            if (jsonNode != null && jsonNode.isObject()) {
+                merge(jsonNode, updateNode.get(fieldName));
+            } else {
+                if (mainNode instanceof ObjectNode) {
+                    ((ObjectNode) mainNode).replace(fieldName, updateNode.get(fieldName));
+                }
+            }
+        });
+        return mainNode;
+    }
+}
+}

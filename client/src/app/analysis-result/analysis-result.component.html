@@ -32,38 +32,31 @@
                         {{ this.getAnalysisResponse!.analysisData.clusterResults!.length }}
                     </a>
                 </h3>
-                <ngx-graph
-                        class="chart-container"
-                        [view]="[graphWidth, graphHeight]"
-                        [nodes]="nodesFCL"
-                        [links]="[]"
-                        [autoCenter]="true">
-                    <!-- Node Template -->
-                    <ng-template #nodeTemplate let-node>
-                        <svg:g [attr.transform]="translate(node.data.customX, node.data.customY)">
-                            <svg:circle
-                                    r="10"
-                                    [attr.fill]="node.data.customColor"
-                                    stroke="white"
-                                    stroke-width="1">
-                            </svg:circle>
-                            <svg:text
-                                    text-anchor="middle"
-                                    y="4"
-                                    font-size="10"
-                                    fill="black">
-                                {{ node.data.clusterLabel }}
-                            </svg:text>
-                            <svg:text
-                                    text-anchor="middle"
-                                    y="22"
-                                    font-size="10"
-                                    fill="white">
-                                {{ node.label }}
-                            </svg:text>
-                        </svg:g>
-                    </ng-template>
-                </ngx-graph>
+                <app-d3-graph-analysis
+                    [getAnalysisResponse]="getAnalysisResponse"
+                    [graphWidth]="graphWidth"
+                    [graphHeight]="graphHeight"
+                    [class.fullscreen]="isFullscreen">
+                </app-d3-graph-analysis>
+                <button class="js-toggle-fullscreen-btn toggle-fullscreen-btn"
+                        aria-label="Enter fullscreen mode"
+                        (click)="toggleGraphFullscreen()">
+                    <svg class="toggle-fullscreen-svg" width="28" height="28" viewBox="-2 -2 28 28">
+                        <g class="icon-fullscreen-enter">
+                            <path d="M 2 9 v -7 h 7" />
+                            <path d="M 22 9 v -7 h -7" />
+                            <path d="M 22 15 v 7 h -7" />
+                            <path d="M 2 15 v 7 h 7" />
+                        </g>
+
+                        <g class="icon-fullscreen-leave">
+                            <path d="M 24 17 h -7 v 7" />
+                            <path d="M 0 17 h 7 v 7" />
+                            <path d="M 0 7 h 7 v -7" />
+                            <path d="M 24 7 h -7 v -7" />
+                        </g>
+                    </svg>
+                </button>
             }
         </div>
 

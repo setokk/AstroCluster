@@ -973,3 +973,141 @@ public class TicketController {
     }
 }
 }
+```[@]```
+27: {
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
+@Service
+public class PaymentService {
+
+    @Autowired
+    private RestTemplate restTemplate;
+
+    private Map<String, Double> transactionDatabase = new HashMap<>();
+
+    public boolean processPayment(String accountNumber, double amount) {
+        if (!validatePaymentDetails(accountNumber, amount)) {
+            return false;
+        }
+
+        try {
+            boolean paymentSuccess = paymentGatewayProcess(accountNumber, amount);
+            if (paymentSuccess) {
+                String transactionId = UUID.randomUUID().toString();
+                transactionDatabase.put(transactionId, amount);
+                System.out.println("Payment processed successfully. Transaction ID: " + transactionId);
+                return true;
+            } else {
+                System.out.println("Payment processing failed for account: " + accountNumber);
+                return false;
+            }
+        } catch (Exception e) {
+            System.out.println("Error processing payment: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean refundPayment(String transactionId, double amount) {
+        if (!transactionDatabase.containsKey(transactionId)) {
+            System.out.println("Invalid transaction ID: " + transactionId);
+            return false;
+        }
+
+        double originalAmount = transactionDatabase.get(transactionId);
+        if (amount > originalAmount) {
+            System.out.println("Refund amount exceeds original transaction amount.");
+            return false;
+        }
+
+        try {
+            boolean refundSuccess = paymentGatewayRefund(transactionId, amount);
+            if (refundSuccess) {
+                transactionDatabase.put(transactionId, originalAmount - amount);
+                System.out.println("Refund processed successfully for transaction ID: " + transactionId);
+                return true;
+            } else {
+                System.out.println("Refund processing failed for transaction ID: " + transactionId);
+                return false;
+            }
+        } catch (Exception e) {
+            System.out.println("Error processing refund: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public String generateInvoice(String transactionId) {
+        if (!transactionDatabase.containsKey(transactionId)) {
+            return "Invalid transaction ID: " + transactionId;
+        }
+
+        double amount = transactionDatabase.get(transactionId);
+        String invoice = "Invoice\n";
+        invoice += "Transaction ID: " + transactionId + "\n";
+        invoice += "Amount: $" + amount + "\n";
+        invoice += "Date: " + java.time.LocalDate.now() + "\n";
+        invoice += "Thank you for your payment!";
+        return invoice;
+    }
+
+    public boolean validatePaymentDetails(String accountNumber, double amount) {
+        if (accountNumber == null || accountNumber.isEmpty()) {
+            System.out.println("Invalid account number.");
+            return false;
+        }
+        if (amount <= 0) {
+            System.out.println("Invalid payment amount.");
+            return false;
+        }
+        return true;
+    }
+
+    private boolean paymentGatewayProcess(String accountNumber, double amount) throws Exception {
+        String url = "https://api.paymentgateway.com/process";
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Content-Type", "application/json");
+
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("accountNumber", accountNumber);
+        requestBody.put("amount", amount);
+
+        HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(requestBody, headers);
+        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity, String.class);
+
+        if (response.getStatusCode() == HttpStatus.OK) {
+            return true;
+        } else {
+            throw new Exception("Payment gateway error: " + response.getBody());
+        }
+    }
+
+    private boolean paymentGatewayRefund(String transactionId, double amount) throws Exception {
+        String url = "https://api.paymentgateway.com/refund";
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Content-Type", "application/json");
+
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("transactionId", transactionId);
+        requestBody.put("amount", amount);
+
+        HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(requestBody, headers);
+        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity, String.class);
+
+        if (response.getStatusCode() == HttpStatus.OK) {
+            return true;
+        } else {
+            throw new Exception("Payment gateway error: " + response.getBody());
+        }
+    }
+}
+}

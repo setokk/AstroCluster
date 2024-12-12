@@ -3,4 +3,6 @@ export interface ClusterResultDto {
     filename: string;
     filepath: string;
     clusterLabel: number;
+    x?: number;
+    y?: number;
 }
