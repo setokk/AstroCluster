@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, Input, ElementRef, ViewChild } from '@angular/core';
+import {Component, AfterViewInit, Input, ElementRef, ViewChild, OnChanges, SimpleChanges} from '@angular/core';
 import {GetAnalysisResponse} from "../core/response/GetAnalysisResponse";
 import {ClusterResultDto} from "../core/model/ClusterResultDto";
 import * as d3 from 'd3';
@@ -9,7 +9,7 @@ import * as d3 from 'd3';
   template: '<div #chart></div>',
   styleUrls: ['./d3-graph-analysis.component.css']
 })
-export class D3GraphAnalysisComponent implements AfterViewInit  {
+export class D3GraphAnalysisComponent implements AfterViewInit, OnChanges  {
   @ViewChild('chart') private chartContainer!: ElementRef;
   @Input() getAnalysisResponse?: GetAnalysisResponse;
   @Input() graphWidth: number = 800;
@@ -18,6 +18,13 @@ export class D3GraphAnalysisComponent implements AfterViewInit  {
   ngAfterViewInit(): void {
     const clusterResults: ClusterResultDto[] = this.getAnalysisResponse!.analysisData.clusterResults!;
     this.createAnalysisGraph(clusterResults);
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['getAnalysisResponse'] || changes['graphWidth'] || changes['graphHeight']) {
+      d3.select(this.chartContainer.nativeElement).selectAll('*').remove();
+      this.ngAfterViewInit();
+    }
   }
 
   private createAnalysisGraph(clusterResults: ClusterResultDto[]): void {
@@ -34,12 +41,12 @@ export class D3GraphAnalysisComponent implements AfterViewInit  {
     const color = d3.scaleOrdinal(d3.schemeCategory10);
 
     const padding = 500;
-    const maxRadius = 400;
+    const maxRadius = 300;
     let groupIndex = 0;
     groups.forEach((nodes: ClusterResultDto[], group: number) => {
       const angleStep = (2 * Math.PI) / nodes.length;
       const maxFilenameLength = Math.max(...nodes.map(node => node.filename.length));
-      const radius = Math.max(30, maxFilenameLength * 5, maxRadius);
+      const radius = Math.max(30, maxFilenameLength * 10 + 20, maxRadius);
       const centerX = (groupIndex % 4) * (radius * 2 + padding) + radius + padding / 2;
       const centerY = Math.floor(groupIndex / 4) * (radius * 2 + padding) + radius + padding / 2;
 

@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, NgZone} from '@angular/core';
 import {GetAnalysisResponse} from "../core/response/GetAnalysisResponse";
 import {AnalysisService} from "../core/services/analysis-service";
 import {ActivatedRoute} from "@angular/router";
@@ -43,6 +43,8 @@ export class AnalysisResultComponent {
 
   // Percentage per Cluster Chart
   chartDataPPC: { name: string; value: number; }[] = [];
+  chartWidth: number = 800;
+  chartHeight: number= 400;
   colorSchemePPC: Color = {
     name: 'PPC Color Scheme',
     selectable: true,
@@ -63,7 +65,9 @@ export class AnalysisResultComponent {
   isFullscreen: boolean = false;
   similarFilesCriteria = SimilarFilesCriteriaEnum.entries();
 
-  constructor(private analysisService: AnalysisService, private route: ActivatedRoute) {}
+  constructor(private analysisService: AnalysisService,
+              private route: ActivatedRoute,
+              private zone: NgZone) {}
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
@@ -216,13 +220,15 @@ export class AnalysisResultComponent {
   }
 
   toggleGraphFullscreen(): void {
-    this.isFullscreen = !this.isFullscreen;
-    if (this.isFullscreen) {
-      this.graphWidth = window.innerWidth;
-      this.graphHeight = window.innerHeight;
-    } else {
-      this.graphWidth = 800;
-      this.graphHeight = 600;
-    }
+    this.zone.run(() => {
+      this.isFullscreen = !this.isFullscreen;
+      if (this.isFullscreen) {
+        this.graphWidth = window.innerWidth;
+        this.graphHeight = window.innerHeight;
+      } else {
+        this.graphWidth = 800;
+        this.graphHeight = 600;
+      }
+    });
   }
 }

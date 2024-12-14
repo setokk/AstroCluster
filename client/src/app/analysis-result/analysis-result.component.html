@@ -14,7 +14,7 @@
         <div class="left-aligned-content">
             @if (activeChartTitle === 'Percentages per Cluster') {
                 <ngx-charts-bar-horizontal
-                        [view]="[graphWidth, graphHeight]"
+                        [view]="[chartWidth, chartHeight]"
                         [results]="chartDataPPC"
                         [scheme]="colorSchemePPC"
                         [gradient]="false"
@@ -27,36 +27,40 @@
                         [yAxisLabel]="'Cluster Labels'">
                 </ngx-charts-bar-horizontal>
             } @else if (activeChartTitle === 'Cluster File Results') {
-                <h3>Total number of analyzed files:
-                    <a style="user-select: none;">
-                        {{ this.getAnalysisResponse!.analysisData.clusterResults!.length }}
-                    </a>
-                </h3>
+                <div class="flex-row-container">
+                    <h3>Total number of analyzed files:
+                        <a style="user-select: none;">
+                            {{ this.getAnalysisResponse!.analysisData.clusterResults!.length }}
+                        </a>
+                    </h3>
+                    <div class="right-aligned-content">
+                        <button class="js-toggle-fullscreen-btn toggle-fullscreen-btn"
+                                aria-label="Enter fullscreen mode"
+                                (click)="toggleGraphFullscreen()"
+                                [class.top-right-fullscreen-btn]="isFullscreen">
+                            <svg class="toggle-fullscreen-svg" width="28" height="28" viewBox="-2 -2 28 28">
+                                <g class="icon-fullscreen-enter">
+                                    <path d="M 2 9 v -7 h 7" />
+                                    <path d="M 22 9 v -7 h -7" />
+                                    <path d="M 22 15 v 7 h -7" />
+                                    <path d="M 2 15 v 7 h 7" />
+                                </g>
+                                <g class="icon-fullscreen-leave">
+                                    <path d="M 24 17 h -7 v 7" />
+                                    <path d="M 0 17 h 7 v 7" />
+                                    <path d="M 0 7 h 7 v -7" />
+                                    <path d="M 24 7 h -7 v -7" />
+                                </g>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
                 <app-d3-graph-analysis
                     [getAnalysisResponse]="getAnalysisResponse"
                     [graphWidth]="graphWidth"
                     [graphHeight]="graphHeight"
                     [class.fullscreen]="isFullscreen">
                 </app-d3-graph-analysis>
-                <button class="js-toggle-fullscreen-btn toggle-fullscreen-btn"
-                        aria-label="Enter fullscreen mode"
-                        (click)="toggleGraphFullscreen()">
-                    <svg class="toggle-fullscreen-svg" width="28" height="28" viewBox="-2 -2 28 28">
-                        <g class="icon-fullscreen-enter">
-                            <path d="M 2 9 v -7 h 7" />
-                            <path d="M 22 9 v -7 h -7" />
-                            <path d="M 22 15 v 7 h -7" />
-                            <path d="M 2 15 v 7 h 7" />
-                        </g>
-
-                        <g class="icon-fullscreen-leave">
-                            <path d="M 24 17 h -7 v 7" />
-                            <path d="M 0 17 h 7 v 7" />
-                            <path d="M 0 7 h 7 v -7" />
-                            <path d="M 24 7 h -7 v -7" />
-                        </g>
-                    </svg>
-                </button>
             }
         </div>
 
