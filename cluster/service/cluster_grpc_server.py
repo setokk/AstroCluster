@@ -17,6 +17,7 @@ class ClusterServiceServicer(cluster_pb2_grpc.ClusterServiceServicer):
         self.tokenizer = tokenizer
         self.device = device
         self.clustering_method = clustering_method
+        self.BATCH_SIZE = 64
 
     def PerformClustering(self, request, context):
         logging.info(f"Received request: path={request.path}, lang={request.lang}, extensions={request.extensions}")
@@ -30,12 +31,17 @@ class ClusterServiceServicer(cluster_pb2_grpc.ClusterServiceServicer):
         file_paths[:] = [fp.replace(f"{project_path}", "") for fp in file_paths]
 
         # Retrieve embeddings
-        inputs_ids = self.tokenizer(files, return_tensors='pt', padding=True, truncation=True, max_length=512)
-        inputs_ids = inputs_ids['input_ids'].to(self.device)
-        with torch.no_grad():
-            embeddings = self.model(inputs_ids)
+        all_embeddings = []
+        for i in range(0, len(files), self.BATCH_SIZE):
+            batch_files = files[i:i+self.BATCH_SIZE]
+            inputs_ids = self.tokenizer(batch_files, return_tensors='pt', padding=True, truncation=True, max_length=512)
+            inputs_ids = inputs_ids['input_ids'].to(self.device)
+            with torch.no_grad():
+                batch_embeddings = self.model(inputs_ids)
+            all_embeddings.append(batch_embeddings.cpu())
+        embeddings = torch.cat(all_embeddings)
 
-        # Pass the embeddings to clustering method
+        # Pass embeddings to clustering method
         cluster_labels = self.clustering_method.fit_predict(embeddings.cpu())
 
         response = ClusterResponse(clusterLabels=cluster_labels.tolist(), filePaths=file_paths)

@@ -14,9 +14,9 @@ public class GrpcClientConfig {
     public ManagedChannel managedChannel() {
         return ManagedChannelBuilder.forAddress("clusterservice", 50051)
                 .usePlaintext()
-                .keepAliveTime(20, TimeUnit.SECONDS)
+                .keepAliveTime(5, TimeUnit.MINUTES)
                 .keepAliveTimeout(10, TimeUnit.SECONDS)
-                .keepAliveWithoutCalls(true)
+                .keepAliveWithoutCalls(false)
                 .build();
     }
 }

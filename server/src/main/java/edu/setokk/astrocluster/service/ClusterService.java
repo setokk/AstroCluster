@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class ClusterService {
@@ -60,7 +61,7 @@ public class ClusterService {
                 .setPath(uuid.toString())
                 .addAllExtensions(requestBody.getExtensions())
                 .build();
-        ClusterResponse clusterResponse = clusterBlockingStub.performClustering(clusterRequest);
+        ClusterResponse clusterResponse = clusterBlockingStub.withDeadlineAfter(24, TimeUnit.HOURS).performClustering(clusterRequest);
 
         // Save analysis data in DB
         AnalysisDtoBuilder analysisBuilder = AnalysisGrpcMapper.INSTANCE.mapToTarget(clusterResponse);
