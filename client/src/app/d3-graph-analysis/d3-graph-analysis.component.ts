@@ -1,5 +1,4 @@
-import {Component, AfterViewInit, Input, ElementRef, ViewChild, OnChanges, SimpleChanges} from '@angular/core';
-import {GetAnalysisResponse} from "../core/response/GetAnalysisResponse";
+import {AfterViewInit, Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild} from '@angular/core';
 import {ClusterResultDto} from "../core/model/ClusterResultDto";
 import * as d3 from 'd3';
 
@@ -11,17 +10,18 @@ import * as d3 from 'd3';
 })
 export class D3GraphAnalysisComponent implements AfterViewInit, OnChanges  {
   @ViewChild('chart') private chartContainer!: ElementRef;
-  @Input() getAnalysisResponse?: GetAnalysisResponse;
+  @Input() currShownClusterResultsInGraph?: ClusterResultDto[];
   @Input() graphWidth: number = 800;
   @Input() graphHeight: number = 400;
 
   ngAfterViewInit(): void {
-    const clusterResults: ClusterResultDto[] = this.getAnalysisResponse!.analysisData.clusterResults!;
-    this.createAnalysisGraph(clusterResults);
+    this.createAnalysisGraph(this.currShownClusterResultsInGraph!);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['getAnalysisResponse'] || changes['graphWidth'] || changes['graphHeight']) {
+    if (this.chartContainer === undefined)
+      return;
+    if (changes['currShownClusterResultsInGraph'] || changes['graphWidth'] || changes['graphHeight']) {
       d3.select(this.chartContainer.nativeElement).selectAll('*').remove();
       this.ngAfterViewInit();
     }

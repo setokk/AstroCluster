@@ -61,6 +61,10 @@ export class AnalysisResultComponent {
   graphX: any = { minX: -200, maxX: 482 };
   graphY: any = { minY: 0, maxY: 370 };
 
+  static SHOW_ALL_CLUSTERS: number = -1;
+  currClusterLabel: number = AnalysisResultComponent.SHOW_ALL_CLUSTERS;
+  currShownClusterResultsInGraph: ClusterResultDto[] = [];
+
   pressedButton?: string;
   isFullscreen: boolean = false;
   similarFilesCriteria = SimilarFilesCriteriaEnum.entries();
@@ -75,6 +79,7 @@ export class AnalysisResultComponent {
       this.analysisService.getAnalysis(analysisId).subscribe({
         next: (response) => {
           this.getAnalysisResponse = response;
+          this.currShownClusterResultsInGraph = response.analysisData.clusterResults!;
           this.onClickReset();
           this.prepareGraphFCL();
         },
@@ -155,6 +160,17 @@ export class AnalysisResultComponent {
     this.topClustersValue = this.getAnalysisResponse!.percentagesPerCluster.length;
     this.lastClusterValue = 1;
     this.prepareChartDataPPC();
+  }
+
+  onChangeCurrClusterLabel(event: Event): void {
+    this.currClusterLabel = (event.target as HTMLInputElement).valueAsNumber;
+    this.currShownClusterResultsInGraph = this.getAnalysisResponse!.analysisData.clusterResults!
+        .filter((cr) => cr.clusterLabel === this.currClusterLabel);
+  }
+
+  onClickShowAllClusters(): void {
+    this.currClusterLabel = -1;
+    this.currShownClusterResultsInGraph = this.getAnalysisResponse!.analysisData.clusterResults!;
   }
 
   onDropdownChange(field: string, value: string) {

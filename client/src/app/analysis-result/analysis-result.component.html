@@ -56,7 +56,7 @@
                     </div>
                 </div>
                 <app-d3-graph-analysis
-                    [getAnalysisResponse]="getAnalysisResponse"
+                    [currShownClusterResultsInGraph]="currShownClusterResultsInGraph"
                     [graphWidth]="graphWidth"
                     [graphHeight]="graphHeight"
                     [class.fullscreen]="isFullscreen">
@@ -92,6 +92,20 @@
                                (change)="onChangeLastClustersValuePPC($event)"
                                name="lastClustersRange" id="lastClustersRange"/>
                         <button (click)="onClickReset()">Reset</button>
+                    </div>
+                } @else if (activeChartTitle === 'Cluster File Results') {
+                    <div class="right-aligned-content">
+                        @if (currClusterLabel === -1) {
+                            <label for="currClusterLabelRange">Showing All Clusters</label>
+                        } @else {
+                            <label for="currClusterLabelRange">Showing Cluster: {{ currClusterLabel }}</label>
+                        }
+                        <input type="range"
+                               min="-1" max="{{ this.getAnalysisResponse!.percentagesPerCluster!.length - 1}}"
+                               [(ngModel)]="currClusterLabel"
+                               (change)="onChangeCurrClusterLabel($event)"
+                               name="currClusterLabelRange" id="currClusterLabelRange"/>
+                        <button (click)="onClickShowAllClusters()">Show All Clusters</button>
                     </div>
                 }
             </div>
