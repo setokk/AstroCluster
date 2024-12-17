@@ -13,7 +13,7 @@ import org.springframework.http.HttpStatus;
 @AllArgsConstructor
 public class InterestPdfAnalysisRequest implements IValidatable {
     @NotNull(message = "[InterestPdfAnalysisRequest]: analysisId field is mandatory")
-    private final Integer analysisId;
+    private final Long analysisId;
     @NotNull(message = "[InterestPdfAnalysisRequest]: similarFilesCriteria field is mandatory")
     @NotEmpty(message = "[InterestPdfAnalysisRequest]: similarFilesCriteria field cannot be empty")
     private final String similarFilesCriteria;
