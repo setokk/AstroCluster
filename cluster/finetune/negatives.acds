@@ -1099,9 +1099,6 @@ public class Ticket {
     private String assignedTo;
     private String priority;
 
-    public Ticket() {
-    }
-
     public Ticket(String description, String status, String assignedTo, String priority) {
         this.description = description;
         this.status = status;
