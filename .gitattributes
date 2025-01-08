@@ -1,3 +1,4 @@
+server/javadocs/ export-ignore
 *.proto linguist-language=Protocol Buffer
 *.proto linguist-detectable=true
 proto/** linguist-documentation=false
