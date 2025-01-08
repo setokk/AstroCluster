@@ -4,8 +4,8 @@ AstroCluster is a framework agnostic clustering tool specializing in semantic an
 
 ## Prerequisites
 - Docker Compose (version ≥ 3.8)
-- Python3
-- 
+- Python3 (for evaluating and fine-tuning models only, ignore for build process)
+
 ## Installation and Deployment
 
 - In order to full build and deploy the project as it is, run the following script from the **root** of the project:
