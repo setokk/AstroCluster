@@ -1,5 +1,1 @@
-server/javadocs/* linguist-vendored
-*.proto linguist-language=Protocol Buffer
-*.proto linguist-detectable=true
-proto/** linguist-documentation=false
-proto/** linguist-vendored=false
+server/javadocs/** linguist-vendored
