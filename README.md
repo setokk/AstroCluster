@@ -2,6 +2,7 @@
 # AstroCluster
 AstroCluster is a framework agnostic clustering tool specializing in semantic clustering of projects and technical debt, with a vision of supporting various languages and clustering paradigms.
 <br/>
+<br/>
 <img src="client/screenshots/home.png" />
 
 ## Prerequisites
