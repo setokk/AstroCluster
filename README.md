@@ -1,6 +1,7 @@
 
 # AstroCluster
-AstroCluster is a framework agnostic clustering tool specializing in semantic analysis of projects and technical debt, supporting various languages.
+AstroCluster is a framework agnostic clustering tool specializing in semantic clustering of projects and technical debt, with a vision of supporting various languages and clustering paradigms. 
+<img src="client/screenshots/home.png" />
 
 ## Prerequisites
 - Docker Compose (version ≥ 3.8)
