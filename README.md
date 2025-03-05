@@ -1,16 +1,21 @@
 
 # AstroCluster
-AstroCluster is a framework agnostic clustering tool specializing in semantic clustering of projects and technical debt, with a vision of supporting various languages and clustering paradigms.
+AstroCluster is a framework-agnostic clustering tool specializing in semantic clustering of projects and technical debt, with a vision of supporting various languages and clustering paradigms.
+## Core Functionalities
+The user can view the clustered file suggestions based on the MVC (Model View Controller) clustering paradigm in a graph.
+They can also download the technical debt calculation either as a PDF or a CSV file, alongside with optional
+parameters that contribute to the calculation (Average Lines of Code, Lines of Code per hour and Developer Salary per hour).
+<img src="client/screenshots/cluster_results.png" />
 <br/>
-<br/>
-<img src="client/screenshots/home.png" />
+The user can also view a bar chart that depicts the percentages of each cluster in the project. This can prove useful for refactoring
+larger projects by identifying large groups of similar files.
+<img src="client/screenshots/cluster_results_chart.png" />
 
 ## Prerequisites
 - Docker Compose (version ≥ 3.8)
 - Python (for evaluating and fine-tuning models only, ignore for build process)
 
 ## Installation and Deployment
-
 - In order to full build and deploy the project as it is, run the following script from the **root** of the project:
 
 ```bash
