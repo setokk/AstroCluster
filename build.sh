@@ -44,7 +44,7 @@ build_services() {
       exit 1
   fi
   echo -e "[${BLUE}BUILD INFO${NC}]: Building ${GREEN}${SERVICES_TO_BUILD[@]}${NC}"
-  sudo docker-compose up -d --build "${SERVICES_TO_BUILD[@]}"
+  docker-compose up -d --build "${SERVICES_TO_BUILD[@]}"
 }
 
 # Main script
@@ -124,18 +124,18 @@ build_services
 # Copy generated gRPC files from containers to the actual project directory
 if [ $SKIP_GRPC = false ]; then
     # Delete temporary .proto files
-    sudo rm -rf ./server/default
-    sudo rm -rf ./server/custom
-    sudo rm -rf ./cluster/cluster.proto
+    rm -rf ./server/default
+    rm -rf ./server/custom
+    rm -rf ./cluster/cluster.proto
 
     # Copy generated files from containers to actual project directory
-    sudo docker cp "${SERVER_CONTAINER_ID}:${BE_GRPC_DOCKER_PATH}" "${BE_GRPC_PROJECT_PATH}"
+    docker cp "${SERVER_CONTAINER_ID}:${BE_GRPC_DOCKER_PATH}" "${BE_GRPC_PROJECT_PATH}"
     echo -e "[${BLUE}BUILD INFO${NC}]: Server gRPC update finished. Copied docker gRPC files to project directory."
-    sudo docker cp "${CLUSTER_SERVICE_CONTAINER_ID}:${CS_GRPC_DOCKER_PATH}" "${CS_GRPC_PROJECT_PATH}" && sudo rm -rf "${CS_GRPC_PROJECT_PATH}/service/__pycache__"
+    docker cp "${CLUSTER_SERVICE_CONTAINER_ID}:${CS_GRPC_DOCKER_PATH}" "${CS_GRPC_PROJECT_PATH}" && sudo rm -rf "${CS_GRPC_PROJECT_PATH}/service/__pycache__"
     echo -e "[${BLUE}BUILD INFO${NC}: Cluster service gRPC update finished. Copied docker gRPC files to project directory."
 
     # Change ownership of files since they were created via root user inside containers
     username=$(whoami)
-    sudo chown -R "${username}:${username}" "${BE_GRPC_PROJECT_PATH}"
-    sudo chown -R "${username}:${username}" "${CS_GRPC_PROJECT_PATH}"
+    chown -R "${username}:${username}" "${BE_GRPC_PROJECT_PATH}"
+    chown -R "${username}:${username}" "${CS_GRPC_PROJECT_PATH}"
 fi
