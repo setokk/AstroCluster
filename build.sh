@@ -23,10 +23,10 @@ END
 
 # Helper functions
 undeploy_all_services() {
-	echo -e "[${BLUE}BUILD INFO${NC}]: Undeploying ${DB_CONTAINER_ID} ($(sudo docker stop ${DB_CONTAINER_ID} && sudo docker rm ${DB_CONTAINER_ID}))"
-	echo -e "[${BLUE}BUILD INFO${NC}]: Undeploying ${SERVER_CONTAINER_ID} ($(sudo docker stop ${SERVER_CONTAINER_ID} && sudo docker rm ${SERVER_CONTAINER_ID}))"
-	echo -e "[${BLUE}BUILD INFO${NC}]: Undeploying ${CLUSTER_SERVICE_CONTAINER_ID} ($(sudo docker stop ${CLUSTER_SERVICE_CONTAINER_ID} && sudo docker rm ${CLUSTER_SERVICE_CONTAINER_ID}))"
-	echo -e "[${BLUE}BUILD INFO${NC}]: Undeploying ${CLIENT_CONTAINER_ID} ($(sudo docker stop ${CLIENT_CONTAINER_ID} && sudo docker rm ${CLIENT_CONTAINER_ID}))"
+	echo -e "[${BLUE}BUILD INFO${NC}]: Undeploying ${DB_CONTAINER_ID} ($(docker stop ${DB_CONTAINER_ID} && docker rm ${DB_CONTAINER_ID}))"
+	echo -e "[${BLUE}BUILD INFO${NC}]: Undeploying ${SERVER_CONTAINER_ID} ($(docker stop ${SERVER_CONTAINER_ID} && docker rm ${SERVER_CONTAINER_ID}))"
+	echo -e "[${BLUE}BUILD INFO${NC}]: Undeploying ${CLUSTER_SERVICE_CONTAINER_ID} ($(docker stop ${CLUSTER_SERVICE_CONTAINER_ID} && docker rm ${CLUSTER_SERVICE_CONTAINER_ID}))"
+	echo -e "[${BLUE}BUILD INFO${NC}]: Undeploying ${CLIENT_CONTAINER_ID} ($(docker stop ${CLIENT_CONTAINER_ID} && docker rm ${CLIENT_CONTAINER_ID}))"
 }
 
 update_dynamic_env_variables() {
@@ -91,9 +91,9 @@ fi
 # Figure out whether to download model (only if it does not exist locally)
 # First, figure if ac-clustering-service exists
 DOWNLOAD_MODEL=true
-CLUSTER_SERVICE_EXISTS=$(sudo docker ps -q -f name="${CLUSTER_SERVICE_CONTAINER_ID}")
+CLUSTER_SERVICE_EXISTS=$(docker ps -q -f name="${CLUSTER_SERVICE_CONTAINER_ID}")
 if [ -n "${CLUSTER_SERVICE_EXISTS}" ]; then
-    MODEL_EXISTS=$(sudo docker exec "${CLUSTER_SERVICE_CONTAINER_ID}" sh -c "test -d ${ASTROCLUSTER_MODEL_PATH} && echo 'exists' || echo 'does not exist'")
+    MODEL_EXISTS=$(docker exec "${CLUSTER_SERVICE_CONTAINER_ID}" sh -c "test -d ${ASTROCLUSTER_MODEL_PATH} && echo 'exists' || echo 'does not exist'")
     if [ "${MODEL_EXISTS}" == "does not exist" ]; then
         DOWNLOAD_MODEL=false
     fi
@@ -108,8 +108,8 @@ if [ $SKIP_DB = false ]; then
     SERVICES_TO_BUILD+=("db")
     # Remove docker volumes with DB data
     undeploy_all_services
-    echo -e "[${BLUE}BUILD INFO${NC}]: Removed volume $(sudo docker volume rm pg_data_ac_cluster)"
-    echo -e "[${BLUE}BUILD INFO${NC}]: Removed volume $(sudo docker volume rm shared_cloned_projects)"
+    echo -e "[${BLUE}BUILD INFO${NC}]: Removed volume $(docker volume rm pg_data_ac_cluster)"
+    echo -e "[${BLUE}BUILD INFO${NC}]: Removed volume $(docker volume rm shared_cloned_projects)"
 fi
 if [ $SKIP_SERVER = false ]; then
     SERVICES_TO_BUILD+=("server")
@@ -131,7 +131,7 @@ if [ $SKIP_GRPC = false ]; then
     # Copy generated files from containers to actual project directory
     docker cp "${SERVER_CONTAINER_ID}:${BE_GRPC_DOCKER_PATH}" "${BE_GRPC_PROJECT_PATH}"
     echo -e "[${BLUE}BUILD INFO${NC}]: Server gRPC update finished. Copied docker gRPC files to project directory."
-    docker cp "${CLUSTER_SERVICE_CONTAINER_ID}:${CS_GRPC_DOCKER_PATH}" "${CS_GRPC_PROJECT_PATH}" && sudo rm -rf "${CS_GRPC_PROJECT_PATH}/service/__pycache__"
+    docker cp "${CLUSTER_SERVICE_CONTAINER_ID}:${CS_GRPC_DOCKER_PATH}" "${CS_GRPC_PROJECT_PATH}" && rm -rf "${CS_GRPC_PROJECT_PATH}/service/__pycache__"
     echo -e "[${BLUE}BUILD INFO${NC}: Cluster service gRPC update finished. Copied docker gRPC files to project directory."
 
     # Change ownership of files since they were created via root user inside containers
